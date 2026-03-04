@@ -1,0 +1,123 @@
+/* ========================================
+   Auth — Login + Register Screens
+   ======================================== */
+
+#screen-login,
+#screen-register {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 0 24px;
+  padding-top: max(48px, env(safe-area-inset-top));
+  padding-bottom: max(32px, env(safe-area-inset-bottom));
+}
+
+.auth-header {
+  margin-bottom: 32px;
+}
+
+.auth-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--accent-blue);
+  margin-bottom: 24px;
+  cursor: pointer;
+  background: none;
+  border: none;
+}
+
+.auth-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  margin-bottom: 32px;
+}
+
+.auth-logo img {
+  height: 36px;
+}
+
+.auth-logo .subtitle {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 200;
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  color: rgba(255, 255, 255, 0.7);
+  text-transform: uppercase;
+}
+
+.auth-title {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 200;
+  font-size: 1.5rem;
+  margin-bottom: 8px;
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Role toggle */
+.role-toggle {
+  display: flex;
+  gap: 8px;
+}
+
+.role-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  background: var(--bg-input);
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.role-btn.active {
+  border-color: var(--accent-blue);
+  background: rgba(74, 158, 255, 0.1);
+  color: var(--accent-blue);
+}
+
+.auth-form .btn {
+  margin-top: 8px;
+}
+
+.auth-form .btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-footer {
+  text-align: center;
+  padding-top: 24px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.auth-footer a {
+  color: var(--accent-blue);
+  cursor: pointer;
+}

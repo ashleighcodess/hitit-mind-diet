@@ -1,0 +1,163 @@
+/* ========================================
+   Daily Mind Weight Screen
+   ======================================== */
+
+#screen-daily {
+  padding: 16px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-bottom: 80px;
+}
+
+.daily-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.daily-header h1 {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 200;
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+
+.daily-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Tier cards */
+.daily-tier-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  margin-bottom: 12px;
+  overflow: hidden;
+}
+
+.daily-tier-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.daily-wave-thumb {
+  width: 60px;
+  height: 30px;
+  object-fit: cover;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.daily-tier-name {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.daily-tier-range {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.daily-emotion-rows {
+  padding: 4px 12px;
+}
+
+.daily-emotion-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(42, 42, 42, 0.5);
+}
+
+.daily-emotion-row:last-child {
+  border-bottom: none;
+}
+
+.daily-emo-cal {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  width: 55px;
+  flex-shrink: 0;
+}
+
+.daily-emo-name {
+  flex: 1;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.daily-emo-time {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  width: 55px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.daily-emo-count {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  width: 24px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Footer totals */
+.daily-footer {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  margin-top: 16px;
+}
+
+.daily-footer h2 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.daily-total-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.daily-total-row:last-child {
+  border-bottom: none;
+  padding-top: 12px;
+}
+
+.daily-total-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.daily-total-value {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.daily-total-value.red-total { color: var(--tier-red); }
+
+.daily-net-value {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.daily-net-value.positive { color: var(--tier-green); }
+.daily-net-value.negative { color: var(--tier-red); }
+.daily-net-value.neutral { color: var(--text-muted); }

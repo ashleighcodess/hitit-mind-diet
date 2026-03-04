@@ -1,0 +1,168 @@
+/* ========================================
+   Peak Vibration Screen
+   ======================================== */
+
+#screen-peak-vibration {
+  padding: 16px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-bottom: 80px;
+}
+
+.peak-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.peak-header h1 {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 200;
+  font-size: 1.3rem;
+  margin-bottom: 4px;
+}
+
+.peak-header p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Triangle image */
+.peak-triangle {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.peak-triangle img {
+  width: 100%;
+  max-width: 320px;
+  margin: 0 auto;
+  border-radius: var(--radius-md);
+}
+
+/* Milestones */
+.peak-milestones {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.milestone {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  opacity: 0.5;
+  transition: all 0.3s ease;
+}
+
+.milestone.achieved {
+  opacity: 1;
+  border-color: var(--milestone-color, var(--border-color));
+}
+
+.milestone-wave {
+  width: 50px;
+  height: 25px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.milestone-wave img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.milestone-info {
+  flex: 1;
+}
+
+.milestone-label {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--milestone-color, var(--text-secondary));
+}
+
+.milestone-vibes {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.milestone-check {
+  font-size: 1.2rem;
+  color: var(--milestone-color, transparent);
+  width: 28px;
+  text-align: center;
+}
+
+/* Vibe score */
+.peak-score {
+  text-align: center;
+  padding: 20px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  margin-bottom: 24px;
+}
+
+.peak-score-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.peak-score-value {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--accent-blue);
+}
+
+/* Emotion picker */
+.peak-picker-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.peak-emotion-picker {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.peak-emo-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.peak-emo-btn img {
+  width: 24px;
+  height: 24px;
+}
+
+.peak-emo-btn.selected {
+  border-color: var(--accent-blue);
+  background: rgba(74, 158, 255, 0.1);
+  color: var(--accent-blue);
+}
+
+.peak-emo-btn:active {
+  transform: scale(0.95);
+}

@@ -86,6 +86,71 @@
   flex-shrink: 0;
 }
 
+/* Full-width card (fears + gratitudes) */
+.exercise-card-full {
+  display: block;
+  cursor: default;
+}
+
+.exercise-card-full:hover {
+  border-color: var(--border-color);
+  background: var(--bg-card);
+}
+
+.exercise-card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.exercise-card-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.exercise-count {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.exercise-dropdowns {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.exercise-dropdown {
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: var(--text-primary);
+  width: 100%;
+  transition: border-color 0.2s ease;
+}
+
+.exercise-dropdown:focus {
+  border-color: var(--accent-blue);
+  outline: none;
+}
+
+.exercise-dropdown::placeholder {
+  color: var(--text-muted);
+}
+
+.exercise-divider {
+  height: 1px;
+  background: var(--border-color);
+  margin: 16px 0;
+}
+
 .empty-state {
   text-align: center;
   padding: 48px 16px;

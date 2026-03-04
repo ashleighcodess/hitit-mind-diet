@@ -134,6 +134,7 @@ export async function createUserDoc(uid, data) {
       reward: '',
       consequence: '',
       topFears: ['', '', '', ''],
+      gratitudes: ['', '', '', '', '', ''],
       peakVibe: 0,
       milestone: 0
     },

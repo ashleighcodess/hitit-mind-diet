@@ -2,8 +2,8 @@
 // Exercises Screen
 // ========================================
 
-import { registerScreen, getCurrentUser } from '../app.js';
-import { getAssignments } from '../data/firestore.js';
+import { registerScreen, getCurrentUser, getUserData, showToast } from '../app.js';
+import { getAssignments, updateUserSettings } from '../data/firestore.js';
 
 const CATEGORIES = [
   {
@@ -29,25 +29,56 @@ const CATEGORIES = [
     title: 'Mental Exercises',
     icon: 'assets/exercises/mental-mind.png',
     description: 'Mind training and awareness practices'
-  },
-  {
-    key: 'fears',
-    title: 'Consistent Fears',
-    icon: 'assets/exercises/fear-loop-head.png',
-    description: 'Track and address your recurring fears'
   }
 ];
+
+let fearTimeout = null;
+let gratitudeTimeout = null;
+
+function saveFears() {
+  clearTimeout(fearTimeout);
+  fearTimeout = setTimeout(() => {
+    const user = getCurrentUser();
+    if (!user) return;
+    const fears = [];
+    document.querySelectorAll('.fear-input').forEach(input => {
+      fears.push(input.value.trim());
+    });
+    updateUserSettings(user.uid, 'settings.topFears', fears)
+      .catch(err => console.error('Failed to save fears:', err));
+  }, 800);
+}
+
+function saveGratitudes() {
+  clearTimeout(gratitudeTimeout);
+  gratitudeTimeout = setTimeout(() => {
+    const user = getCurrentUser();
+    if (!user) return;
+    const gratitudes = [];
+    document.querySelectorAll('.gratitude-input').forEach(input => {
+      gratitudes.push(input.value.trim());
+    });
+    updateUserSettings(user.uid, 'settings.gratitudes', gratitudes)
+      .catch(err => console.error('Failed to save gratitudes:', err));
+  }, 800);
+}
 
 async function loadExercises() {
   const user = getCurrentUser();
   if (!user) return;
 
   const container = document.getElementById('exercises-list');
+  const userData = getUserData();
+  const fears = userData?.settings?.topFears || ['', '', '', ''];
+  const gratitudes = userData?.settings?.gratitudes || ['', '', '', '', '', ''];
 
   try {
     const assignments = await getAssignments(user.uid);
 
-    container.innerHTML = CATEGORIES.map(cat => {
+    let html = '';
+
+    // Assignment category cards
+    html += CATEGORIES.map(cat => {
       const catAssignments = assignments.filter(a => a.type === cat.key);
       const pending = catAssignments.filter(a => !a.completedAt).length;
 
@@ -64,10 +95,62 @@ async function loadExercises() {
       `;
     }).join('');
 
+    // Fears + Gratitudes card
+    html += `
+      <div class="exercise-card exercise-card-full">
+        <div class="exercise-card-inner">
+          <div class="exercise-card-row">
+            <img src="assets/exercises/fear-loop-head.png" alt="Fears" class="exercise-icon">
+            <div class="exercise-info">
+              <h3 class="exercise-title">Your Most Consistent Fears</h3>
+              <p class="exercise-desc">4 Fear Drop Downs to fill out</p>
+            </div>
+            <span class="exercise-count">${fears.filter(f => f).length} Fears</span>
+          </div>
+          <div class="exercise-dropdowns">
+            ${fears.map((f, i) => `
+              <input type="text" class="fear-input exercise-dropdown"
+                     placeholder="Fear ${i + 1}" value="${escapeAttr(f)}" maxlength="100">
+            `).join('')}
+          </div>
+
+          <div class="exercise-divider"></div>
+
+          <div class="exercise-card-row">
+            <div class="exercise-info">
+              <h3 class="exercise-title">What I Am Grateful For</h3>
+              <p class="exercise-desc">6 Grateful Drop Downs — can be filled out</p>
+            </div>
+            <span class="exercise-count">${gratitudes.filter(g => g).length} Gratefuls</span>
+          </div>
+          <div class="exercise-dropdowns">
+            ${gratitudes.map((g, i) => `
+              <input type="text" class="gratitude-input exercise-dropdown"
+                     placeholder="Grateful ${i + 1}" value="${escapeAttr(g)}" maxlength="100">
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+
+    container.innerHTML = html;
+
+    // Attach input listeners
+    container.querySelectorAll('.fear-input').forEach(input => {
+      input.addEventListener('input', saveFears);
+    });
+    container.querySelectorAll('.gratitude-input').forEach(input => {
+      input.addEventListener('input', saveGratitudes);
+    });
+
   } catch (err) {
     console.error('Failed to load exercises:', err);
     container.innerHTML = '<div class="empty-state">No exercises assigned yet.</div>';
   }
+}
+
+function escapeAttr(str) {
+  return str.replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
 registerScreen('exercises', {

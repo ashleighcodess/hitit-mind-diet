@@ -26,6 +26,51 @@
     /* SPA screen management — !important needed to beat ID selectors in screen CSS */
     .screen:not(.screen-active) { display: none !important; }
 
+    /* Desktop frame — constrain to phone width, center */
+    @media (min-width: 481px) {
+      body {
+        display: flex;
+        justify-content: center;
+        background: #050505;
+      }
+      /* App shell */
+      body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 430px;
+        height: 100%;
+        background: var(--bg-primary);
+        z-index: -1;
+        box-shadow: 0 0 60px rgba(74, 158, 255, 0.06);
+      }
+      .screen {
+        max-width: 430px;
+        margin-left: auto;
+        margin-right: auto;
+        width: 100%;
+      }
+      .bottom-nav {
+        max-width: 430px;
+        left: 50% !important;
+        right: auto !important;
+        transform: translateX(-50%);
+      }
+      .dash-topbar {
+        max-width: 430px;
+        margin: 0 auto;
+      }
+      .modal-overlay .modal-sheet {
+        max-width: 430px;
+        margin: 0 auto;
+      }
+      .toast {
+        max-width: 380px;
+      }
+    }
+
     /* Bottom navigation */
     .bottom-nav {
       position: fixed;
@@ -124,93 +169,98 @@
   <div class="onboard-title">How Your Mind Diet Works</div>
 
   <div class="onboard-pages" id="onboard-pages">
-    <!-- Page 1: RED, GREEN, BLUE -->
-    <div class="onboard-page active">
-      <!-- RED -->
-      <div class="onboard-tier" style="border-left: 3px solid var(--tier-red)">
-        <div class="onboard-tier-header">
-          <img src="assets/vibrations/Vibrations Red.jpg" alt="Red" class="onboard-wave-thumb">
-          <div>
-            <div class="onboard-tier-name" style="color: var(--tier-red)">RED 20-150 Vibes</div>
-            <div class="onboard-tier-range">High calorie negative thoughts</div>
-          </div>
-        </div>
-        <div class="onboard-emotions">
-          <div class="onboard-emo"><img src="assets/icons/TV Super Guilt.png" alt=""><span class="onboard-emo-name">Guilt</span><span class="onboard-emo-cal" style="color:var(--tier-red)">+1,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Fear.png" alt=""><span class="onboard-emo-name">Fear</span><span class="onboard-emo-cal" style="color:var(--tier-red)">+2,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Anger.png" alt=""><span class="onboard-emo-name">Anger</span><span class="onboard-emo-cal" style="color:var(--tier-red)">+3,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Doubt.png" alt=""><span class="onboard-emo-name">Doubt</span><span class="onboard-emo-cal" style="color:var(--tier-red)">+4,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Critical.png" alt=""><span class="onboard-emo-name">Critical</span><span class="onboard-emo-cal" style="color:var(--tier-red)">+5,000</span></div>
+    <!-- Page 1: Interactive Demo -->
+    <div class="onboard-page active" id="onboard-demo">
+      <!-- Score meter -->
+      <div class="demo-meter">
+        <div class="demo-score" id="demo-score">0</div>
+        <div class="demo-label">Mind Calories</div>
+        <div class="demo-bar">
+          <div class="demo-bar-fill" id="demo-bar-fill"></div>
         </div>
       </div>
-      <!-- GREEN -->
-      <div class="onboard-tier" style="border-left: 3px solid var(--tier-green)">
-        <div class="onboard-tier-header">
-          <img src="assets/vibrations/Vibrations Green.jpg" alt="Green" class="onboard-wave-thumb">
-          <div>
-            <div class="onboard-tier-name" style="color: var(--tier-green)">GREEN 175-350 Vibes</div>
-            <div class="onboard-tier-range">Flip RED to BLUE</div>
-          </div>
+
+      <!-- Narration text -->
+      <div class="demo-narration" id="demo-narration">Watch what happens when negative thoughts hit...</div>
+
+      <!-- Red emotions (auto-animate in) -->
+      <div class="demo-row demo-row-red" id="demo-red-row">
+        <div class="demo-chip demo-chip-red" data-cal="3000">
+          <img src="assets/icons/TV Super Anger.png" alt=""><span>Anger</span><span class="demo-chip-cal">+3,000</span>
         </div>
-        <div class="onboard-emotions">
-          <div class="onboard-emo"><img src="assets/icons/TV Super Willingness.png" alt=""><span class="onboard-emo-name">Willingness</span><span class="onboard-emo-cal" style="color:var(--tier-green)">-2,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Point Self Flip.png" alt=""><span class="onboard-emo-name">Point Self Flip</span><span class="onboard-emo-cal" style="color:var(--tier-green)">-3,000</span></div>
+        <div class="demo-chip demo-chip-red" data-cal="2000">
+          <img src="assets/icons/TV Super Fear.png" alt=""><span>Fear</span><span class="demo-chip-cal">+2,000</span>
+        </div>
+        <div class="demo-chip demo-chip-red" data-cal="4000">
+          <img src="assets/icons/TV Super Doubt.png" alt=""><span>Doubt</span><span class="demo-chip-cal">+4,000</span>
         </div>
       </div>
-      <!-- BLUE -->
-      <div class="onboard-tier" style="border-left: 3px solid var(--tier-blue)">
-        <div class="onboard-tier-header">
-          <img src="assets/vibrations/Vibrations Blue.jpg" alt="Blue" class="onboard-wave-thumb">
-          <div>
-            <div class="onboard-tier-name" style="color: var(--tier-blue)">BLUE 400-600 Vibes</div>
-            <div class="onboard-tier-range">Positive calorie burners</div>
-          </div>
+
+      <!-- Green/Blue actions (appear after red, user taps these) -->
+      <div class="demo-row demo-row-positive" id="demo-positive-row" style="opacity:0; pointer-events:none;">
+        <div class="demo-prompt" id="demo-prompt">Tap to burn them off!</div>
+        <div class="demo-chip demo-chip-green demo-tappable" data-cal="-3000">
+          <img src="assets/icons/TV Super Point Self Flip.png" alt=""><span>Flip It</span><span class="demo-chip-cal">-3,000</span>
         </div>
-        <div class="onboard-emotions">
-          <div class="onboard-emo"><img src="assets/icons/TV Super Big Smile.png" alt=""><span class="onboard-emo-name">Big Smile</span><span class="onboard-emo-cal" style="color:var(--tier-blue)">-1,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Bright Side.png" alt=""><span class="onboard-emo-name">Bright Side</span><span class="onboard-emo-cal" style="color:var(--tier-blue)">-2,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Giving Compliments.png" alt=""><span class="onboard-emo-name">Giving Comps</span><span class="onboard-emo-cal" style="color:var(--tier-blue)">-3,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Self-Centered.png" alt=""><span class="onboard-emo-name">Piece Done</span><span class="onboard-emo-cal" style="color:var(--tier-blue)">-4,000</span></div>
+        <div class="demo-chip demo-chip-blue demo-tappable" data-cal="-4000">
+          <img src="assets/icons/TV Super Self-Centered.png" alt=""><span>Piece Done</span><span class="demo-chip-cal">-4,000</span>
         </div>
+        <div class="demo-chip demo-chip-blue demo-tappable" data-cal="-2000">
+          <img src="assets/icons/TV Super Bright Side.png" alt=""><span>Bright Side</span><span class="demo-chip-cal">-2,000</span>
+        </div>
+      </div>
+
+      <!-- Success message -->
+      <div class="demo-success" id="demo-success" style="display:none;">
+        <div class="demo-success-icon">&#10003;</div>
+        <div class="demo-success-text">You burned off the negativity!</div>
+        <div class="demo-success-sub">This is how HIT IT works. Track it daily.</div>
       </div>
     </div>
 
-    <!-- Page 2: PURPLE, WHITE -->
-    <div class="onboard-page">
-      <!-- PURPLE -->
-      <div class="onboard-tier" style="border-left: 3px solid var(--tier-purple)">
-        <div class="onboard-tier-header">
-          <img src="assets/vibrations/Vibrations Purple.jpg" alt="Purple" class="onboard-wave-thumb">
-          <div>
-            <div class="onboard-tier-name" style="color: var(--tier-purple)">PURPLE 700-900 Vibes</div>
-            <div class="onboard-tier-range">Enlightenment burns</div>
-          </div>
-        </div>
-        <div class="onboard-emotions">
-          <div class="onboard-emo"><img src="assets/icons/TV Super Rocket Desire.png" alt=""><span class="onboard-emo-name">Rocket Desire</span><span class="onboard-emo-cal" style="color:var(--tier-purple)">-1,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Spend Money.png" alt=""><span class="onboard-emo-name">Spend Money</span><span class="onboard-emo-cal" style="color:var(--tier-purple)">-2,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Synchronicity.png" alt=""><span class="onboard-emo-name">Synchronicity</span><span class="onboard-emo-cal" style="color:var(--tier-purple)">-3,000</span></div>
-        </div>
-      </div>
-      <!-- WHITE -->
-      <div class="onboard-tier" style="border-left: 3px solid var(--tier-white)">
-        <div class="onboard-tier-header">
-          <img src="assets/vibrations/Vibrations White.png" alt="White" class="onboard-wave-thumb">
-          <div>
-            <div class="onboard-tier-name" style="color: var(--tier-white)">WHITE 901-1000 Vibes</div>
-            <div class="onboard-tier-range">Ultimate consciousness</div>
-          </div>
-        </div>
-        <div class="onboard-emotions">
-          <div class="onboard-emo"><img src="assets/icons/TV Super Intention.png" alt=""><span class="onboard-emo-name">Intention</span><span class="onboard-emo-cal" style="color:var(--tier-white)">-1,000</span></div>
-          <div class="onboard-emo"><img src="assets/icons/TV Super Stayed Calm.png" alt=""><span class="onboard-emo-name">Stayed Calm</span><span class="onboard-emo-cal" style="color:var(--tier-white)">-2,000</span></div>
+    <!-- Page 2: Interactive Demo — PURPLE + WHITE ascension -->
+    <div class="onboard-page" id="onboard-demo2">
+      <!-- Score meter -->
+      <div class="demo-meter" id="demo2-meter">
+        <div class="demo-score" id="demo2-score">+3,000</div>
+        <div class="demo-label">Mind Calories</div>
+        <div class="demo-bar">
+          <div class="demo-bar-fill" id="demo2-bar-fill"></div>
         </div>
       </div>
 
-      <div style="padding: 16px; text-align: center;">
-        <p style="color: var(--text-secondary); font-size: 0.85rem; line-height: 1.6;">
-          Tap each emotion as you feel it throughout the day. RED adds calories. Everything else BURNS them. Your goal: end each day with the lowest mind weight possible.
-        </p>
+      <!-- Narration -->
+      <div class="demo-narration" id="demo2-narration">But there are even higher vibrations...</div>
+
+      <!-- Purple row (auto-animate in) -->
+      <div class="demo-row demo-row-purple" id="demo2-purple-row">
+        <div class="demo-chip demo-chip-purple" data-cal="-1000">
+          <img src="assets/icons/TV Super Rocket Desire.png" alt=""><span>Rocket Desire</span><span class="demo-chip-cal">-1,000</span>
+        </div>
+        <div class="demo-chip demo-chip-purple" data-cal="-2000">
+          <img src="assets/icons/TV Super Spend Money.png" alt=""><span>Spend Money</span><span class="demo-chip-cal">-2,000</span>
+        </div>
+        <div class="demo-chip demo-chip-purple" data-cal="-3000">
+          <img src="assets/icons/TV Super Synchronicity.png" alt=""><span>Synchronicity</span><span class="demo-chip-cal">-3,000</span>
+        </div>
+      </div>
+
+      <!-- White row (user taps) -->
+      <div class="demo-row demo-row-white" id="demo2-white-row" style="opacity:0; pointer-events:none;">
+        <div class="demo-prompt" id="demo2-prompt">Tap to reach peak vibration!</div>
+        <div class="demo-chip demo-chip-white demo-tappable2" data-cal="-1000">
+          <img src="assets/icons/TV Super Intention.png" alt=""><span>Intention</span><span class="demo-chip-cal">-1,000</span>
+        </div>
+        <div class="demo-chip demo-chip-white demo-tappable2" data-cal="-2000">
+          <img src="assets/icons/TV Super Stayed Calm.png" alt=""><span>Stayed Calm</span><span class="demo-chip-cal">-2,000</span>
+        </div>
+      </div>
+
+      <!-- Success -->
+      <div class="demo-success" id="demo2-success" style="display:none;">
+        <div class="demo-success-icon demo-success-icon-glow">&#9734;</div>
+        <div class="demo-success-text" style="color: var(--tier-purple);">Peak Vibration Reached!</div>
+        <div class="demo-success-sub">Track daily to reach NO resistance.</div>
       </div>
     </div>
   </div>

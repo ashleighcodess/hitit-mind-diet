@@ -147,8 +147,258 @@
   color: var(--text-muted);
 }
 
+/* ========================================
+   Interactive Demo (Page 1)
+   ======================================== */
+
+.demo-meter {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.demo-score {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 2.4rem;
+  color: var(--text-primary);
+  transition: color 0.4s ease;
+  line-height: 1.1;
+}
+
+.demo-score.negative { color: var(--tier-green); }
+.demo-score.high { color: var(--tier-red); }
+
+.demo-label {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  margin-top: 2px;
+}
+
+.demo-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--bg-card);
+  border-radius: 3px;
+  margin-top: 10px;
+  overflow: hidden;
+  border: 1px solid var(--border-color);
+}
+
+.demo-bar-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 3px;
+  background: var(--tier-red);
+  transition: width 0.5s ease, background 0.5s ease;
+}
+
+.demo-bar-fill.cooling {
+  background: var(--tier-green);
+}
+
+/* Narration */
+.demo-narration {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+  min-height: 20px;
+  transition: opacity 0.3s ease;
+}
+
+/* Chip rows */
+.demo-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.demo-chip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px 8px 8px;
+  border-radius: 24px;
+  font-size: 0.8rem;
+  opacity: 0;
+  transform: translateY(10px) scale(0.9);
+  transition: all 0.4s ease;
+}
+
+.demo-chip.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.demo-chip img {
+  width: 28px;
+  height: 28px;
+}
+
+.demo-chip-cal {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+}
+
+.demo-chip-red {
+  background: var(--tier-red-bg);
+  border: 1px solid rgba(255, 68, 68, 0.3);
+}
+.demo-chip-red .demo-chip-cal { color: var(--tier-red); }
+
+.demo-chip-green {
+  background: var(--tier-green-bg);
+  border: 1px solid rgba(68, 204, 68, 0.3);
+}
+.demo-chip-green .demo-chip-cal { color: var(--tier-green); }
+
+.demo-chip-blue {
+  background: var(--tier-blue-bg);
+  border: 1px solid rgba(74, 158, 255, 0.3);
+}
+.demo-chip-blue .demo-chip-cal { color: var(--tier-blue); }
+
+.demo-chip-purple {
+  background: var(--tier-purple-bg);
+  border: 1px solid rgba(170, 102, 255, 0.3);
+}
+.demo-chip-purple .demo-chip-cal { color: var(--tier-purple); }
+
+.demo-chip-white {
+  background: var(--tier-white-bg);
+  border: 1px solid rgba(224, 224, 224, 0.2);
+}
+.demo-chip-white .demo-chip-cal { color: var(--tier-white); }
+
+/* Tappable chips pulse */
+.demo-tappable {
+  cursor: pointer;
+}
+.demo-tappable.pulse {
+  animation: demoPulse 1.2s ease-in-out infinite;
+}
+.demo-tappable.tapped {
+  animation: none;
+  opacity: 0.4;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+@keyframes demoPulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); box-shadow: 0 0 14px rgba(68, 204, 68, 0.3); }
+}
+
+/* Red shake when red chips land */
+.demo-meter.shake {
+  animation: demoShake 0.35s ease;
+}
+
+@keyframes demoShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-4px); }
+  40% { transform: translateX(4px); }
+  60% { transform: translateX(-3px); }
+  80% { transform: translateX(2px); }
+}
+
+/* Prompt */
+.demo-prompt {
+  width: 100%;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--accent-blue);
+  font-weight: 500;
+  margin-bottom: 4px;
+}
+
+/* Success */
+.demo-success {
+  text-align: center;
+  padding: 20px 0;
+  animation: demoSuccessIn 0.5s ease;
+}
+
+.demo-success-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--tier-green);
+  color: #fff;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+}
+
+.demo-success-text {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--tier-green);
+  margin-bottom: 4px;
+}
+
+.demo-success-sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.demo-success-icon-glow {
+  background: linear-gradient(135deg, var(--tier-purple), #d4aaff);
+  box-shadow: 0 0 20px rgba(170, 102, 255, 0.4);
+}
+
+.demo-tappable2 {
+  cursor: pointer;
+}
+.demo-tappable2.pulse {
+  animation: demoPulseWhite 1.2s ease-in-out infinite;
+}
+.demo-tappable2.tapped {
+  animation: none;
+  opacity: 0.4;
+  transform: scale(0.9);
+  pointer-events: none;
+}
+
+@keyframes demoPulseWhite {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); box-shadow: 0 0 14px rgba(224, 224, 224, 0.2); }
+}
+
+/* Purple chip landing glow */
+.demo-meter.glow-purple {
+  animation: demoPurpleGlow 0.5s ease;
+}
+@keyframes demoPurpleGlow {
+  0% { filter: brightness(1); }
+  50% { filter: brightness(1.2) drop-shadow(0 0 8px rgba(170, 102, 255, 0.4)); }
+  100% { filter: brightness(1); }
+}
+
+/* Score color for deep negative (purple state) */
+.demo-score.deep-negative { color: var(--tier-purple); }
+
+@keyframes demoSuccessIn {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .onboard-page {
     animation: none;
   }
+  .demo-chip { transition: none; }
+  .demo-tappable.pulse { animation: none; }
+  .demo-meter.shake { animation: none; }
+  .demo-meter.glow-purple { animation: none; }
+  .demo-tappable2.pulse { animation: none; }
+  .demo-success { animation: none; }
 }

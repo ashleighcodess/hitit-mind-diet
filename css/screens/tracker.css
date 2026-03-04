@@ -146,38 +146,79 @@
 .tier-purple .tier-title { color: var(--tier-purple); }
 .tier-white .tier-title { color: var(--tier-white); }
 
-/* Emotion grid */
+/* ---- Chip-style emotion grid ---- */
 .emotion-grid {
   display: flex;
-  flex-wrap: nowrap;
-  gap: 4px;
+  flex-wrap: wrap;
+  gap: 8px;
   margin-bottom: 12px;
   justify-content: center;
 }
 
 .emotion-btn {
-  flex: 1 1 0;
-  min-width: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  gap: 4px;
-  padding: 6px 1px;
-  border-radius: var(--radius-sm);
+  gap: 8px;
+  padding: 8px 14px 8px 8px;
+  border-radius: 28px;
   background: transparent;
-  border: 1px solid transparent;
-  transition: all 0.2s ease;
   cursor: pointer;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
 }
 
-/* Hover: lift + glow ring */
+/* Tier-specific chip backgrounds and borders */
+.tier-red .emotion-btn {
+  background: var(--tier-red-bg);
+  border: 1px solid rgba(255, 68, 68, 0.25);
+}
+.tier-green .emotion-btn {
+  background: var(--tier-green-bg);
+  border: 1px solid rgba(68, 204, 68, 0.25);
+}
+.tier-blue .emotion-btn {
+  background: var(--tier-blue-bg);
+  border: 1px solid rgba(74, 158, 255, 0.25);
+}
+.tier-purple .emotion-btn {
+  background: var(--tier-purple-bg);
+  border: 1px solid rgba(170, 102, 255, 0.25);
+}
+.tier-white .emotion-btn {
+  background: var(--tier-white-bg);
+  border: 1px solid rgba(224, 224, 224, 0.15);
+}
+
+/* Hover — lift + glow + brighten */
 .emotion-btn:hover {
-  transform: translateY(-3px);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px var(--chip-glow, rgba(74, 158, 255, 0.15));
+}
+.tier-red .emotion-btn:hover {
+  border-color: rgba(255, 68, 68, 0.5);
+  --chip-glow: rgba(255, 68, 68, 0.2);
+}
+.tier-green .emotion-btn:hover {
+  border-color: rgba(68, 204, 68, 0.5);
+  --chip-glow: rgba(68, 204, 68, 0.2);
+}
+.tier-blue .emotion-btn:hover {
+  border-color: rgba(74, 158, 255, 0.5);
+  --chip-glow: rgba(74, 158, 255, 0.2);
+}
+.tier-purple .emotion-btn:hover {
+  border-color: rgba(170, 102, 255, 0.5);
+  --chip-glow: rgba(170, 102, 255, 0.2);
+}
+.tier-white .emotion-btn:hover {
+  border-color: rgba(224, 224, 224, 0.35);
+  --chip-glow: rgba(224, 224, 224, 0.12);
 }
 
-.emotion-btn:hover .icon-wrap {
-  box-shadow: 0 0 12px var(--hover-glow, rgba(74, 158, 255, 0.35));
-  transform: scale(1.08);
+.emotion-btn:hover .icon-wrap img {
+  filter: brightness(1.2);
 }
 
 .emotion-btn:hover .emotion-name {
@@ -185,32 +226,32 @@
 }
 
 .emotion-btn:hover .emotion-cal {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
-/* Tier-specific hover glow colors */
-.tier-red .emotion-btn    { --hover-glow: rgba(255, 68, 68, 0.4); }
-.tier-green .emotion-btn  { --hover-glow: rgba(68, 204, 68, 0.4); }
-.tier-blue .emotion-btn   { --hover-glow: rgba(74, 158, 255, 0.4); }
-.tier-purple .emotion-btn { --hover-glow: rgba(170, 102, 255, 0.4); }
-.tier-white .emotion-btn  { --hover-glow: rgba(224, 224, 224, 0.35); }
-
+/* Tap / active state */
 .emotion-btn:active,
 .emotion-btn.tapped {
-  transform: scale(1.1);
-  border-color: var(--accent-blue);
-  background: rgba(74, 158, 255, 0.08);
+  transform: scale(0.95);
 }
 
+.tier-red .emotion-btn.tapped { border-color: var(--tier-red); background: rgba(255, 68, 68, 0.2); }
+.tier-green .emotion-btn.tapped { border-color: var(--tier-green); background: rgba(68, 204, 68, 0.2); }
+.tier-blue .emotion-btn.tapped { border-color: var(--tier-blue); background: rgba(74, 158, 255, 0.2); }
+.tier-purple .emotion-btn.tapped { border-color: var(--tier-purple); background: rgba(170, 102, 255, 0.2); }
+.tier-white .emotion-btn.tapped { border-color: var(--tier-white); background: rgba(224, 224, 224, 0.15); }
+
+/* Icon inside chip */
 .icon-wrap {
-  width: 64px;
-  height: 64px;
+  width: 32px;
+  height: 32px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
 }
 
 .icon-wrap img {
@@ -220,26 +261,21 @@
   transition: filter 0.2s ease;
 }
 
-/* Slight brightness boost on hover */
-.emotion-btn:hover .icon-wrap img {
-  filter: brightness(1.15);
-}
-
-.emotion-cal {
-  transition: transform 0.2s ease;
-}
-
+/* Emotion name & cal inside chip */
 .emotion-name {
-  font-size: 0.6rem;
+  font-size: 0.8rem;
   color: var(--text-secondary);
-  text-align: center;
+  white-space: nowrap;
   line-height: 1.2;
+  transition: color 0.2s ease;
 }
 
 .emotion-cal {
   font-family: 'Montserrat', Helvetica, sans-serif;
   font-weight: 600;
-  font-size: 0.65rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  transition: transform 0.2s ease;
 }
 
 .tier-red .emotion-cal { color: var(--tier-red); }
@@ -388,32 +424,40 @@
   flex: 1;
 }
 
-/* Icon pop animation */
-@keyframes iconPop {
+/* Icon pop animation on tap */
+@keyframes chipTap {
   0% { transform: scale(1); }
-  50% { transform: scale(1.25); }
+  40% { transform: scale(0.92); }
+  70% { transform: scale(1.04); }
   100% { transform: scale(1); }
 }
 
-.emotion-btn.tapped .icon-wrap {
-  animation: iconPop 0.4s ease;
+.emotion-btn.tapped {
+  animation: chipTap 0.4s ease;
 }
 
-/* Responsive */
+/* Responsive — smaller screens get slightly tighter chips */
 @media (max-width: 360px) {
-  .icon-wrap {
-    width: 52px;
-    height: 52px;
+  .emotion-btn {
+    padding: 6px 10px 6px 6px;
+    gap: 5px;
   }
-  .emotion-grid {
-    gap: 2px;
+  .icon-wrap {
+    width: 28px;
+    height: 28px;
+  }
+  .emotion-name {
+    font-size: 0.7rem;
+  }
+  .emotion-cal {
+    font-size: 0.65rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .modal-overlay,
   .modal-sheet,
-  .emotion-btn.tapped .icon-wrap {
+  .emotion-btn.tapped {
     animation: none;
     transition: none;
   }

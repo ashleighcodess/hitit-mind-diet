@@ -310,6 +310,13 @@
   margin-top: 4px;
 }
 
+.media-or {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin: 4px 0;
+}
+
 #coach-assign-file {
   padding: 10px;
   font-size: 0.85rem;

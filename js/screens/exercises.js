@@ -35,6 +35,25 @@ const CATEGORIES = [
 let fearTimeout = null;
 let gratitudeTimeout = null;
 
+function getEmbedUrl(url) {
+  let m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([\w-]+)/);
+  if (m) return `https://www.youtube.com/embed/${m[1]}`;
+  m = url.match(/vimeo\.com\/(\d+)/);
+  if (m) return `https://player.vimeo.com/video/${m[1]}`;
+  return null;
+}
+
+function renderMedia(url, type) {
+  const embed = getEmbedUrl(url);
+  if (embed) {
+    return `<iframe src="${embed}" frameborder="0" allowfullscreen class="exercise-media-video" style="aspect-ratio:16/9;"></iframe>`;
+  }
+  if (type === 'video') {
+    return `<video src="${url}" controls preload="metadata" class="exercise-media-video"></video>`;
+  }
+  return `<img src="${url}" alt="" class="exercise-media-img">`;
+}
+
 function saveFears() {
   clearTimeout(fearTimeout);
   fearTimeout = setTimeout(() => {
@@ -98,12 +117,8 @@ async function loadExercises() {
       if (catAssignments.length > 0) {
         cardHtml += catAssignments.map(a => {
           let mediaHtml = '';
-          if (a.uploadUrl) {
-            if (a.type === 'video') {
-              mediaHtml = `<video src="${a.uploadUrl}" controls preload="metadata" class="exercise-media-video"></video>`;
-            } else {
-              mediaHtml = `<img src="${a.uploadUrl}" alt="${escapeAttr(a.title)}" class="exercise-media-img">`;
-            }
+          if (a.mediaUrl) {
+            mediaHtml = renderMedia(a.mediaUrl, a.type);
           }
           return `
             <div class="exercise-assignment-item">

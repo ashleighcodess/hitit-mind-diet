@@ -82,7 +82,7 @@ async function loadExercises() {
       const catAssignments = assignments.filter(a => a.type === cat.key);
       const pending = catAssignments.filter(a => !a.completedAt).length;
 
-      return `
+      let cardHtml = `
         <div class="exercise-card" data-category="${cat.key}">
           <img src="${cat.icon}" alt="${cat.title}" class="exercise-icon">
           <div class="exercise-info">
@@ -93,6 +93,30 @@ async function loadExercises() {
           <span class="exercise-arrow">&rsaquo;</span>
         </div>
       `;
+
+      // Show assigned media items below the category card
+      if (catAssignments.length > 0) {
+        cardHtml += catAssignments.map(a => {
+          let mediaHtml = '';
+          if (a.uploadUrl) {
+            if (a.type === 'video') {
+              mediaHtml = `<video src="${a.uploadUrl}" controls preload="metadata" class="exercise-media-video"></video>`;
+            } else {
+              mediaHtml = `<img src="${a.uploadUrl}" alt="${escapeAttr(a.title)}" class="exercise-media-img">`;
+            }
+          }
+          return `
+            <div class="exercise-assignment-item">
+              <div class="exercise-assign-title">${escapeAttr(a.title)}</div>
+              ${a.description ? `<div class="exercise-assign-desc">${escapeAttr(a.description)}</div>` : ''}
+              ${mediaHtml}
+              ${a.dueDate ? `<div class="exercise-assign-due">Due: ${a.dueDate}</div>` : ''}
+            </div>
+          `;
+        }).join('');
+      }
+
+      return cardHtml;
     }).join('');
 
     // Fears + Gratitudes card

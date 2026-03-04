@@ -151,6 +151,52 @@
   margin: 16px 0;
 }
 
+/* Assignment items with media */
+.exercise-assignment-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  margin-left: 16px;
+  border-left: 3px solid var(--accent-blue);
+}
+
+.exercise-assign-title {
+  font-weight: 500;
+  font-size: 0.85rem;
+  margin-bottom: 4px;
+}
+
+.exercise-assign-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.exercise-media-video,
+.exercise-media-img {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  margin-bottom: 6px;
+}
+
+.exercise-media-video {
+  max-height: 240px;
+  background: #000;
+}
+
+.exercise-media-img {
+  max-height: 300px;
+  object-fit: cover;
+}
+
+.exercise-assign-due {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
 .empty-state {
   text-align: center;
   padding: 48px 16px;

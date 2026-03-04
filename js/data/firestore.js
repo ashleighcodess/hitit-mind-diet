@@ -2,7 +2,7 @@
 // Shared Firestore Operations
 // ========================================
 
-import { db } from '../firebase-config.js';
+import { db, storage } from '../firebase-config.js';
 import {
   collection,
   addDoc,
@@ -17,6 +17,11 @@ import {
   updateDoc,
   setDoc
 } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 
 // ---- Date helpers ----
 export function todayStr() {
@@ -237,4 +242,16 @@ export function countByEmotion(entries) {
     counts[e.emotion] = (counts[e.emotion] || 0) + 1;
   });
   return counts;
+}
+
+// ---- File upload (Firebase Storage) ----
+export async function uploadAssignmentFile(file, assignmentId) {
+  const ext = file.name.split('.').pop();
+  const storageRef = ref(storage, `assignments/${assignmentId}/${Date.now()}.${ext}`);
+  await uploadBytes(storageRef, file);
+  return getDownloadURL(storageRef);
+}
+
+export async function updateAssignment(assignmentId, data) {
+  return updateDoc(doc(db, 'assignments', assignmentId), data);
 }

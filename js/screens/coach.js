@@ -8,7 +8,7 @@ import { getEmotionLabel } from '../data/emotions.js';
 import {
   getClientsByCoach, subscribeToEntries, todayStr, formatTime,
   calcDailyTotals, countByEmotion, updateUserSettings,
-  createAssignment, getAssignments
+  createAssignment, getAssignments, uploadAssignmentFile, updateAssignment
 } from '../data/firestore.js';
 import { getUserDoc } from '../data/firestore.js';
 
@@ -147,6 +147,7 @@ async function loadClientAssignments(clientId) {
             </div>
             <div class="coach-assign-item-title">${escapeHtml(a.title)}</div>
             ${a.description ? `<div class="coach-assign-item-desc">${escapeHtml(a.description)}</div>` : ''}
+            ${a.uploadUrl ? `<div class="coach-assign-media">${a.type === 'video' ? `<video src="${a.uploadUrl}" controls preload="metadata"></video>` : `<img src="${a.uploadUrl}" alt="Attachment">`}</div>` : ''}
             ${due ? `<div class="coach-assign-item-due">Due: ${due}</div>` : ''}
           </div>
         `;
@@ -231,8 +232,17 @@ registerScreen('coach', {
       }
     });
 
+    // Show/hide file upload based on type
+    const typeSelect = document.getElementById('coach-assign-type');
+    const fileGroup = document.getElementById('coach-assign-file-group');
+    typeSelect.addEventListener('change', () => {
+      const showFile = typeSelect.value === 'video' || typeSelect.value === 'visual';
+      fileGroup.style.display = showFile ? 'block' : 'none';
+    });
+
     // Assignment creation
-    document.getElementById('coach-assign-send').addEventListener('click', async () => {
+    const sendBtn = document.getElementById('coach-assign-send');
+    sendBtn.addEventListener('click', async () => {
       if (!selectedClientId) return;
       const user = getCurrentUser();
       if (!user) return;
@@ -241,14 +251,19 @@ registerScreen('coach', {
       const title = document.getElementById('coach-assign-title').value.trim();
       const description = document.getElementById('coach-assign-desc').value.trim();
       const dueDate = document.getElementById('coach-assign-due').value;
+      const fileInput = document.getElementById('coach-assign-file');
+      const file = fileInput.files[0] || null;
 
       if (!title) {
         showToast('Please enter a title');
         return;
       }
 
+      sendBtn.disabled = true;
+      sendBtn.textContent = file ? 'Uploading...' : 'Sending...';
+
       try {
-        await createAssignment({
+        const docRef = await createAssignment({
           clientId: selectedClientId,
           coachId: user.uid,
           type,
@@ -257,18 +272,31 @@ registerScreen('coach', {
           dueDate,
           questions: ''
         });
+
+        // Upload file if provided
+        if (file) {
+          const url = await uploadAssignmentFile(file, docRef.id);
+          await updateAssignment(docRef.id, { uploadUrl: url });
+        }
+
         showToast('Assignment sent!', 'success');
 
         // Clear form
         document.getElementById('coach-assign-title').value = '';
         document.getElementById('coach-assign-desc').value = '';
         document.getElementById('coach-assign-due').value = '';
+        fileInput.value = '';
+        fileGroup.style.display = 'none';
+        typeSelect.value = 'task';
 
         // Refresh list
         loadClientAssignments(selectedClientId);
       } catch (err) {
         console.error('Failed to create assignment:', err);
         showToast('Failed to send assignment');
+      } finally {
+        sendBtn.disabled = false;
+        sendBtn.textContent = 'Send to Client';
       }
     });
 

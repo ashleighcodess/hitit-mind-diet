@@ -291,6 +291,30 @@
   margin-top: 4px;
 }
 
+.coach-assign-media {
+  margin-top: 8px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+.coach-assign-media img,
+.coach-assign-media video {
+  width: 100%;
+  border-radius: var(--radius-sm);
+  max-height: 200px;
+  object-fit: cover;
+}
+
+.upload-hint {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+#coach-assign-file {
+  padding: 10px;
+  font-size: 0.85rem;
+}
+
 .coach-status-pending {
   font-size: 0.65rem;
   color: var(--accent-blue);

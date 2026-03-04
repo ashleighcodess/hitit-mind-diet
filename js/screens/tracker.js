@@ -72,7 +72,7 @@ registerScreen('tracker', {
           if (!user) { showToast('Please sign in first'); return; }
           logEntry(user.uid, emotionKey, tier, calories, '')
             .then(() => showToast(`${getEmotionLabel(emotionKey)} logged!`, 'success'))
-            .catch(() => showToast('Failed to log entry'));
+            .catch((err) => { console.error('Log error:', err); showToast('Failed to log entry'); });
         }
       });
     });
@@ -89,11 +89,12 @@ registerScreen('tracker', {
       const user = getCurrentUser();
       if (!user) { showToast('Please sign in first'); return; }
       const details = document.getElementById('tracker-modal-details').value.trim();
-      logEntry(user.uid, pendingEmotion.emotion, pendingEmotion.tier, pendingEmotion.calories, details)
-        .then(() => showToast(`${getEmotionLabel(pendingEmotion.emotion)} logged!`, 'success'))
-        .catch(() => showToast('Failed to log entry'));
+      const emo = pendingEmotion; // capture before nulling
       modal.classList.remove('active');
       pendingEmotion = null;
+      logEntry(user.uid, emo.emotion, emo.tier, emo.calories, details)
+        .then(() => showToast(`${getEmotionLabel(emo.emotion)} logged!`, 'success'))
+        .catch((err) => { console.error('Log error:', err); showToast('Failed to log entry'); });
     });
 
     modal.addEventListener('click', (e) => {

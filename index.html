@@ -22,9 +22,8 @@
   <link rel="stylesheet" href="css/screens/coach.css">
 
   <style>
-    /* SPA screen management */
-    .screen { display: none; }
-    .screen.screen-active { display: block; }
+    /* SPA screen management — !important needed to beat ID selectors in screen CSS */
+    .screen:not(.screen-active) { display: none !important; }
 
     /* Bottom navigation */
     .bottom-nav {

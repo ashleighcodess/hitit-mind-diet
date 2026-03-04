@@ -61,15 +61,23 @@ export async function logEntry(userId, emotion, tier, calories, details = '') {
   });
 }
 
+// All queries use single userId filter + client-side filtering/sorting
+// to avoid needing composite indexes
+
 export function subscribeToEntries(userId, date, callback, onError) {
   const q = query(
     collection(db, 'entries'),
-    where('userId', '==', userId),
-    where('date', '==', date),
-    orderBy('timestamp', 'desc')
+    where('userId', '==', userId)
   );
   return onSnapshot(q, (snapshot) => {
-    const entries = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    const entries = snapshot.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(e => e.date === date)
+      .sort((a, b) => {
+        const ta = a.timestamp?.seconds || 0;
+        const tb = b.timestamp?.seconds || 0;
+        return tb - ta;
+      });
     callback(entries);
   }, onError);
 }
@@ -77,25 +85,34 @@ export function subscribeToEntries(userId, date, callback, onError) {
 export async function getEntriesForDate(userId, date) {
   const q = query(
     collection(db, 'entries'),
-    where('userId', '==', userId),
-    where('date', '==', date),
-    orderBy('timestamp', 'desc')
+    where('userId', '==', userId)
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  return snapshot.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .filter(e => e.date === date)
+    .sort((a, b) => {
+      const ta = a.timestamp?.seconds || 0;
+      const tb = b.timestamp?.seconds || 0;
+      return tb - ta;
+    });
 }
 
 export async function getEntriesForDateRange(userId, startDate, endDate) {
   const q = query(
     collection(db, 'entries'),
-    where('userId', '==', userId),
-    where('date', '>=', startDate),
-    where('date', '<=', endDate),
-    orderBy('date', 'desc'),
-    orderBy('timestamp', 'desc')
+    where('userId', '==', userId)
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  return snapshot.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .filter(e => e.date >= startDate && e.date <= endDate)
+    .sort((a, b) => {
+      if (a.date !== b.date) return b.date.localeCompare(a.date);
+      const ta = a.timestamp?.seconds || 0;
+      const tb = b.timestamp?.seconds || 0;
+      return tb - ta;
+    });
 }
 
 // ---- User operations ----
@@ -155,11 +172,16 @@ export async function createAssignment(data) {
 export async function getAssignments(clientId) {
   const q = query(
     collection(db, 'assignments'),
-    where('clientId', '==', clientId),
-    orderBy('createdAt', 'desc')
+    where('clientId', '==', clientId)
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  return snapshot.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => {
+      const ta = a.createdAt?.seconds || 0;
+      const tb = b.createdAt?.seconds || 0;
+      return tb - ta;
+    });
 }
 
 // ---- Aggregation helpers ----

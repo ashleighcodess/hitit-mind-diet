@@ -8,7 +8,7 @@ import {
   signInWithEmailAndPassword,
   signOut
 } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
-import { createUserDoc } from '../data/firestore.js';
+import { createUserDoc, getCoachUid } from '../data/firestore.js';
 import { registerScreen, navigate, showToast } from '../app.js';
 
 let selectedRole = 'client';
@@ -93,7 +93,12 @@ registerScreen('register', {
 
       try {
         const cred = await createUserWithEmailAndPassword(auth, email, password);
-        await createUserDoc(cred.user.uid, { name, email, role: selectedRole });
+        // Auto-link clients to the coach
+        let coachId = '';
+        if (selectedRole === 'client') {
+          coachId = await getCoachUid() || '';
+        }
+        await createUserDoc(cred.user.uid, { name, email, role: selectedRole, coachId });
         // onAuthStateChanged handles navigation
       } catch (err) {
         let message = 'Registration failed';

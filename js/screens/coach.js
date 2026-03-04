@@ -7,7 +7,8 @@ import { getUserData } from '../app.js';
 import { getEmotionLabel } from '../data/emotions.js';
 import {
   getClientsByCoach, subscribeToEntries, todayStr, formatTime,
-  calcDailyTotals, countByEmotion, updateUserSettings
+  calcDailyTotals, countByEmotion, updateUserSettings,
+  createAssignment, getAssignments
 } from '../data/firestore.js';
 import { getUserDoc } from '../data/firestore.js';
 
@@ -41,7 +42,7 @@ async function loadClients() {
       clientList.innerHTML = `
         <div class="empty-state">
           <h2>No Clients Yet</h2>
-          <p>When clients register and link to your account, they will appear here.</p>
+          <p>When clients register, they will automatically appear here.</p>
         </div>
       `;
       return;
@@ -83,6 +84,9 @@ async function openClientDetail(clientId) {
     document.getElementById('coach-detail-name').textContent = client.name;
     document.getElementById('coach-goal-daily').value = client.goals?.dailyTarget || '';
     document.getElementById('coach-goal-weekly').value = client.goals?.weeklyTarget || '';
+
+    // Show client fears & gratitudes
+    renderClientFearsGratitudes(client);
   } catch (err) {
     console.error('Failed to load client:', err);
   }
@@ -96,6 +100,61 @@ async function openClientDetail(clientId) {
   }, (err) => {
     console.error('Client entries error:', err);
   });
+
+  // Load existing assignments
+  loadClientAssignments(clientId);
+}
+
+function renderClientFearsGratitudes(client) {
+  const fears = client.settings?.topFears || [];
+  const gratitudes = client.settings?.gratitudes || [];
+
+  const fearsEl = document.getElementById('coach-client-fears-list');
+  const gratEl = document.getElementById('coach-client-gratitudes-list');
+
+  const filledFears = fears.filter(f => f);
+  const filledGrats = gratitudes.filter(g => g);
+
+  fearsEl.innerHTML = filledFears.length > 0
+    ? `<h4 class="coach-sub-title">Fears (${filledFears.length})</h4>` +
+      filledFears.map(f => `<div class="coach-list-item coach-fear-item">${escapeHtml(f)}</div>`).join('')
+    : '<p class="text-muted" style="font-size:0.8rem;font-style:italic">No fears entered yet.</p>';
+
+  gratEl.innerHTML = filledGrats.length > 0
+    ? `<h4 class="coach-sub-title" style="margin-top:12px">Grateful For (${filledGrats.length})</h4>` +
+      filledGrats.map(g => `<div class="coach-list-item coach-grat-item">${escapeHtml(g)}</div>`).join('')
+    : '<p class="text-muted" style="font-size:0.8rem;font-style:italic;margin-top:8px">No gratitudes entered yet.</p>';
+}
+
+async function loadClientAssignments(clientId) {
+  const listEl = document.getElementById('coach-assign-list');
+  try {
+    const assignments = await getAssignments(clientId);
+    if (assignments.length === 0) {
+      listEl.innerHTML = '<p class="text-muted" style="font-size:0.8rem;font-style:italic">No assignments sent yet.</p>';
+      return;
+    }
+    listEl.innerHTML = '<h4 class="coach-sub-title">Sent Assignments</h4>' +
+      assignments.map(a => {
+        const status = a.completedAt ? 'Completed' : 'Pending';
+        const statusClass = a.completedAt ? 'coach-status-done' : 'coach-status-pending';
+        const due = a.dueDate || '';
+        return `
+          <div class="coach-assign-item">
+            <div class="coach-assign-item-header">
+              <span class="coach-assign-item-type">${a.type}</span>
+              <span class="${statusClass}">${status}</span>
+            </div>
+            <div class="coach-assign-item-title">${escapeHtml(a.title)}</div>
+            ${a.description ? `<div class="coach-assign-item-desc">${escapeHtml(a.description)}</div>` : ''}
+            ${due ? `<div class="coach-assign-item-due">Due: ${due}</div>` : ''}
+          </div>
+        `;
+      }).join('');
+  } catch (err) {
+    console.error('Failed to load assignments:', err);
+    listEl.innerHTML = '';
+  }
 }
 
 function renderClientStats(entries) {
@@ -169,6 +228,47 @@ registerScreen('coach', {
         showToast('Goals saved!', 'success');
       } catch (err) {
         showToast('Failed to save goals');
+      }
+    });
+
+    // Assignment creation
+    document.getElementById('coach-assign-send').addEventListener('click', async () => {
+      if (!selectedClientId) return;
+      const user = getCurrentUser();
+      if (!user) return;
+
+      const type = document.getElementById('coach-assign-type').value;
+      const title = document.getElementById('coach-assign-title').value.trim();
+      const description = document.getElementById('coach-assign-desc').value.trim();
+      const dueDate = document.getElementById('coach-assign-due').value;
+
+      if (!title) {
+        showToast('Please enter a title');
+        return;
+      }
+
+      try {
+        await createAssignment({
+          clientId: selectedClientId,
+          coachId: user.uid,
+          type,
+          title,
+          description,
+          dueDate,
+          questions: ''
+        });
+        showToast('Assignment sent!', 'success');
+
+        // Clear form
+        document.getElementById('coach-assign-title').value = '';
+        document.getElementById('coach-assign-desc').value = '';
+        document.getElementById('coach-assign-due').value = '';
+
+        // Refresh list
+        loadClientAssignments(selectedClientId);
+      } catch (err) {
+        console.error('Failed to create assignment:', err);
+        showToast('Failed to send assignment');
       }
     });
 

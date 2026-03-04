@@ -204,6 +204,139 @@
   margin-bottom: 12px;
 }
 
+/* Assignment section */
+.coach-assign-section {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.coach-assign-section h3 {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--accent-blue);
+  margin-bottom: 12px;
+}
+
+.coach-assign-section .form-group {
+  margin-bottom: 10px;
+}
+
+.coach-assign-section label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.coach-assign-section select,
+.coach-assign-section input,
+.coach-assign-section textarea {
+  padding: 10px 12px;
+  font-size: 0.85rem;
+}
+
+.coach-assign-section textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.coach-sub-title {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.coach-assign-item {
+  background: var(--bg-input);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.coach-assign-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.coach-assign-item-type {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+.coach-assign-item-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.coach-assign-item-desc {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.coach-assign-item-due {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.coach-status-pending {
+  font-size: 0.65rem;
+  color: var(--accent-blue);
+  font-weight: 500;
+}
+
+.coach-status-done {
+  font-size: 0.65rem;
+  color: var(--tier-green);
+  font-weight: 500;
+}
+
+/* Client fears & gratitudes */
+.coach-client-fears {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.coach-client-fears h3 {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.coach-list-item {
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.coach-fear-item {
+  background: var(--tier-red-bg);
+  color: var(--tier-red);
+}
+
+.coach-grat-item {
+  background: var(--tier-green-bg);
+  color: var(--tier-green);
+}
+
 .text-muted {
   color: var(--text-muted);
   font-size: 0.85rem;

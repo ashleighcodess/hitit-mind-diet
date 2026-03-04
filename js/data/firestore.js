@@ -150,14 +150,39 @@ export async function updateUserSettings(uid, path, value) {
 }
 
 // ---- Coach operations ----
+export async function getCoachUid() {
+  const q = query(
+    collection(db, 'users'),
+    where('role', '==', 'coach')
+  );
+  const snapshot = await getDocs(q);
+  if (snapshot.empty) return null;
+  return snapshot.docs[0].id; // first (only) coach
+}
+
 export async function getClientsByCoach(coachId) {
+  // Get linked clients
   const q = query(
     collection(db, 'users'),
     where('role', '==', 'client'),
     where('coachId', '==', coachId)
   );
   const snapshot = await getDocs(q);
-  return snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+  const clients = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+
+  // Also find unlinked clients and auto-link them to this coach
+  const unlinkedQ = query(
+    collection(db, 'users'),
+    where('role', '==', 'client'),
+    where('coachId', '==', '')
+  );
+  const unlinkedSnap = await getDocs(unlinkedQ);
+  for (const d of unlinkedSnap.docs) {
+    await updateDoc(doc(db, 'users', d.id), { coachId });
+    clients.push({ id: d.id, ...d.data(), coachId });
+  }
+
+  return clients;
 }
 
 // ---- Assignment operations ----

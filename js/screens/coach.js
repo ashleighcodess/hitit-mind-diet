@@ -48,6 +48,17 @@ function showListView() {
 function showDetailView() {
   document.getElementById('coach-list-view').style.display = 'none';
   document.getElementById('coach-detail-view').style.display = 'block';
+  // Reset to Overview tab
+  switchTab('overview');
+}
+
+function switchTab(tabName) {
+  document.querySelectorAll('#coach-tab-bar .coach-tab').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.tab === tabName);
+  });
+  document.querySelectorAll('#coach-detail-view .coach-tab-panel').forEach(panel => {
+    panel.classList.toggle('active', panel.id === `coach-panel-${tabName}`);
+  });
 }
 
 async function loadClients() {
@@ -239,6 +250,11 @@ function renderRedSummary(entries) {
 registerScreen('coach', {
   init() {
     document.getElementById('coach-back-btn').addEventListener('click', showListView);
+
+    // Tab switching
+    document.querySelectorAll('#coach-tab-bar .coach-tab').forEach(btn => {
+      btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+    });
 
     document.getElementById('coach-save-goals').addEventListener('click', async () => {
       if (!selectedClientId) return;

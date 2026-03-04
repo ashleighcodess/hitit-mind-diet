@@ -3,7 +3,56 @@
    ======================================== */
 
 #screen-coach {
-  padding-bottom: 80px;
+  padding-bottom: 20px;
+}
+
+/* Tab bar */
+.coach-tab-bar {
+  display: flex;
+  gap: 6px;
+  padding: 0 0 16px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.coach-tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.coach-tab {
+  flex-shrink: 0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.coach-tab:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.coach-tab.active {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: #fff;
+}
+
+/* Tab panels */
+.coach-tab-panel {
+  display: none;
+}
+
+.coach-tab-panel.active {
+  display: block;
 }
 
 .coach-topbar {

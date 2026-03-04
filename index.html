@@ -728,94 +728,115 @@
       <button class="coach-back-btn" id="coach-back-btn">&larr; All Clients</button>
       <h2 id="coach-detail-name"></h2>
 
-      <div class="coach-goal-section">
-        <h3>Goals</h3>
-        <div class="goal-inputs">
-          <div class="form-group">
-            <label>Daily Target (cal burned)</label>
-            <input type="number" id="coach-goal-daily" placeholder="0">
-          </div>
-          <div class="form-group">
-            <label>Weekly Target</label>
-            <input type="number" id="coach-goal-weekly" placeholder="0">
-          </div>
-        </div>
-        <button class="btn btn-primary" id="coach-save-goals">Save Goals</button>
+      <!-- Tab bar -->
+      <div class="coach-tab-bar" id="coach-tab-bar">
+        <button class="coach-tab active" data-tab="overview">Overview</button>
+        <button class="coach-tab" data-tab="assignments">Assignments</button>
+        <button class="coach-tab" data-tab="insights">Insights</button>
+        <button class="coach-tab" data-tab="log">Log</button>
       </div>
 
-      <div class="coach-stats-grid">
-        <div class="coach-stat-card">
-          <div class="coach-stat-value" id="coach-stat-cal">0</div>
-          <div class="coach-stat-label">Today's Calories</div>
-        </div>
-        <div class="coach-stat-card">
-          <div class="coach-stat-value" id="coach-stat-entries">0</div>
-          <div class="coach-stat-label">Entries Today</div>
-        </div>
-        <div class="coach-stat-card">
-          <div class="coach-stat-value" id="coach-stat-goal">--</div>
-          <div class="coach-stat-label">Goal Status</div>
-        </div>
-      </div>
-
-      <div class="coach-red-section">
-        <h3>RED Thought Summary</h3>
-        <div id="coach-red-summary">
-          <p class="text-muted" style="font-style:italic">No red thoughts logged today.</p>
-        </div>
-      </div>
-
-      <div class="coach-assign-section">
-        <h3>Send Assignment</h3>
-        <div class="form-group">
-          <label>Type</label>
-          <select id="coach-assign-type">
-            <option value="task">Task Assignment</option>
-            <option value="video">Video</option>
-            <option value="visual">Visual</option>
-            <option value="mental">Mental Exercise</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Title</label>
-          <input type="text" id="coach-assign-title" placeholder="Assignment title" maxlength="120">
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <textarea id="coach-assign-desc" placeholder="Instructions or details..." rows="3"></textarea>
-        </div>
-        <div id="coach-assign-media-group" style="display:none;">
-          <div class="form-group">
-            <label>Upload File</label>
-            <input type="file" id="coach-assign-file" accept="image/*,video/*">
-            <div class="upload-hint">Photos or videos up to 50MB</div>
+      <!-- Tab: Overview -->
+      <div class="coach-tab-panel active" id="coach-panel-overview">
+        <div class="coach-stats-grid">
+          <div class="coach-stat-card">
+            <div class="coach-stat-value" id="coach-stat-cal">0</div>
+            <div class="coach-stat-label">Today's Calories</div>
           </div>
-          <div class="media-or">or</div>
-          <div class="form-group">
-            <label>Paste Link</label>
-            <input type="url" id="coach-assign-url" placeholder="YouTube, Vimeo, or image URL">
+          <div class="coach-stat-card">
+            <div class="coach-stat-value" id="coach-stat-entries">0</div>
+            <div class="coach-stat-label">Entries Today</div>
+          </div>
+          <div class="coach-stat-card">
+            <div class="coach-stat-value" id="coach-stat-goal">--</div>
+            <div class="coach-stat-label">Goal Status</div>
           </div>
         </div>
-        <div class="form-group">
-          <label>Due Date</label>
-          <input type="date" id="coach-assign-due">
-        </div>
-        <button class="btn btn-primary btn-full" id="coach-assign-send">Send to Client</button>
-        <div id="coach-assign-list" style="margin-top: 16px;"></div>
-      </div>
 
-      <div class="coach-client-fears">
-        <h3>Client's Fears &amp; Gratitudes</h3>
-        <div id="coach-client-fears-list"></div>
-        <div id="coach-client-gratitudes-list"></div>
-      </div>
-
-      <div class="coach-log-section">
-        <h3>Today's Log</h3>
-        <div id="coach-log-list">
-          <div class="log-empty">No entries yet today.</div>
+        <div class="coach-goal-section">
+          <h3>Goals</h3>
+          <div class="goal-inputs">
+            <div class="form-group">
+              <label>Daily Target (cal burned)</label>
+              <input type="number" id="coach-goal-daily" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label>Weekly Target</label>
+              <input type="number" id="coach-goal-weekly" placeholder="0">
+            </div>
+          </div>
+          <button class="btn btn-primary" id="coach-save-goals">Save Goals</button>
         </div>
       </div>
+
+      <!-- Tab: Assignments -->
+      <div class="coach-tab-panel" id="coach-panel-assignments">
+        <div class="coach-assign-section">
+          <h3>Send Assignment</h3>
+          <div class="form-group">
+            <label>Type</label>
+            <select id="coach-assign-type">
+              <option value="task">Task Assignment</option>
+              <option value="video">Video</option>
+              <option value="visual">Visual</option>
+              <option value="mental">Mental Exercise</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" id="coach-assign-title" placeholder="Assignment title" maxlength="120">
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="coach-assign-desc" placeholder="Instructions or details..." rows="3"></textarea>
+          </div>
+          <div id="coach-assign-media-group" style="display:none;">
+            <div class="form-group">
+              <label>Upload File</label>
+              <input type="file" id="coach-assign-file" accept="image/*,video/*">
+              <div class="upload-hint">Photos or videos up to 50MB</div>
+            </div>
+            <div class="media-or">or</div>
+            <div class="form-group">
+              <label>Paste Link</label>
+              <input type="url" id="coach-assign-url" placeholder="YouTube, Vimeo, or image URL">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Due Date</label>
+            <input type="date" id="coach-assign-due">
+          </div>
+          <button class="btn btn-primary btn-full" id="coach-assign-send">Send to Client</button>
+          <div id="coach-assign-list" style="margin-top: 16px;"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Insights -->
+      <div class="coach-tab-panel" id="coach-panel-insights">
+        <div class="coach-red-section">
+          <h3>RED Thought Summary</h3>
+          <div id="coach-red-summary">
+            <p class="text-muted" style="font-style:italic">No red thoughts logged today.</p>
+          </div>
+        </div>
+
+        <div class="coach-client-fears">
+          <h3>Client's Fears &amp; Gratitudes</h3>
+          <div id="coach-client-fears-list"></div>
+          <div id="coach-client-gratitudes-list"></div>
+        </div>
+      </div>
+
+      <!-- Tab: Log -->
+      <div class="coach-tab-panel" id="coach-panel-log">
+        <div class="coach-log-section">
+          <h3>Today's Log</h3>
+          <div id="coach-log-list">
+            <div class="log-empty">No entries yet today.</div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

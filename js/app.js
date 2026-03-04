@@ -80,10 +80,11 @@ function activateScreen(name) {
     screenEl.classList.add('screen-active');
   }
 
-  // Bottom nav visibility
+  // Bottom nav visibility — hide entirely for coaches
   const bottomNav = document.getElementById('bottom-nav');
   if (bottomNav) {
-    bottomNav.classList.toggle('nav-visible', NAV_SCREENS.includes(name));
+    const isCoach = userDoc?.role === 'coach';
+    bottomNav.classList.toggle('nav-visible', !isCoach && NAV_SCREENS.includes(name));
   }
 
   // Update nav active state

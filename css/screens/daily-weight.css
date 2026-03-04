@@ -3,14 +3,20 @@
    ======================================== */
 
 #screen-daily {
-  padding: 16px;
-  padding-top: max(16px, env(safe-area-inset-top));
   padding-bottom: 80px;
+}
+
+#screen-daily > .daily-header,
+#screen-daily > #daily-tiers,
+#screen-daily > .daily-footer {
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .daily-header {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
+  padding-top: 8px;
 }
 
 .daily-header h1 {

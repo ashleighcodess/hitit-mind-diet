@@ -5,6 +5,7 @@
 import { registerScreen, getCurrentUser, showToast } from '../app.js';
 import { TIERS, EMOTIONS, getEmotionsByTier, TIER_ORDER } from '../data/emotions.js';
 import { subscribeToEntries, todayStr, formatTime, calcDailyTotals, countByEmotion } from '../data/firestore.js';
+import { staggerDailyCards } from '../animations.js';
 
 let unsubEntries = null;
 
@@ -55,6 +56,9 @@ function renderDailyWeight(entries) {
   });
 
   container.innerHTML = html;
+
+  // Animate cards in with stagger
+  staggerDailyCards();
 
   // Footer totals
   document.getElementById('daily-red-total').textContent = '+' + totals.redTotal.toLocaleString();

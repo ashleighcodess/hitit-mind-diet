@@ -149,24 +149,51 @@
 /* Emotion grid */
 .emotion-grid {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-wrap: nowrap;
+  gap: 4px;
   margin-bottom: 12px;
+  justify-content: center;
 }
 
 .emotion-btn {
-  width: calc(20% - 6.4px);
+  flex: 1 1 0;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4px;
-  padding: 8px 2px;
+  padding: 6px 1px;
   border-radius: var(--radius-sm);
   background: transparent;
   border: 1px solid transparent;
   transition: all 0.2s ease;
   cursor: pointer;
 }
+
+/* Hover: lift + glow ring */
+.emotion-btn:hover {
+  transform: translateY(-3px);
+}
+
+.emotion-btn:hover .icon-wrap {
+  box-shadow: 0 0 12px var(--hover-glow, rgba(74, 158, 255, 0.35));
+  transform: scale(1.08);
+}
+
+.emotion-btn:hover .emotion-name {
+  color: var(--text-primary);
+}
+
+.emotion-btn:hover .emotion-cal {
+  transform: scale(1.1);
+}
+
+/* Tier-specific hover glow colors */
+.tier-red .emotion-btn    { --hover-glow: rgba(255, 68, 68, 0.4); }
+.tier-green .emotion-btn  { --hover-glow: rgba(68, 204, 68, 0.4); }
+.tier-blue .emotion-btn   { --hover-glow: rgba(74, 158, 255, 0.4); }
+.tier-purple .emotion-btn { --hover-glow: rgba(170, 102, 255, 0.4); }
+.tier-white .emotion-btn  { --hover-glow: rgba(224, 224, 224, 0.35); }
 
 .emotion-btn:active,
 .emotion-btn.tapped {
@@ -176,19 +203,30 @@
 }
 
 .icon-wrap {
-  width: 48px;
-  height: 48px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .icon-wrap img {
   width: 100%;
   height: 100%;
   object-fit: contain;
+  transition: filter 0.2s ease;
+}
+
+/* Slight brightness boost on hover */
+.emotion-btn:hover .icon-wrap img {
+  filter: brightness(1.15);
+}
+
+.emotion-cal {
+  transition: transform 0.2s ease;
 }
 
 .emotion-name {
@@ -201,7 +239,7 @@
 .emotion-cal {
   font-family: 'Montserrat', Helvetica, sans-serif;
   font-weight: 600;
-  font-size: 0.6rem;
+  font-size: 0.65rem;
 }
 
 .tier-red .emotion-cal { color: var(--tier-red); }
@@ -363,12 +401,12 @@
 
 /* Responsive */
 @media (max-width: 360px) {
-  .emotion-btn {
-    width: calc(25% - 6px);
-  }
   .icon-wrap {
-    width: 40px;
-    height: 40px;
+    width: 52px;
+    height: 52px;
+  }
+  .emotion-grid {
+    gap: 2px;
   }
 }
 

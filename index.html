@@ -20,6 +20,7 @@
   <link rel="stylesheet" href="css/screens/exercises.css">
   <link rel="stylesheet" href="css/screens/reference.css">
   <link rel="stylesheet" href="css/screens/coach.css">
+  <link rel="stylesheet" href="css/animations.css">
 
   <style>
     /* SPA screen management — !important needed to beat ID selectors in screen CSS */
@@ -483,8 +484,15 @@
      SCREEN: DAILY MIND WEIGHT
      ============================================================ -->
 <div class="screen" id="screen-daily">
+  <div class="video-header">
+    <video autoplay muted loop playsinline>
+      <source src="assets/video/ai-brain.mp4" type="video/mp4">
+    </video>
+    <div class="video-header-overlay">
+      <h1>Daily Mind Weight</h1>
+    </div>
+  </div>
   <div class="daily-header">
-    <h1>Daily Mind Weight</h1>
     <div class="daily-date" id="daily-date"></div>
   </div>
   <div id="daily-tiers"></div>
@@ -772,9 +780,11 @@
   import './js/screens/reference.js';
   import './js/screens/coach.js';
 
-  // Initialize SPA router
+  // Initialize SPA router + animations
   import { initApp } from './js/app.js';
+  import { initAnimations } from './js/animations.js';
   initApp();
+  initAnimations();
 </script>
 
 </body>

@@ -1,0 +1,428 @@
+/* ========================================
+   HIT IT Mind Diet — Animations & Effects
+   ======================================== */
+
+/* ---- Screen Entrance Animations ---- */
+.screen.screen-active {
+  animation: screenEnter 0.4s ease-out;
+}
+
+@keyframes screenEnter {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ---- Animated Canvas Waveforms ---- */
+.tier-wave {
+  position: relative;
+}
+
+.wave-canvas {
+  width: 55%;
+  max-width: 220px;
+  height: auto;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+/* Daily tier card wave animation */
+.daily-tier-header {
+  position: relative;
+}
+
+.daily-wave-thumb {
+  position: relative;
+}
+
+.daily-tier-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.daily-tier-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--card-glow, rgba(255, 255, 255, 0.03)),
+    transparent
+  );
+  animation: cardSweep 4s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.daily-tier-card[data-tier="red"] { --card-glow: rgba(255, 68, 68, 0.05); }
+.daily-tier-card[data-tier="green"] { --card-glow: rgba(68, 204, 68, 0.05); }
+.daily-tier-card[data-tier="blue"] { --card-glow: rgba(74, 158, 255, 0.05); }
+.daily-tier-card[data-tier="purple"] { --card-glow: rgba(170, 102, 255, 0.05); }
+.daily-tier-card[data-tier="white"] { --card-glow: rgba(224, 224, 224, 0.04); }
+
+@keyframes cardSweep {
+  0% { left: -50%; }
+  100% { left: 150%; }
+}
+
+/* ---- Enhanced Emotion Tap Effects ---- */
+.emotion-btn {
+  position: relative;
+  overflow: visible;
+}
+
+/* Ripple burst on tap */
+.emotion-btn.tapped::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--tap-color, rgba(74, 158, 255, 0.3)) 0%, transparent 70%);
+  transform: translate(-50%, -50%) scale(0);
+  animation: tapBurst 0.6s ease-out forwards;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.tier-red .emotion-btn.tapped::before { --tap-color: rgba(255, 68, 68, 0.25); }
+.tier-green .emotion-btn.tapped::before { --tap-color: rgba(68, 204, 68, 0.25); }
+.tier-blue .emotion-btn.tapped::before { --tap-color: rgba(74, 158, 255, 0.25); }
+.tier-purple .emotion-btn.tapped::before { --tap-color: rgba(170, 102, 255, 0.25); }
+.tier-white .emotion-btn.tapped::before { --tap-color: rgba(224, 224, 224, 0.2); }
+
+@keyframes tapBurst {
+  0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(2.5); opacity: 0; }
+}
+
+/* Sparkle ring */
+.emotion-btn.tapped::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--tap-ring, rgba(74, 158, 255, 0.4));
+  transform: translate(-50%, -50%) scale(0.5);
+  animation: tapRing 0.5s ease-out forwards;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.tier-red .emotion-btn.tapped::after { --tap-ring: rgba(255, 68, 68, 0.3); }
+.tier-green .emotion-btn.tapped::after { --tap-ring: rgba(68, 204, 68, 0.3); }
+.tier-blue .emotion-btn.tapped::after { --tap-ring: rgba(74, 158, 255, 0.3); }
+.tier-purple .emotion-btn.tapped::after { --tap-ring: rgba(170, 102, 255, 0.3); }
+.tier-white .emotion-btn.tapped::after { --tap-ring: rgba(224, 224, 224, 0.25); }
+
+@keyframes tapRing {
+  0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+}
+
+/* ---- Animated Score Counter ---- */
+.score-number {
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.score-number.score-bump {
+  animation: scoreBump 0.4s ease;
+}
+
+@keyframes scoreBump {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.15); }
+  60% { transform: scale(0.95); }
+  100% { transform: scale(1); }
+}
+
+/* Calorie flash on log entry */
+.score-flash {
+  position: absolute;
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.2rem;
+  pointer-events: none;
+  animation: calFlash 1s ease-out forwards;
+  z-index: 10;
+}
+
+.score-flash.burn { color: var(--tier-green); }
+.score-flash.gain { color: var(--tier-red); }
+
+@keyframes calFlash {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(-40px) scale(0.8); }
+}
+
+/* ---- Glowing Card Borders (Weekly) ---- */
+.weekly-card {
+  position: relative;
+  overflow: hidden;
+}
+
+.weekly-card::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: var(--radius-md);
+  background: conic-gradient(
+    from var(--card-angle, 0deg),
+    transparent 0%,
+    var(--accent-blue) 10%,
+    var(--accent-cyan) 20%,
+    transparent 30%
+  );
+  opacity: 0;
+  animation: cardRotate 6s linear infinite, cardFadeIn 2s ease forwards;
+  z-index: -1;
+}
+
+.weekly-card::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: calc(var(--radius-md) - 1px);
+  background: var(--bg-card);
+  z-index: -1;
+}
+
+@keyframes cardRotate {
+  from { --card-angle: 0deg; }
+  to { --card-angle: 360deg; }
+}
+
+@keyframes cardFadeIn {
+  from { opacity: 0; }
+  to { opacity: 0.4; }
+}
+
+/* Register the custom property for animation */
+@property --card-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* ---- Video Header Shared ---- */
+.video-header {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.video-header video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-header-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, transparent 30%, var(--bg-primary) 100%);
+  display: flex;
+  align-items: flex-end;
+  padding: 16px;
+}
+
+.video-header-overlay h1 {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 200;
+  font-size: 1.3rem;
+}
+
+/* ---- Floating Energy Particles ---- */
+.particles-container {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0;
+  animation: particleFloat var(--p-dur, 6s) var(--p-delay, 0s) ease-in-out infinite;
+}
+
+@keyframes particleFloat {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0);
+  }
+  15% {
+    opacity: var(--p-opacity, 0.3);
+    transform: translateY(-10px) scale(1);
+  }
+  85% {
+    opacity: var(--p-opacity, 0.3);
+    transform: translateY(calc(var(--p-travel, -80px))) scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(calc(var(--p-travel, -80px) - 20px)) scale(0);
+  }
+}
+
+/* ---- Peak Vibration Triangle Glow ---- */
+.peak-triangle {
+  position: relative;
+}
+
+.peak-triangle img {
+  position: relative;
+  z-index: 1;
+}
+
+.peak-triangle::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80%;
+  height: 80%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(170, 102, 255, 0.15) 0%,
+    rgba(74, 158, 255, 0.08) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  animation: triangleGlow 4s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes triangleGlow {
+  0%, 100% { opacity: 0.4; transform: translate(-50%, -50%) scale(0.95); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+/* ---- Milestone Achievement Animation ---- */
+.milestone.achieved {
+  animation: milestoneAchieve 0.6s ease-out;
+}
+
+@keyframes milestoneAchieve {
+  0% { transform: scale(0.95); opacity: 0; }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ---- Splash Logo Float ---- */
+.splash-hero .logo-overlay {
+  animation: logoFloat 4s ease-in-out infinite;
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(-6px); }
+}
+
+/* ---- Score Bar Glow on Change ---- */
+.score-bar {
+  position: relative;
+}
+
+.score-bar.glowing::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: var(--glow-color, var(--accent-blue));
+  border-radius: 2px;
+  animation: scoreGlow 1s ease-out forwards;
+}
+
+.score-bar.glowing.glow-positive { --glow-color: var(--tier-green); }
+.score-bar.glowing.glow-negative { --glow-color: var(--tier-red); }
+
+@keyframes scoreGlow {
+  0% { opacity: 1; box-shadow: 0 0 15px var(--glow-color); }
+  100% { opacity: 0; box-shadow: 0 0 0 var(--glow-color); }
+}
+
+/* ---- Stagger Entrance for Tier Sections ---- */
+.tier-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.tier-section.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Stagger delays */
+.tier-section:nth-child(1) { transition-delay: 0.05s; }
+.tier-section:nth-child(2) { transition-delay: 0.1s; }
+.tier-section:nth-child(3) { transition-delay: 0.15s; }
+.tier-section:nth-child(4) { transition-delay: 0.2s; }
+.tier-section:nth-child(5) { transition-delay: 0.25s; }
+
+/* ---- Daily Card Stagger ---- */
+.daily-tier-card {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.daily-tier-card.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---- Log Entry Slide In ---- */
+.log-entry {
+  animation: logSlideIn 0.3s ease-out;
+}
+
+@keyframes logSlideIn {
+  from { opacity: 0; transform: translateX(-10px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* ---- Reduced Motion ---- */
+@media (prefers-reduced-motion: reduce) {
+  .screen.screen-active,
+  .daily-tier-card::before,
+  .emotion-btn.tapped::before,
+  .emotion-btn.tapped::after,
+  .score-number.score-bump,
+  .score-flash,
+  .weekly-card::before,
+  .peak-triangle::before,
+  .milestone.achieved,
+  .splash-hero .logo-overlay,
+  .log-entry,
+  .particle {
+    animation: none !important;
+  }
+  .tier-section,
+  .daily-tier-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

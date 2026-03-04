@@ -6,15 +6,30 @@ import { registerScreen, getCurrentUser, showToast, escapeHtml } from '../app.js
 import { TIERS, EMOTIONS, getEmotionsByTier, getEmotionLabel, TIER_ORDER } from '../data/emotions.js';
 import { logEntry, subscribeToEntries, todayStr, formatTime, updateUserSettings } from '../data/firestore.js';
 import { getUserData } from '../app.js';
+import { animateScore, showCalorieFlash } from '../animations.js';
 
 let unsubEntries = null;
 let todayEntries = [];
+let prevEntryCount = 0;
 let pendingEmotion = null;
 
 function updateScore() {
   const scoreEl = document.getElementById('tracker-score');
   const total = todayEntries.reduce((sum, e) => sum + e.calories, 0);
-  scoreEl.textContent = (total > 0 ? '+' : '') + total.toLocaleString();
+
+  // Animate the score counter
+  animateScore(scoreEl, total);
+
+  // Show calorie flash for new entries
+  if (todayEntries.length > prevEntryCount && prevEntryCount > 0) {
+    const newest = todayEntries[0]; // sorted newest first
+    if (newest) {
+      const scoreBar = document.querySelector('.score-bar');
+      showCalorieFlash(scoreBar, newest.calories);
+    }
+  }
+  prevEntryCount = todayEntries.length;
+
   scoreEl.classList.remove('positive', 'negative', 'neutral');
   if (total < 0) scoreEl.classList.add('positive');
   else if (total > 0) scoreEl.classList.add('negative');
@@ -57,7 +72,7 @@ registerScreen('tracker', {
         const calories = parseInt(btn.dataset.calories, 10);
 
         btn.classList.add('tapped');
-        setTimeout(() => btn.classList.remove('tapped'), 400);
+        setTimeout(() => btn.classList.remove('tapped'), 600);
 
         if (tier === 'red') {
           pendingEmotion = { emotion: emotionKey, tier, calories };

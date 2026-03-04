@@ -255,10 +255,7 @@
 
 /* Assignment section */
 .coach-assign-section {
-  background: var(--bg-card);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border-color);
-  padding: 16px;
+  padding: 0;
   margin-bottom: 16px;
 }
 
@@ -302,11 +299,12 @@
 }
 
 .coach-assign-item {
-  background: var(--bg-input);
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border-color);
-  padding: 10px 12px;
-  margin-bottom: 8px;
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 12px 14px;
+  margin-bottom: 6px;
 }
 
 .coach-assign-item-header {

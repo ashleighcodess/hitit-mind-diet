@@ -14,6 +14,9 @@ import {
 } from '../data/firestore.js';
 import { getUserDoc } from '../data/firestore.js';
 
+// ---- Coach Jaynie's UID (used for all coach queries) ----
+const COACH_UID = 'bYrV0rVnuMWYtkmtUK9u883kHOO2';
+
 // ---- State ----
 let selectedClientId = null;
 let unsubClientEntries = null;
@@ -215,8 +218,8 @@ async function loadDashboard() {
   try {
     // Load clients + all assignments + vibes in parallel
     const [clients, allAssign] = await Promise.all([
-      getClientsByCoach(user.uid),
-      getAllAssignments(user.uid)
+      getClientsByCoach(COACH_UID),
+      getAllAssignments(COACH_UID)
     ]);
     cachedClients = clients;
     cachedAllAssignments = allAssign;
@@ -378,8 +381,8 @@ async function loadClients() {
 
   try {
     const [clients, allAssign] = await Promise.all([
-      getClientsByCoach(user.uid),
-      getAllAssignments(user.uid)
+      getClientsByCoach(COACH_UID),
+      getAllAssignments(COACH_UID)
     ]);
     cachedClients = clients;
     cachedAllAssignments = allAssign;
@@ -496,7 +499,7 @@ async function openClientWorkspace(clientId) {
 
   const user = getCurrentUser();
   if (user) {
-    markAllNotificationsRead(user.uid).catch(() => {});
+    markAllNotificationsRead(COACH_UID).catch(() => {});
   }
 
   try {
@@ -817,8 +820,8 @@ async function loadReviewQueue() {
 
   try {
     const [allAssign, clients] = await Promise.all([
-      getAllAssignments(user.uid),
-      cachedClients.length ? Promise.resolve(cachedClients) : getClientsByCoach(user.uid)
+      getAllAssignments(COACH_UID),
+      cachedClients.length ? Promise.resolve(cachedClients) : getClientsByCoach(COACH_UID)
     ]);
     cachedClients = clients;
     cachedAllAssignments = allAssign;
@@ -846,7 +849,7 @@ async function loadAllAssignments() {
   const el = document.getElementById('coach-all-assignments');
 
   try {
-    const allAssign = await getAllAssignments(user.uid);
+    const allAssign = await getAllAssignments(COACH_UID);
     cachedAllAssignments = allAssign;
 
     if (allAssign.length === 0) {
@@ -1084,7 +1087,7 @@ registerScreen('coach', {
       try {
         await createAssignment({
           clientId: targetClient,
-          coachId: user.uid,
+          coachId: COACH_UID,
           type,
           title,
           description,
@@ -1138,7 +1141,7 @@ registerScreen('coach', {
     // Notifications
     const user = getCurrentUser();
     if (user && !unsubNotifications) {
-      unsubNotifications = subscribeToNotifications(user.uid, (notifs) => {
+      unsubNotifications = subscribeToNotifications(COACH_UID, (notifs) => {
         const unread = notifs.filter(n => !n.read);
         const badge = document.getElementById('coach-notif-badge');
         if (badge) {

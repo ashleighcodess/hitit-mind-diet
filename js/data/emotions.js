@@ -67,9 +67,9 @@ export const EMOTIONS = [
   { key: 'willingness',        label: 'Willingness',     tier: 'green',  calories: -2000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Green Willingness.png' },
   { key: 'point_self_flip',    label: 'Point Self Flip', tier: 'green',  calories: -3000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Green Point to Self Flip.png' },
   // BLUE — burns calories
-  { key: 'bright_side',        label: 'Brighter Side',   tier: 'blue',   calories: -500,  icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 500 Brighter Side.png' },
   { key: 'big_smile',          label: 'Big Smile',       tier: 'blue',   calories: -1000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 1000 Big Smile.png' },
-  { key: 'compliments',        label: 'Compliments',     tier: 'blue',   calories: -2000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 2000 Compliments.png' },
+  { key: 'bright_side',        label: 'Bright Side',     tier: 'blue',   calories: -2000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 500 Brighter Side.png' },
+  { key: 'compliments',        label: 'Compliments',     tier: 'blue',   calories: -3000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 2000 Compliments.png' },
   { key: 'grateful',           label: 'Grateful',        tier: 'blue',   calories: -3000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 3000 Grateful.png' },
   { key: 'piece_done',         label: 'Piece Done',      tier: 'blue',   calories: -4000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue Piece Done.png' },
   { key: 'giving',             label: 'Giving',          tier: 'blue',   calories: -5000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 5000 Giving .png' },

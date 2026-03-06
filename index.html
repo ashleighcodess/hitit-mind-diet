@@ -387,12 +387,12 @@
     <div class="score-date" id="tracker-date"></div>
   </div>
 
-  <p class="dash-instruction">Select the emotion you are feeling each time it occurs throughout the day.</p>
+  <p class="dash-instruction">Select the emotion you are feeling each time it occurs throughout the day. Counts resemble calories representing invisible positive or negative thoughts.</p>
 
   <!-- RED TIER -->
   <section class="tier-section tier-red">
     <div class="tier-wave">
-      <img src="assets/vibrations/Vibrations Red.jpg" alt="Red vibrations">
+      <img src="assets/vibrations/vibrations-red.avif" alt="Red vibrations">
       <div class="tier-wave-label">Fear<br>100 Vibes</div>
     </div>
     <div class="tier-title">RED 20-150 Vibrations Per Second</div>
@@ -433,47 +433,49 @@
   <!-- GREEN TIER -->
   <section class="tier-section tier-green">
     <div class="tier-wave">
-      <img src="assets/vibrations/Vibrations Green.jpg" alt="Green vibrations">
+      <img src="assets/vibrations/vibrations-green.avif" alt="Green vibrations">
       <div class="tier-wave-label">Willing<br>310 Vibes</div>
     </div>
     <div class="tier-title">GREEN 175-350 Vibrations Per Second</div>
-    <div class="emotion-grid">
-      <button class="emotion-btn" data-emotion="willingness" data-tier="green" data-calories="-2000">
-        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Green Willingness.png" alt="Willingness"></div>
-        <span class="emotion-name">Willingness</span>
-        <span class="emotion-cal">-2,000</span>
-      </button>
-      <button class="emotion-btn" data-emotion="point_self_flip" data-tier="green" data-calories="-3000">
-        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Green Point to Self Flip.png" alt="Point Self Flip"></div>
-        <span class="emotion-name">Point Self Flip</span>
-        <span class="emotion-cal">-3,000</span>
-      </button>
+    <div class="tier-content-row">
+      <div class="emotion-grid">
+        <button class="emotion-btn" data-emotion="willingness" data-tier="green" data-calories="-2000">
+          <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Green Willingness.png" alt="Willingness"></div>
+          <span class="emotion-name">Willingness</span>
+          <span class="emotion-cal">-2,000</span>
+        </button>
+        <button class="emotion-btn" data-emotion="point_self_flip" data-tier="green" data-calories="-3000">
+          <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Green Point to Self Flip.png" alt="Point Self Flip"></div>
+          <span class="emotion-name">Point Self Flip</span>
+          <span class="emotion-cal">-3,000</span>
+        </button>
+      </div>
+      <p class="tier-description">Point to yourself and FLIP your RED vibes to BLUE. You have now stopped blaming others for your red.</p>
     </div>
-    <p class="tier-description">Point to yourself and FLIP your RED vibes to BLUE. You have now stopped blaming others for your red.</p>
   </section>
 
   <!-- BLUE TIER -->
   <section class="tier-section tier-blue">
     <div class="tier-wave">
-      <img src="assets/vibrations/Vibrations Blue.jpg" alt="Blue vibrations">
+      <img src="assets/vibrations/vibrations-blue.avif" alt="Blue vibrations">
       <div class="tier-wave-label">Love<br>500 Vibes</div>
     </div>
     <div class="tier-title">BLUE 400-600 Vibrations Per Second</div>
     <div class="emotion-grid">
-      <button class="emotion-btn" data-emotion="bright_side" data-tier="blue" data-calories="-500">
-        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 500 Brighter Side.png" alt="Brighter Side"></div>
-        <span class="emotion-name">Brighter Side</span>
-        <span class="emotion-cal">-500</span>
-      </button>
       <button class="emotion-btn" data-emotion="big_smile" data-tier="blue" data-calories="-1000">
         <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 1000 Big Smile.png" alt="Big Smile"></div>
         <span class="emotion-name">Big Smile</span>
         <span class="emotion-cal">-1,000</span>
       </button>
-      <button class="emotion-btn" data-emotion="compliments" data-tier="blue" data-calories="-2000">
+      <button class="emotion-btn" data-emotion="bright_side" data-tier="blue" data-calories="-2000">
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 500 Brighter Side.png" alt="Brighter Side"></div>
+        <span class="emotion-name">Bright Side</span>
+        <span class="emotion-cal">-2,000</span>
+      </button>
+      <button class="emotion-btn" data-emotion="compliments" data-tier="blue" data-calories="-3000">
         <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 2000 Compliments.png" alt="Compliments"></div>
         <span class="emotion-name">Compliments</span>
-        <span class="emotion-cal">-2,000</span>
+        <span class="emotion-cal">-3,000</span>
       </button>
       <button class="emotion-btn" data-emotion="grateful" data-tier="blue" data-calories="-3000">
         <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 3000 Grateful.png" alt="Grateful"></div>
@@ -493,10 +495,13 @@
     </div>
   </section>
 
-  <!-- PURPLE TIER -->
-  <section class="tier-section tier-purple">
+  <!-- Button to show Purple & White -->
+  <button class="section-link-btn" id="show-purple-white">Purple &amp; White Vibes</button>
+
+  <!-- PURPLE TIER (hidden by default) -->
+  <section class="tier-section tier-purple" id="purple-white-section" style="display:none;">
     <div class="tier-wave">
-      <img src="assets/vibrations/Vibrations Purple.jpg" alt="Purple vibrations">
+      <img src="assets/vibrations/vibrations-purple.avif" alt="Purple vibrations">
       <div class="tier-wave-label">Enlightenment<br>700 Vibes</div>
     </div>
     <div class="tier-title">PURPLE 700-900 Vibrations Per Second</div>
@@ -520,10 +525,10 @@
     <p class="tier-description">Every synchronicity occurrence = 3,000 calories burned.</p>
   </section>
 
-  <!-- WHITE TIER -->
-  <section class="tier-section tier-white">
+  <!-- WHITE TIER (hidden by default) -->
+  <section class="tier-section tier-white" id="white-section" style="display:none;">
     <div class="tier-wave">
-      <img src="assets/vibrations/Vibrations White.png" alt="White vibrations">
+      <img src="assets/vibrations/vibrations-white.avif" alt="White vibrations">
       <div class="tier-wave-label">Ultimate<br>Consciousness<br>1000 Vibes</div>
     </div>
     <div class="tier-title">WHITE 901-1000 Vibrations Per Second</div>

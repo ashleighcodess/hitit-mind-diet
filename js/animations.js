@@ -30,18 +30,18 @@ function fadeEdges(ctx, w, h) {
 }
 
 // ============================================================
-// RED — Chaotic, jittery, aggressive. Feels like static/noise.
-// Irregular spikes, random jitter, fast & harsh.
+// RED — SLOWEST. Chaotic, jittery, lots of vibrating lines.
+// Irregular spikes, random jitter, harsh but slow-moving.
 // ============================================================
 function drawRedWave(ctx, w, h, time) {
   ctx.fillStyle = '#0a0a0a';
   ctx.fillRect(0, 0, w, h);
   const midY = h / 2;
 
-  for (let i = 0; i < 3; i++) {
-    const opacity = 0.25 + i * 0.3;
-    const speed = 1.4 + i * 0.2;
-    const amp = midY * (0.38 - i * 0.06);
+  for (let i = 0; i < 4; i++) {
+    const opacity = 0.25 + i * 0.22;
+    const speed = 0.25 + i * 0.05;
+    const amp = midY * (0.38 - i * 0.05);
 
     ctx.beginPath();
     ctx.moveTo(0, midY);
@@ -49,7 +49,6 @@ function drawRedWave(ctx, w, h, time) {
     for (let x = 0; x <= w; x++) {
       const xN = x / w;
       const envelope = Math.sin(xN * Math.PI);
-      // Harsh angular wave + noise
       const sharp = Math.sin(xN * 4.5 * Math.PI * 2 + time * speed + i * 1.5);
       const spike = Math.sin(xN * 11 * Math.PI * 2 + time * speed * 1.8 + i) * 0.4;
       const noise = (Math.random() - 0.5) * 0.35;
@@ -72,8 +71,8 @@ function drawRedWave(ctx, w, h, time) {
 }
 
 // ============================================================
-// GREEN — Smooth rising sine, gentle pulse.
-// Feels like taking a deep breath — calm transition energy.
+// GREEN — Moderate speed. Lots of vibrating lines like red style.
+// Slightly faster than red.
 // ============================================================
 function drawGreenWave(ctx, w, h, time) {
   ctx.fillStyle = '#0a0a0a';
@@ -88,9 +87,9 @@ function drawGreenWave(ctx, w, h, time) {
   ctx.globalAlpha = 0.6 + Math.sin(time * 0.5) * 0.3;
   ctx.fillRect(0, 0, w, h);
 
-  for (let i = 0; i < 3; i++) {
-    const opacity = 0.2 + i * 0.35;
-    const speed = 0.6 + i * 0.1;
+  for (let i = 0; i < 4; i++) {
+    const opacity = 0.2 + i * 0.25;
+    const speed = 0.45 + i * 0.08;
     const amp = midY * (0.32 - i * 0.04);
     const freq = 2.0 + i * 0.5;
 
@@ -124,8 +123,8 @@ function drawGreenWave(ctx, w, h, time) {
 }
 
 // ============================================================
-// BLUE — Flowing, musical, layered harmonics.
-// Feels like ocean waves — smooth, rhythmic, alive with love.
+// BLUE — Faster than green. Flowing, layered harmonics with
+// lots of vibrating lines.
 // ============================================================
 function drawBlueWave(ctx, w, h, time) {
   ctx.fillStyle = '#0a0a0a';
@@ -142,7 +141,7 @@ function drawBlueWave(ctx, w, h, time) {
 
   for (let i = 0; i < 4; i++) {
     const opacity = 0.15 + i * 0.22;
-    const speed = 0.45 + i * 0.08;
+    const speed = 0.7 + i * 0.12;
     const amp = midY * (0.3 - i * 0.03);
     const freq = 1.8 + i * 0.6;
 
@@ -179,8 +178,8 @@ function drawBlueWave(ctx, w, h, time) {
 }
 
 // ============================================================
-// PURPLE — Resonant, almost sacred geometry feeling.
-// Smooth sinusoids that weave and bloom. Enlightenment energy.
+// PURPLE — Fast. Resonant, lots of vibrating lines.
+// Faster than blue.
 // ============================================================
 function drawPurpleWave(ctx, w, h, time) {
   ctx.fillStyle = '#0a0a0a';
@@ -198,7 +197,7 @@ function drawPurpleWave(ctx, w, h, time) {
 
   for (let i = 0; i < 4; i++) {
     const opacity = 0.15 + i * 0.2;
-    const speed = 0.35 + i * 0.06;
+    const speed = 1.0 + i * 0.15;
     const amp = midY * (0.28 - i * 0.02);
     const freq = 2.2 + i * 0.7;
 
@@ -234,8 +233,8 @@ function drawPurpleWave(ctx, w, h, time) {
 }
 
 // ============================================================
-// WHITE — Ethereal, barely-there, transcendent.
-// Ultra-smooth sine with slow breath. Pure consciousness.
+// WHITE — FASTEST. Lots of vibrating lines, high energy.
+// Pure consciousness — the highest vibration.
 // ============================================================
 function drawWhiteWave(ctx, w, h, time) {
   ctx.fillStyle = '#0a0a0a';
@@ -253,7 +252,7 @@ function drawWhiteWave(ctx, w, h, time) {
 
   for (let i = 0; i < 5; i++) {
     const opacity = 0.1 + i * 0.16;
-    const speed = 0.2 + i * 0.04;
+    const speed = 1.4 + i * 0.2;
     const amp = midY * (0.22 - i * 0.015);
     const freq = 1.5 + i * 0.5;
 

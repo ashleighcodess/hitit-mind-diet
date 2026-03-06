@@ -1,0 +1,75 @@
+<!-- ============================================================
+     CLASSIC Peak Vibration Screen HTML
+
+     TO SWAP IN: Replace the entire #screen-peak-vibration div in
+     index.html with this content, then swap the CSS and JS imports:
+
+     CSS: Change peak-vibration.css → peak-vibration-classic.css
+     JS:  Change peak-vibration.js  → peak-vibration-classic.js
+     ============================================================ -->
+<div class="screen" id="screen-peak-vibration">
+
+  <!-- Header -->
+  <div class="pvc-header">
+    <div class="pvc-header-top">
+      <img src="assets/images/hitit-logo.png" alt="HIT IT" class="pvc-header-logo">
+      <span class="pvc-header-title">YOUR PEAK VIBRATION</span>
+    </div>
+    <p class="pvc-header-subtitle">Increase your vibrations up to 1000/Sec to see your miracle that has been there all along.</p>
+  </div>
+
+  <!-- Triangle -->
+  <div class="pvc-triangle">
+    <img src="assets/reference/vibration-triangle.jpg" alt="Vibration Triangle">
+  </div>
+
+  <!-- Reference graphics: Love / Enlightenment / Miracles -->
+  <div class="pvc-ref-row">
+    <div class="pvc-ref-card">
+      <img src="assets/vibrations/vibepage3/love.avif" alt="Love vibration">
+      <div class="pvc-ref-label pvc-ref-label-blue">LOVE</div>
+      <div class="pvc-ref-vibes">500 Vibes</div>
+    </div>
+    <div class="pvc-ref-card">
+      <img src="assets/vibrations/vibepage3/enlightenment.avif" alt="Enlightenment vibration">
+      <div class="pvc-ref-label pvc-ref-label-purple">ENLIGHTENMENT</div>
+      <div class="pvc-ref-vibes">700 Vibes</div>
+    </div>
+    <div class="pvc-ref-card">
+      <img src="assets/vibrations/vibepage3/miracle.jpg" alt="Miracles vibration">
+      <div class="pvc-ref-label pvc-ref-label-white">MIRACLES</div>
+      <div class="pvc-ref-vibes">1000 Vibes</div>
+    </div>
+  </div>
+
+  <!-- Breakthrough banner -->
+  <div class="pvc-breakthrough">
+    <div class="pvc-breakthrough-icon"><img src="assets/vibrations/mountain-flag.avif" alt="Flag"></div>
+    <div class="pvc-breakthrough-text">
+      <div class="pvc-breakthrough-title">HIT YOUR FINAL BREAKTHROUGH</div>
+      <div class="pvc-breakthrough-sub">VIBE FROM 400-1000</div>
+    </div>
+  </div>
+
+  <!-- Milestone setting -->
+  <div class="pvc-milestone">
+    <div class="pvc-milestone-label">Positive High Vibrations 1st Milestone <strong id="pvc-milestone-value">600</strong></div>
+    <input type="range" id="pvc-milestone-slider" min="400" max="1000" step="50" value="600" class="pvc-milestone-slider">
+    <div class="pvc-milestone-range"><span>400</span><span>1000</span></div>
+  </div>
+
+  <!-- Emotion picker -->
+  <div class="pvc-picker-heading">Which 3 Emotions did you feel today</div>
+  <div class="pvc-emotion-grid" id="pvc-emotion-grid"></div>
+
+  <!-- Score card -->
+  <div class="pvc-score-card">
+    <span class="pvc-score-label">YOU HAVE</span>
+    <img src="assets/images/hitit-logo.png" alt="HIT IT" class="pvc-score-logo">
+    <div class="pvc-score-display">
+      <span class="pvc-score-title">Vibe Score</span>
+      <span class="pvc-score-number" id="pvc-score-value">0</span>
+    </div>
+  </div>
+
+</div>

@@ -66,7 +66,7 @@ function activateScreen(name) {
 
   // Leave current screen
   if (currentScreen && screens[currentScreen]?.leave) {
-    screens[currentScreen].leave();
+    try { screens[currentScreen].leave(); } catch (e) { console.error('leave() error:', e); }
   }
 
   // Hide all screens
@@ -94,13 +94,13 @@ function activateScreen(name) {
 
   // Initialize screen if first visit
   if (!screenDef.initialized && screenDef.init) {
-    screenDef.init();
+    try { screenDef.init(); } catch (e) { console.error('init() error:', e); }
     screenDef.initialized = true;
   }
 
   // Enter screen
   if (screenDef.enter) {
-    screenDef.enter();
+    try { screenDef.enter(); } catch (e) { console.error('enter() error:', e); }
   }
 
   currentScreen = name;

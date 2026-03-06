@@ -1,0 +1,307 @@
+/* ========================================
+   Peak Vibration Screen — Classic (Client Mockup Match)
+   ======================================== */
+
+#screen-peak-vibration {
+  padding: 16px;
+  padding-top: max(16px, env(safe-area-inset-top));
+  padding-bottom: 80px;
+  background: #000;
+}
+
+/* ---- Header ---- */
+.pvc-header {
+  margin-bottom: 14px;
+}
+
+.pvc-header-top {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.pvc-header-logo {
+  height: 30px;
+}
+
+.pvc-header-title {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
+}
+
+.pvc-header-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ---- Triangle image ---- */
+.pvc-triangle {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.pvc-triangle img {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+}
+
+/* ---- Reference graphics row (Love / Enlightenment / Miracles) ---- */
+.pvc-ref-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.pvc-ref-card {
+  flex: 1;
+  text-align: center;
+  padding: 8px 4px;
+}
+
+.pvc-ref-card img {
+  width: 100%;
+  height: 55px;
+  object-fit: contain;
+  margin-bottom: 8px;
+}
+
+.pvc-ref-label {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
+.pvc-ref-label-blue { color: #4a9eff; }
+.pvc-ref-label-purple { color: #aa66ff; }
+.pvc-ref-label-white { color: #e0e0e0; }
+
+.pvc-ref-vibes {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* ---- Breakthrough banner — flat, no border ---- */
+.pvc-breakthrough {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 0;
+  background: transparent;
+  margin-bottom: 10px;
+}
+
+.pvc-breakthrough-icon {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: #000;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pvc-breakthrough-icon img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.pvc-breakthrough-text {
+  flex: 1;
+}
+
+.pvc-breakthrough-title {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin-bottom: 2px;
+}
+
+.pvc-breakthrough-sub {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+/* ---- Milestone setting ---- */
+.pvc-milestone {
+  margin-bottom: 16px;
+}
+
+.pvc-milestone-label {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+.pvc-milestone-label strong {
+  color: #fff;
+  font-weight: 700;
+}
+
+.pvc-milestone-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 3px;
+  border-radius: 2px;
+  background: #333;
+  outline: none;
+}
+
+.pvc-milestone-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffd700;
+  cursor: pointer;
+}
+
+.pvc-milestone-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffd700;
+  cursor: pointer;
+  border: none;
+}
+
+.pvc-milestone-range {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* ---- Emotion picker heading ---- */
+.pvc-picker-heading {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+/* ---- Emotion grid — 3x6 text-only buttons ---- */
+.pvc-emotion-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.pvc-emo-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 12px 4px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  min-height: 48px;
+}
+
+.pvc-emo-value {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  line-height: 1.2;
+}
+
+.pvc-emo-label {
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.6);
+  margin-top: 2px;
+  text-align: center;
+  line-height: 1.1;
+}
+
+/* Selected state */
+.pvc-emo-btn.selected {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+}
+
+.pvc-emo-btn.selected .pvc-emo-label {
+  color: #fff;
+}
+
+.pvc-emo-btn:active {
+  opacity: 0.6;
+}
+
+/* ---- Score card at bottom ---- */
+.pvc-score-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 20px;
+}
+
+.pvc-score-label {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pvc-score-logo {
+  height: 22px;
+}
+
+.pvc-score-display {
+  margin-left: auto;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.pvc-score-title {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.pvc-score-number {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.6rem;
+  color: var(--accent-blue);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 360px) {
+  .pvc-emo-btn {
+    min-height: 42px;
+    padding: 8px 2px;
+  }
+  .pvc-emo-value {
+    font-size: 1rem;
+  }
+  .pvc-emo-label {
+    font-size: 0.65rem;
+  }
+  .pvc-ref-card img {
+    height: 40px;
+  }
+}

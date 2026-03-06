@@ -2,7 +2,7 @@
 // Shared Firestore Operations
 // ========================================
 
-import { db } from '../firebase-config.js';
+import { db, storage } from '../firebase-config.js';
 import {
   collection,
   addDoc,
@@ -17,6 +17,11 @@ import {
   updateDoc,
   setDoc
 } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 
 // ---- Date helpers ----
 export function todayStr() {
@@ -189,9 +194,13 @@ export async function getClientsByCoach(coachId) {
 export async function createAssignment(data) {
   return addDoc(collection(db, 'assignments'), {
     ...data,
+    status: 'pending',        // pending → submitted → reviewed
+    response: '',
+    responseUrl: '',
     createdAt: serverTimestamp(),
-    completedAt: null,
-    uploadUrl: ''
+    submittedAt: null,
+    reviewedAt: null,
+    coachNote: ''
   });
 }
 
@@ -208,6 +217,97 @@ export async function getAssignments(clientId) {
       const tb = b.createdAt?.seconds || 0;
       return tb - ta;
     });
+}
+
+export async function submitAssignment(assignmentId, response, responseFiles = []) {
+  const docRef = doc(db, 'assignments', assignmentId);
+  return updateDoc(docRef, {
+    status: 'submitted',
+    response,
+    responseFiles,
+    submittedAt: serverTimestamp()
+  });
+}
+
+// ---- File upload to Firebase Storage ----
+export async function uploadFile(file, path) {
+  const storageRef = ref(storage, path);
+  const snapshot = await uploadBytes(storageRef, file);
+  return getDownloadURL(snapshot.ref);
+}
+
+export async function uploadHomeworkFiles(userId, assignmentId, files) {
+  const results = [];
+  for (const file of files) {
+    const ts = Date.now();
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const path = `homework/${userId}/${assignmentId}/${ts}_${safeName}`;
+    const url = await uploadFile(file, path);
+    results.push({ name: file.name, url, type: file.type, size: file.size });
+  }
+  return results;
+}
+
+export async function reviewAssignment(assignmentId, coachNote = '') {
+  const ref = doc(db, 'assignments', assignmentId);
+  return updateDoc(ref, {
+    status: 'reviewed',
+    coachNote,
+    reviewedAt: serverTimestamp()
+  });
+}
+
+// ---- Notification operations ----
+export async function createNotification(data) {
+  return addDoc(collection(db, 'notifications'), {
+    ...data,
+    read: false,
+    createdAt: serverTimestamp()
+  });
+}
+
+export async function getNotifications(userId) {
+  const q = query(
+    collection(db, 'notifications'),
+    where('toUserId', '==', userId)
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => {
+      const ta = a.createdAt?.seconds || 0;
+      const tb = b.createdAt?.seconds || 0;
+      return tb - ta;
+    });
+}
+
+export async function markNotificationRead(notifId) {
+  return updateDoc(doc(db, 'notifications', notifId), { read: true });
+}
+
+export async function markAllNotificationsRead(userId) {
+  const notifs = await getNotifications(userId);
+  const unread = notifs.filter(n => !n.read);
+  for (const n of unread) {
+    await updateDoc(doc(db, 'notifications', n.id), { read: true });
+  }
+}
+
+export function subscribeToNotifications(userId, callback) {
+  const q = query(
+    collection(db, 'notifications'),
+    where('toUserId', '==', userId)
+  );
+  return onSnapshot(q, (snapshot) => {
+    const notifs = snapshot.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .sort((a, b) => {
+        const ta = a.createdAt?.seconds || 0;
+        const tb = b.createdAt?.seconds || 0;
+        return tb - ta;
+      });
+    callback(notifs);
+  });
 }
 
 // ---- Aggregation helpers ----

@@ -8,12 +8,14 @@ import { getEmotionLabel } from '../data/emotions.js';
 import {
   getClientsByCoach, subscribeToEntries, todayStr, formatTime,
   calcDailyTotals, countByEmotion, updateUserSettings,
-  createAssignment, getAssignments
+  createAssignment, getAssignments, reviewAssignment,
+  subscribeToNotifications, markAllNotificationsRead
 } from '../data/firestore.js';
 import { getUserDoc } from '../data/firestore.js';
 
 let selectedClientId = null;
 let unsubClientEntries = null;
+let unsubNotifications = null;
 
 function getEmbedUrl(url) {
   // YouTube
@@ -80,18 +82,31 @@ async function loadClients() {
       return;
     }
 
-    clientList.innerHTML = clients.map(client => {
+    // Fetch assignment counts per client
+    const clientCards = await Promise.all(clients.map(async (client) => {
+      let submittedCount = 0;
+      let pendingCount = 0;
+      try {
+        const assigns = await getAssignments(client.id);
+        submittedCount = assigns.filter(a => a.status === 'submitted').length;
+        pendingCount = assigns.filter(a => !a.status || a.status === 'pending').length;
+      } catch (e) { /* ignore */ }
+
       return `
         <div class="client-card" data-client-id="${client.id}">
           <div class="client-card-header">
             <span class="client-name">${escapeHtml(client.name)}</span>
+            ${submittedCount > 0 ? `<span style="font-size:0.65rem;font-weight:600;color:var(--tier-blue);background:rgba(74,158,255,0.12);padding:2px 8px;border-radius:10px;">${submittedCount} to review</span>` : ''}
           </div>
           <div class="client-meta">
             <span>${client.email}</span>
+            ${pendingCount > 0 ? `<span style="font-size:0.65rem;color:var(--text-muted)">${pendingCount} pending</span>` : ''}
           </div>
         </div>
       `;
-    }).join('');
+    }));
+
+    clientList.innerHTML = clientCards.join('');
 
     clientList.querySelectorAll('.client-card').forEach(card => {
       card.addEventListener('click', () => openClientDetail(card.dataset.clientId));
@@ -106,6 +121,12 @@ async function loadClients() {
 async function openClientDetail(clientId) {
   selectedClientId = clientId;
   showDetailView();
+
+  // Mark notifications read for this coach
+  const user = getCurrentUser();
+  if (user) {
+    markAllNotificationsRead(user.uid).catch(() => {});
+  }
 
   try {
     const client = await getUserDoc(clientId);
@@ -166,28 +187,118 @@ async function loadClientAssignments(clientId) {
       listEl.innerHTML = '<p class="text-muted" style="font-size:0.8rem;font-style:italic">No assignments sent yet.</p>';
       return;
     }
-    listEl.innerHTML = '<h4 class="coach-sub-title">Sent Assignments</h4>' +
-      assignments.map(a => {
-        const status = a.completedAt ? 'Completed' : 'Pending';
-        const statusClass = a.completedAt ? 'coach-status-done' : 'coach-status-pending';
-        const due = a.dueDate || '';
-        return `
-          <div class="coach-assign-item">
-            <div class="coach-assign-item-header">
-              <span class="coach-assign-item-type">${a.type}</span>
-              <span class="${statusClass}">${status}</span>
-            </div>
-            <div class="coach-assign-item-title">${escapeHtml(a.title)}</div>
-            ${a.description ? `<div class="coach-assign-item-desc">${escapeHtml(a.description)}</div>` : ''}
-            ${a.mediaUrl ? `<div class="coach-assign-media">${renderMedia(a.mediaUrl, a.type)}</div>` : ''}
-            ${due ? `<div class="coach-assign-item-due">Due: ${due}</div>` : ''}
-          </div>
-        `;
-      }).join('');
+
+    const submitted = assignments.filter(a => a.status === 'submitted');
+    const pending = assignments.filter(a => !a.status || a.status === 'pending');
+    const reviewed = assignments.filter(a => a.status === 'reviewed');
+
+    let html = '';
+
+    // Show submitted first (needs attention)
+    if (submitted.length > 0) {
+      html += `<h4 class="coach-sub-title" style="color:var(--tier-blue)">Needs Review (${submitted.length})</h4>`;
+      html += submitted.map(a => renderCoachAssignCard(a, 'submitted')).join('');
+    }
+
+    if (pending.length > 0) {
+      html += `<h4 class="coach-sub-title" style="margin-top:16px">Pending (${pending.length})</h4>`;
+      html += pending.map(a => renderCoachAssignCard(a, 'pending')).join('');
+    }
+
+    if (reviewed.length > 0) {
+      html += `<h4 class="coach-sub-title" style="margin-top:16px;color:var(--tier-green)">Reviewed (${reviewed.length})</h4>`;
+      html += reviewed.map(a => renderCoachAssignCard(a, 'reviewed')).join('');
+    }
+
+    listEl.innerHTML = html;
+
+    // Attach review buttons
+    listEl.querySelectorAll('.coach-review-btn').forEach(btn => {
+      btn.addEventListener('click', async () => {
+        const assignId = btn.dataset.id;
+        const card = btn.closest('.coach-assign-item');
+        const noteInput = card.querySelector('.coach-review-note');
+        const note = noteInput ? noteInput.value.trim() : '';
+
+        btn.disabled = true;
+        btn.textContent = 'Saving...';
+
+        try {
+          await reviewAssignment(assignId, note);
+          showToast('Assignment reviewed!', 'success');
+          loadClientAssignments(clientId);
+        } catch (err) {
+          console.error('Failed to review:', err);
+          showToast('Failed to save review');
+          btn.disabled = false;
+          btn.textContent = 'Mark Reviewed';
+        }
+      });
+    });
+
   } catch (err) {
     console.error('Failed to load assignments:', err);
     listEl.innerHTML = '';
   }
+}
+
+function renderCoachFileList(files) {
+  if (!files || files.length === 0) return '';
+  return `
+    <div style="margin-bottom:8px">
+      <div style="font-size:0.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">Attached Files (${files.length})</div>
+      ${files.map(f => {
+        const isImage = f.type && f.type.startsWith('image/');
+        return `
+          <div style="display:flex;align-items:center;gap:8px;padding:6px 10px;background:rgba(255,255,255,0.02);border:1px solid var(--border-color);border-radius:6px;margin-bottom:4px">
+            ${isImage ? `<img src="${escapeHtml(f.url)}" alt="" style="width:40px;height:40px;object-fit:cover;border-radius:4px;flex-shrink:0">` : ''}
+            <a href="${escapeHtml(f.url)}" target="_blank" style="font-size:0.75rem;color:var(--accent-blue);text-decoration:underline;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${escapeHtml(f.name)}</a>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
+function renderCoachAssignCard(a, status) {
+  const statusLabels = { pending: 'Pending', submitted: 'Submitted', reviewed: 'Reviewed' };
+  const statusColors = { pending: '#f0a030', submitted: 'var(--tier-blue)', reviewed: 'var(--tier-green)' };
+  const due = a.dueDate || '';
+
+  return `
+    <div class="coach-assign-item" style="border-left:3px solid ${statusColors[status]}">
+      <div class="coach-assign-item-header">
+        <span class="coach-assign-item-type">${a.type}</span>
+        <span style="font-size:0.7rem;font-weight:600;color:${statusColors[status]}">${statusLabels[status]}</span>
+      </div>
+      <div class="coach-assign-item-title">${escapeHtml(a.title)}</div>
+      ${a.description ? `<div class="coach-assign-item-desc">${escapeHtml(a.description)}</div>` : ''}
+      ${a.mediaUrl ? `<div class="coach-assign-media">${renderMedia(a.mediaUrl, a.type)}</div>` : ''}
+      ${due ? `<div class="coach-assign-item-due">Due: ${due}</div>` : ''}
+
+      ${status === 'submitted' ? `
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color)">
+          <div style="font-size:0.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px">Client's Response</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary);padding:8px 10px;background:rgba(74,158,255,0.06);border-radius:6px;border-left:3px solid var(--tier-blue);white-space:pre-wrap;margin-bottom:8px">${escapeHtml(a.response || 'No written response')}</div>
+          ${renderCoachFileList(a.responseFiles)}
+          <textarea class="coach-review-note" placeholder="Add feedback (optional)..." rows="2" style="width:100%;background:var(--bg-input);border:1px solid var(--border-color);border-radius:6px;padding:8px 10px;font-size:0.8rem;color:var(--text-primary);resize:none;font-family:inherit;margin-bottom:8px"></textarea>
+          <button class="coach-review-btn btn btn-primary" data-id="${a.id}" style="width:100%;padding:10px;font-size:0.8rem">Mark Reviewed</button>
+        </div>
+      ` : ''}
+
+      ${status === 'reviewed' ? `
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color)">
+          <div style="font-size:0.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">Client's Response</div>
+          <div style="font-size:0.8rem;color:var(--text-secondary);padding:8px 10px;background:rgba(74,158,255,0.06);border-radius:6px;border-left:3px solid var(--tier-blue);white-space:pre-wrap;margin-bottom:8px">${escapeHtml(a.response || 'No written response')}</div>
+          ${renderCoachFileList(a.responseFiles)}
+          ${a.coachNote ? `
+            <div style="font-size:0.7rem;font-weight:600;color:var(--tier-green);text-transform:uppercase;margin-bottom:4px">Your Feedback</div>
+            <div style="font-size:0.8rem;color:var(--text-secondary);padding:8px 10px;background:rgba(68,204,68,0.06);border-radius:6px;border-left:3px solid var(--tier-green);white-space:pre-wrap">${escapeHtml(a.coachNote)}</div>
+          ` : ''}
+        </div>
+      ` : ''}
+    </div>
+  `;
 }
 
 function renderClientStats(entries) {
@@ -360,12 +471,29 @@ registerScreen('coach', {
   enter() {
     showListView();
     loadClients();
+
+    // Subscribe to notifications for badge updates
+    const user = getCurrentUser();
+    if (user && !unsubNotifications) {
+      unsubNotifications = subscribeToNotifications(user.uid, (notifs) => {
+        const unread = notifs.filter(n => !n.read);
+        const badge = document.getElementById('coach-notif-badge');
+        if (badge) {
+          badge.textContent = unread.length;
+          badge.style.display = unread.length > 0 ? 'flex' : 'none';
+        }
+      });
+    }
   },
 
   leave() {
     if (unsubClientEntries) {
       unsubClientEntries();
       unsubClientEntries = null;
+    }
+    if (unsubNotifications) {
+      unsubNotifications();
+      unsubNotifications = null;
     }
   }
 });

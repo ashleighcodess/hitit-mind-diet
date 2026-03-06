@@ -64,7 +64,7 @@ registerScreen('tracker', {
       weekday: 'long', month: 'long', day: 'numeric'
     });
 
-    // Emotion button taps
+    // Emotion button taps — ALL tiers now open LOG IT modal
     document.querySelectorAll('#screen-tracker .emotion-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const emotionKey = btn.dataset.emotion;
@@ -74,21 +74,13 @@ registerScreen('tracker', {
         btn.classList.add('tapped');
         setTimeout(() => btn.classList.remove('tapped'), 600);
 
-        if (tier === 'red') {
-          pendingEmotion = { emotion: emotionKey, tier, calories };
-          const modal = document.getElementById('tracker-modal');
-          document.getElementById('tracker-modal-title').textContent =
-            `What triggered "${getEmotionLabel(emotionKey)}"?`;
-          document.getElementById('tracker-modal-details').value = '';
-          modal.classList.add('active');
-          document.getElementById('tracker-modal-details').focus();
-        } else {
-          const user = getCurrentUser();
-          if (!user) { showToast('Please sign in first'); return; }
-          logEntry(user.uid, emotionKey, tier, calories, '')
-            .then(() => showToast(`${getEmotionLabel(emotionKey)} logged!`, 'success'))
-            .catch((err) => { console.error('Log error:', err); showToast('Failed to log entry'); });
-        }
+        pendingEmotion = { emotion: emotionKey, tier, calories };
+        const modal = document.getElementById('tracker-modal');
+        document.getElementById('tracker-modal-title').textContent =
+          `What triggered "${getEmotionLabel(emotionKey)}"?`;
+        document.getElementById('tracker-modal-details').value = '';
+        modal.classList.add('active');
+        document.getElementById('tracker-modal-details').focus();
       });
     });
 
@@ -118,6 +110,28 @@ registerScreen('tracker', {
         pendingEmotion = null;
       }
     });
+
+    // Menu toggle + logout
+    const menuBtn = document.getElementById('topbar-menu-btn');
+    const dropdown = document.getElementById('topbar-dropdown');
+    if (menuBtn && dropdown) {
+      menuBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdown.classList.toggle('open');
+      });
+      document.addEventListener('click', () => dropdown.classList.remove('open'));
+      dropdown.addEventListener('click', (e) => e.stopPropagation());
+    }
+
+    const logoutBtn = document.getElementById('tracker-logout-btn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', async () => {
+        const { signOut } = await import('https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js');
+        const { auth } = await import('../firebase-config.js');
+        await signOut(auth);
+        window.location.hash = 'splash';
+      });
+    }
 
     // Intention save
     let intentionTimeout;

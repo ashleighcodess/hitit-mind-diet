@@ -57,26 +57,29 @@ export const TIERS = {
 
 export const EMOTIONS = [
   // RED — adds calories
-  { key: 'guilt',              label: 'Guilt',           tier: 'red',    calories: 1000,  icon: 'TV Super Guilt.png' },
-  { key: 'fear',               label: 'Fear',            tier: 'red',    calories: 2000,  icon: 'TV Super Fear.png' },
-  { key: 'anger',              label: 'Anger',           tier: 'red',    calories: 3000,  icon: 'TV Super Anger.png' },
-  { key: 'doubt',              label: 'Doubt',           tier: 'red',    calories: 4000,  icon: 'TV Super Doubt.png' },
-  { key: 'critical',           label: 'Critical',        tier: 'red',    calories: 5000,  icon: 'TV Super Critical.png' },
+  { key: 'guilt',              label: 'Guilt',              tier: 'red',    calories: 1000,  icon: 'RedComplainticons/Guilt.png' },
+  { key: 'fear',               label: 'Fear',               tier: 'red',    calories: 2000,  icon: 'RedComplainticons/Fear.png' },
+  { key: 'anger',              label: 'Anger',              tier: 'red',    calories: 3000,  icon: 'RedComplainticons/Anger.png' },
+  { key: 'doubt',              label: 'Doubt',              tier: 'red',    calories: 4000,  icon: 'RedComplainticons/Doubt.png' },
+  { key: 'critical',           label: 'Critical\nSelf-Centered', tier: 'red', calories: 5000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Red Critical Self Centered.png' },
+  { key: 'complaints',         label: 'Complaints',         tier: 'red',    calories: 6000,  icon: 'RedComplainticons/Complaints White.png' },
   // GREEN — burns calories (flips RED to BLUE)
-  { key: 'willingness',        label: 'Willingness',     tier: 'green',  calories: -2000, icon: 'TV Super Willingness.png' },
-  { key: 'point_self_flip',    label: 'Point Self Flip', tier: 'green',  calories: -3000, icon: 'TV Super Point Self Flip.png' },
+  { key: 'willingness',        label: 'Willingness',     tier: 'green',  calories: -2000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Green Willingness.png' },
+  { key: 'point_self_flip',    label: 'Point Self Flip', tier: 'green',  calories: -3000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Green Point to Self Flip.png' },
   // BLUE — burns calories
-  { key: 'big_smile',          label: 'Big Smile',       tier: 'blue',   calories: -1000, icon: 'TV Super Big Smile.png' },
-  { key: 'bright_side',        label: 'Bright Side',     tier: 'blue',   calories: -2000, icon: 'TV Super Bright Side.png' },
-  { key: 'giving_compliments', label: 'Giving Comps',    tier: 'blue',   calories: -3000, icon: 'TV Super Giving Compliments.png' },
-  { key: 'piece_done',         label: 'Piece Done',      tier: 'blue',   calories: -4000, icon: 'TV Super Self-Centered.png' },
+  { key: 'bright_side',        label: 'Brighter Side',   tier: 'blue',   calories: -500,  icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 500 Brighter Side.png' },
+  { key: 'big_smile',          label: 'Big Smile',       tier: 'blue',   calories: -1000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 1000 Big Smile.png' },
+  { key: 'compliments',        label: 'Compliments',     tier: 'blue',   calories: -2000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 2000 Compliments.png' },
+  { key: 'grateful',           label: 'Grateful',        tier: 'blue',   calories: -3000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 3000 Grateful.png' },
+  { key: 'piece_done',         label: 'Piece Done',      tier: 'blue',   calories: -4000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue Piece Done.png' },
+  { key: 'giving',             label: 'Giving',          tier: 'blue',   calories: -5000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Blue 5000 Giving .png' },
   // PURPLE — burns calories
-  { key: 'rocket_desire',      label: 'Rocket Desire',   tier: 'purple', calories: -1000, icon: 'TV Super Rocket Desire.png' },
-  { key: 'spend_money',        label: 'Spend Money',     tier: 'purple', calories: -2000, icon: 'TV Super Spend Money.png' },
-  { key: 'synchronicity',      label: 'Synchronicity',   tier: 'purple', calories: -3000, icon: 'TV Super Synchronicity.png' },
+  { key: 'rocket_desire',      label: 'Rocket Desire',   tier: 'purple', calories: -1000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Purple Rocket Desire.png' },
+  { key: 'spend_money',        label: 'Spent Money',     tier: 'purple', calories: -2000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Purple Spent Money NOT Spend.png' },
+  { key: 'synchronicity',      label: 'Synchronicity',   tier: 'purple', calories: -3000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Purple Synchronicity.png' },
   // WHITE — burns calories
-  { key: 'intention',          label: 'Intention',       tier: 'white',  calories: -1000, icon: 'TV Super Intention.png' },
-  { key: 'stayed_calm',        label: 'Stayed Calm',     tier: 'white',  calories: -2000, icon: 'TV Super Stayed Calm.png' }
+  { key: 'intention',          label: 'Intention',       tier: 'white',  calories: -1000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/White Intention.png' },
+  { key: 'stayed_calm',        label: 'Stayed Calm',     tier: 'white',  calories: -2000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/White Stayed Calm.png' }
 ];
 
 // Lookup helpers

@@ -8,6 +8,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>HIT IT Mind Diet</title>
 
+  <!-- Montserrat — Google Fonts CDN (fast woff2, preconnect) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
   <!-- Global + Screen CSS -->
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/screens/splash.css">
@@ -16,7 +21,7 @@
   <link rel="stylesheet" href="css/screens/tracker.css">
   <link rel="stylesheet" href="css/screens/daily-weight.css">
   <link rel="stylesheet" href="css/screens/weekly.css">
-  <link rel="stylesheet" href="css/screens/peak-vibration.css">
+  <link rel="stylesheet" href="css/screens/peak-vibration-classic.css">
   <link rel="stylesheet" href="css/screens/exercises.css">
   <link rel="stylesheet" href="css/screens/reference.css">
   <link rel="stylesheet" href="css/screens/coach.css">
@@ -54,9 +59,9 @@
       }
       .bottom-nav {
         max-width: 430px;
-        left: 50% !important;
-        right: auto !important;
-        transform: translateX(-50%);
+        margin: 0 auto;
+        left: 0 !important;
+        right: 0 !important;
       }
       .dash-topbar {
         max-width: 430px;
@@ -69,6 +74,12 @@
       .toast {
         max-width: 380px;
       }
+    }
+
+    /* Screens sit below nav */
+    .screen {
+      position: relative;
+      z-index: 1;
     }
 
     /* Bottom navigation */
@@ -86,7 +97,7 @@
       border-top: 1px solid var(--border-color);
       padding: 8px 0;
       padding-bottom: max(8px, env(safe-area-inset-bottom));
-      z-index: 90;
+      z-index: 9999;
     }
     .bottom-nav.nav-visible { display: flex; }
 
@@ -206,8 +217,8 @@
         <div class="demo-chip demo-chip-blue demo-tappable" data-cal="-4000">
           <img src="assets/icons/TV Super Self-Centered.png" alt=""><span>Piece Done</span><span class="demo-chip-cal">-4,000</span>
         </div>
-        <div class="demo-chip demo-chip-blue demo-tappable" data-cal="-2000">
-          <img src="assets/icons/TV Super Bright Side.png" alt=""><span>Bright Side</span><span class="demo-chip-cal">-2,000</span>
+        <div class="demo-chip demo-chip-blue demo-tappable" data-cal="-500">
+          <img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 500 Brighter Side.png" alt=""><span>Brighter Side</span><span class="demo-chip-cal">-500</span>
         </div>
       </div>
 
@@ -355,7 +366,17 @@
       <span>Mind Diet</span>
     </div>
     <div class="dash-topbar-actions">
-      <button class="btn-icon" id="tracker-logout-btn" title="Sign out" onclick="window.hititLogout && window.hititLogout()">&#x2192;</button>
+      <div class="topbar-menu-wrap">
+        <button class="btn-icon topbar-menu-btn" id="topbar-menu-btn" title="Menu">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="5" x2="15" y2="5"/><line x1="3" y1="9" x2="15" y2="9"/><line x1="3" y1="13" x2="15" y2="13"/></svg>
+        </button>
+        <div class="topbar-dropdown" id="topbar-dropdown">
+          <button class="topbar-dropdown-item" id="tracker-logout-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Sign Out
+          </button>
+        </div>
+      </div>
     </div>
   </header>
 
@@ -377,29 +398,34 @@
     <div class="tier-title">RED 20-150 Vibrations Per Second</div>
     <div class="emotion-grid">
       <button class="emotion-btn" data-emotion="guilt" data-tier="red" data-calories="1000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Guilt.png" alt="Guilt"></div>
+        <div class="icon-wrap"><img src="assets/icons/RedComplainticons/Guilt.png" alt="Guilt"></div>
         <span class="emotion-name">Guilt</span>
         <span class="emotion-cal">+1,000</span>
       </button>
       <button class="emotion-btn" data-emotion="fear" data-tier="red" data-calories="2000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Fear.png" alt="Fear"></div>
+        <div class="icon-wrap"><img src="assets/icons/RedComplainticons/Fear.png" alt="Fear"></div>
         <span class="emotion-name">Fear</span>
         <span class="emotion-cal">+2,000</span>
       </button>
       <button class="emotion-btn" data-emotion="anger" data-tier="red" data-calories="3000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Anger.png" alt="Anger"></div>
+        <div class="icon-wrap"><img src="assets/icons/RedComplainticons/Anger.png" alt="Anger"></div>
         <span class="emotion-name">Anger</span>
         <span class="emotion-cal">+3,000</span>
       </button>
       <button class="emotion-btn" data-emotion="doubt" data-tier="red" data-calories="4000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Doubt.png" alt="Doubt"></div>
+        <div class="icon-wrap"><img src="assets/icons/RedComplainticons/Doubt.png" alt="Doubt"></div>
         <span class="emotion-name">Doubt</span>
         <span class="emotion-cal">+4,000</span>
       </button>
       <button class="emotion-btn" data-emotion="critical" data-tier="red" data-calories="5000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Critical.png" alt="Critical"></div>
-        <span class="emotion-name">Critical</span>
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Red Critical Self Centered.png" alt="Critical"></div>
+        <span class="emotion-name">Critical<br>Self-Centered</span>
         <span class="emotion-cal">+5,000</span>
+      </button>
+      <button class="emotion-btn" data-emotion="complaints" data-tier="red" data-calories="6000">
+        <div class="icon-wrap"><img src="assets/icons/RedComplainticons/Complaints White.png" alt="Complaints"></div>
+        <span class="emotion-name">Complaints</span>
+        <span class="emotion-cal">+6,000</span>
       </button>
     </div>
   </section>
@@ -413,12 +439,12 @@
     <div class="tier-title">GREEN 175-350 Vibrations Per Second</div>
     <div class="emotion-grid">
       <button class="emotion-btn" data-emotion="willingness" data-tier="green" data-calories="-2000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Willingness.png" alt="Willingness"></div>
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Green Willingness.png" alt="Willingness"></div>
         <span class="emotion-name">Willingness</span>
         <span class="emotion-cal">-2,000</span>
       </button>
       <button class="emotion-btn" data-emotion="point_self_flip" data-tier="green" data-calories="-3000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Point Self Flip.png" alt="Point Self Flip"></div>
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Green Point to Self Flip.png" alt="Point Self Flip"></div>
         <span class="emotion-name">Point Self Flip</span>
         <span class="emotion-cal">-3,000</span>
       </button>
@@ -434,25 +460,35 @@
     </div>
     <div class="tier-title">BLUE 400-600 Vibrations Per Second</div>
     <div class="emotion-grid">
+      <button class="emotion-btn" data-emotion="bright_side" data-tier="blue" data-calories="-500">
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 500 Brighter Side.png" alt="Brighter Side"></div>
+        <span class="emotion-name">Brighter Side</span>
+        <span class="emotion-cal">-500</span>
+      </button>
       <button class="emotion-btn" data-emotion="big_smile" data-tier="blue" data-calories="-1000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Big Smile.png" alt="Big Smile"></div>
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 1000 Big Smile.png" alt="Big Smile"></div>
         <span class="emotion-name">Big Smile</span>
         <span class="emotion-cal">-1,000</span>
       </button>
-      <button class="emotion-btn" data-emotion="bright_side" data-tier="blue" data-calories="-2000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Bright Side.png" alt="Bright Side"></div>
-        <span class="emotion-name">Bright Side</span>
+      <button class="emotion-btn" data-emotion="compliments" data-tier="blue" data-calories="-2000">
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 2000 Compliments.png" alt="Compliments"></div>
+        <span class="emotion-name">Compliments</span>
         <span class="emotion-cal">-2,000</span>
       </button>
-      <button class="emotion-btn" data-emotion="giving_compliments" data-tier="blue" data-calories="-3000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Giving Compliments.png" alt="Giving Comps"></div>
-        <span class="emotion-name">Giving Comps</span>
+      <button class="emotion-btn" data-emotion="grateful" data-tier="blue" data-calories="-3000">
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 3000 Grateful.png" alt="Grateful"></div>
+        <span class="emotion-name">Grateful</span>
         <span class="emotion-cal">-3,000</span>
       </button>
       <button class="emotion-btn" data-emotion="piece_done" data-tier="blue" data-calories="-4000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Self-Centered.png" alt="Piece Done"></div>
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue Piece Done.png" alt="Piece Done"></div>
         <span class="emotion-name">Piece Done</span>
         <span class="emotion-cal">-4,000</span>
+      </button>
+      <button class="emotion-btn" data-emotion="giving" data-tier="blue" data-calories="-5000">
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Blue 5000 Giving .png" alt="Giving"></div>
+        <span class="emotion-name">Giving</span>
+        <span class="emotion-cal">-5,000</span>
       </button>
     </div>
   </section>
@@ -466,17 +502,17 @@
     <div class="tier-title">PURPLE 700-900 Vibrations Per Second</div>
     <div class="emotion-grid">
       <button class="emotion-btn" data-emotion="rocket_desire" data-tier="purple" data-calories="-1000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Rocket Desire.png" alt="Rocket Desire"></div>
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Purple Rocket Desire.png" alt="Rocket Desire"></div>
         <span class="emotion-name">Rocket Desire</span>
         <span class="emotion-cal">-1,000</span>
       </button>
       <button class="emotion-btn" data-emotion="spend_money" data-tier="purple" data-calories="-2000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Spend Money.png" alt="Spend Money"></div>
-        <span class="emotion-name">Spend Money</span>
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Purple Spent Money NOT Spend.png" alt="Spent Money"></div>
+        <span class="emotion-name">Spent Money</span>
         <span class="emotion-cal">-2,000</span>
       </button>
       <button class="emotion-btn" data-emotion="synchronicity" data-tier="purple" data-calories="-3000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Synchronicity.png" alt="Synchronicity"></div>
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Purple Synchronicity.png" alt="Synchronicity"></div>
         <span class="emotion-name">Synchronicity</span>
         <span class="emotion-cal">-3,000</span>
       </button>
@@ -493,12 +529,12 @@
     <div class="tier-title">WHITE 901-1000 Vibrations Per Second</div>
     <div class="emotion-grid">
       <button class="emotion-btn" data-emotion="intention" data-tier="white" data-calories="-1000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Intention.png" alt="Intention"></div>
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/White Intention.png" alt="Intention"></div>
         <span class="emotion-name">Intention</span>
         <span class="emotion-cal">-1,000</span>
       </button>
       <button class="emotion-btn" data-emotion="stayed_calm" data-tier="white" data-calories="-2000">
-        <div class="icon-wrap"><img src="assets/icons/TV Super Stayed Calm.png" alt="Stayed Calm"></div>
+        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/White Stayed Calm.png" alt="Stayed Calm"></div>
         <span class="emotion-name">Stayed Calm</span>
         <span class="emotion-cal">-2,000</span>
       </button>
@@ -525,7 +561,7 @@
       <textarea id="tracker-modal-details" placeholder="Briefly describe what triggered this emotion..."></textarea>
       <div class="modal-actions">
         <button class="btn btn-outline" id="tracker-modal-cancel">Cancel</button>
-        <button class="btn btn-primary" id="tracker-modal-save">Log It</button>
+        <button class="btn btn-primary" id="tracker-modal-save">LOG IT</button>
       </div>
     </div>
   </div>
@@ -570,7 +606,8 @@
 <div class="screen" id="screen-weekly">
   <div class="weekly-video-header">
     <video autoplay muted loop playsinline>
-      <source src="assets/video/ai-brain.mp4" type="video/mp4">
+      <source src="assets/video/brain-head.mov" type="video/quicktime">
+      <source src="assets/video/brain-head.mov" type="video/mp4">
     </video>
     <div class="weekly-video-overlay">
       <h1>Weekly Results</h1>
@@ -630,20 +667,70 @@
      SCREEN: PEAK VIBRATION
      ============================================================ -->
 <div class="screen" id="screen-peak-vibration">
-  <div class="peak-header">
-    <h1>Your Peak Vibration</h1>
-    <p>Track your highest vibrational state</p>
+
+  <!-- Header -->
+  <div class="pvc-header">
+    <div class="pvc-header-top">
+      <img src="assets/images/hitit-logo.png" alt="HIT IT" class="pvc-header-logo">
+      <span class="pvc-header-title">YOUR PEAK VIBRATION</span>
+    </div>
+    <p class="pvc-header-subtitle">Increase your vibrations up to 1000/Sec to see your miracle that has been there all along.</p>
   </div>
-  <div class="peak-triangle">
-    <img src="assets/reference/vibration-triangle.png" alt="Vibration Triangle">
+
+  <!-- Triangle -->
+  <div class="pvc-triangle">
+    <img src="assets/reference/vibration-triangle.jpg" alt="Vibration Triangle">
   </div>
-  <div id="peak-milestones" class="peak-milestones"></div>
-  <div class="peak-score">
-    <div class="peak-score-label">Your Vibe Score</div>
-    <div class="peak-score-value" id="peak-vibe-score">0</div>
+
+  <!-- Reference graphics: Love / Enlightenment / Miracles -->
+  <div class="pvc-ref-row">
+    <div class="pvc-ref-card">
+      <img src="assets/vibrations/vibepage3/love.avif" alt="Love vibration">
+      <div class="pvc-ref-label pvc-ref-label-blue">LOVE</div>
+      <div class="pvc-ref-vibes">500 Vibes</div>
+    </div>
+    <div class="pvc-ref-card">
+      <img src="assets/vibrations/vibepage3/enlightenment.avif" alt="Enlightenment vibration">
+      <div class="pvc-ref-label pvc-ref-label-purple">ENLIGHTENMENT</div>
+      <div class="pvc-ref-vibes">700 Vibes</div>
+    </div>
+    <div class="pvc-ref-card">
+      <img src="assets/vibrations/vibepage3/miracle.jpg" alt="Miracles vibration">
+      <div class="pvc-ref-label pvc-ref-label-white">MIRACLES</div>
+      <div class="pvc-ref-vibes">1000 Vibes</div>
+    </div>
   </div>
-  <div class="peak-picker-label">Select your top 3 emotions today</div>
-  <div id="peak-emotion-picker" class="peak-emotion-picker"></div>
+
+  <!-- Breakthrough banner -->
+  <div class="pvc-breakthrough">
+    <div class="pvc-breakthrough-icon"><img src="assets/vibrations/mountain-flag.avif" alt="Flag"></div>
+    <div class="pvc-breakthrough-text">
+      <div class="pvc-breakthrough-title">HIT YOUR FINAL BREAKTHROUGH</div>
+      <div class="pvc-breakthrough-sub">VIBE FROM 400-1000</div>
+    </div>
+  </div>
+
+  <!-- Milestone setting -->
+  <div class="pvc-milestone">
+    <div class="pvc-milestone-label">Positive High Vibrations 1st Milestone <strong id="pvc-milestone-value">600</strong></div>
+    <input type="range" id="pvc-milestone-slider" min="400" max="1000" step="50" value="600" class="pvc-milestone-slider">
+    <div class="pvc-milestone-range"><span>400</span><span>1000</span></div>
+  </div>
+
+  <!-- Emotion picker -->
+  <div class="pvc-picker-heading">Which 3 Emotions did you feel today</div>
+  <div class="pvc-emotion-grid" id="pvc-emotion-grid"></div>
+
+  <!-- Score card -->
+  <div class="pvc-score-card">
+    <span class="pvc-score-label">YOU HAVE</span>
+    <img src="assets/images/hitit-logo.png" alt="HIT IT" class="pvc-score-logo">
+    <div class="pvc-score-display">
+      <span class="pvc-score-title">Vibe Score</span>
+      <span class="pvc-score-number" id="pvc-score-value">0</span>
+    </div>
+  </div>
+
 </div>
 
 <!-- ============================================================
@@ -651,8 +738,11 @@
      ============================================================ -->
 <div class="screen" id="screen-exercises">
   <div class="exercises-header">
-    <h1>Exercises</h1>
-    <p>Assignments and practices from your coach</p>
+    <div class="ex-header-top">
+      <img src="assets/images/hitit-logo.png" alt="HIT IT" class="ex-header-logo">
+      <p class="ex-header-subtitle">LIVING YOUR NEW STORY</p>
+    </div>
+    <h1>EXERCISES / TASK ASSIGNMENTS</h1>
   </div>
   <div id="exercises-list"></div>
 </div>
@@ -668,7 +758,14 @@
     <div class="ref-card">
       <img src="assets/reference/bowling-pins.jpg" alt="60,000 Thoughts">
       <div class="ref-card-caption">
-        <h3>We Are Pinned Down With Over 42,000 Negative Thoughts Per Day</h3>
+        <h3>In the outside world it&rsquo;s fact that 7 out of 10 People are Predominately RED, 2 are GREEN and Only 1 Consistently Vibrates BLUE.</h3>
+      </div>
+    </div>
+
+    <div class="ref-card">
+      <img src="assets/images/prism.png" alt="Prism">
+      <div class="ref-card-caption">
+        <h3>Prism</h3>
       </div>
     </div>
 
@@ -681,7 +778,7 @@
     </div>
 
     <div class="ref-card">
-      <img src="assets/reference/electromagnetic-spectrum.png" alt="Electromagnetic Spectrum">
+      <img src="assets/images/electromagneticspectrum.png" alt="Electromagnetic Spectrum">
       <div class="ref-card-caption">
         <h3>Electromagnetic Spectrum</h3>
       </div>
@@ -713,7 +810,13 @@
 <div class="screen" id="screen-coach">
   <div class="coach-topbar">
     <h1>Coach Dashboard</h1>
-    <button class="btn-icon" id="coach-logout-btn" title="Sign out">&#x2192;</button>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <div style="position:relative;">
+        <span id="coach-notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:var(--tier-red);color:#fff;font-size:0.6rem;font-weight:700;align-items:center;justify-content:center;z-index:2;">0</span>
+        <span style="font-size:1.2rem;">&#128276;</span>
+      </div>
+      <button class="btn-icon" id="coach-logout-btn" title="Sign out">&#x2192;</button>
+    </div>
   </div>
 
   <!-- List view -->
@@ -891,21 +994,26 @@
      SCRIPTS (Module)
      ============================================================ -->
 <script type="module">
-  // Import all screen modules (they self-register via registerScreen)
-  import './js/screens/splash.js';
-  import './js/screens/onboarding.js';
-  import './js/screens/auth.js';
-  import './js/screens/tracker.js';
-  import './js/screens/daily-weight.js';
-  import './js/screens/weekly.js';
-  import './js/screens/peak-vibration.js';
-  import './js/screens/exercises.js';
-  import './js/screens/reference.js';
-  import './js/screens/coach.js';
-
-  // Initialize SPA router + animations
+  // Import app + animations first (static)
   import { initApp } from './js/app.js';
   import { initAnimations } from './js/animations.js';
+
+  // Load all screen modules (dynamic so one failure doesn't break the app)
+  const screenFiles = [
+    './js/screens/splash.js',
+    './js/screens/onboarding.js',
+    './js/screens/auth.js',
+    './js/screens/tracker.js',
+    './js/screens/daily-weight.js',
+    './js/screens/weekly.js',
+    './js/screens/peak-vibration-classic.js',
+    './js/screens/exercises.js',
+    './js/screens/reference.js',
+    './js/screens/coach.js'
+  ];
+  await Promise.all(screenFiles.map(s => import(s).catch(e => console.error('Failed to load:', s, e))));
+
+  // Initialize SPA router + animations
   initApp();
   initAnimations();
 </script>

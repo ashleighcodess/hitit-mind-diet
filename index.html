@@ -495,61 +495,65 @@
     </div>
   </section>
 
-  <!-- Button to show Purple & White -->
-  <button class="section-link-btn" id="show-purple-white">Purple &amp; White Vibes</button>
-
-  <!-- PURPLE TIER (hidden by default) -->
-  <section class="tier-section tier-purple" id="purple-white-section" style="display:none;">
+  <!-- PURPLE TIER -->
+  <section class="tier-section tier-purple">
     <div class="tier-wave">
       <img src="assets/vibrations/Vibrations Purple.jpg" alt="Purple vibrations">
       <div class="tier-wave-label">Enlightenment<br>700 Vibes</div>
     </div>
     <div class="tier-title">PURPLE 700-900 Vibrations Per Second</div>
-    <div class="emotion-grid">
-      <button class="emotion-btn" data-emotion="rocket_desire" data-tier="purple" data-calories="-1000">
-        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Purple Rocket Desire.png" alt="Rocket Desire"></div>
-        <span class="emotion-name">Rocket Desire</span>
-        <span class="emotion-cal">-1,000</span>
-      </button>
-      <button class="emotion-btn" data-emotion="spend_money" data-tier="purple" data-calories="-2000">
-        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Purple Spent Money NOT Spend.png" alt="Spent Money"></div>
-        <span class="emotion-name">Spent Money</span>
-        <span class="emotion-cal">-2,000</span>
-      </button>
-      <button class="emotion-btn" data-emotion="synchronicity" data-tier="purple" data-calories="-3000">
-        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Purple Synchronicity.png" alt="Synchronicity"></div>
-        <span class="emotion-name">Synchronicity</span>
-        <span class="emotion-cal">-3,000</span>
-      </button>
+    <div class="tier-content-row">
+      <div class="emotion-grid">
+        <button class="emotion-btn" data-emotion="rocket_desire" data-tier="purple" data-calories="-1000">
+          <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Purple Rocket Desire.png" alt="Rocket Desire"></div>
+          <span class="emotion-name">Rocket Desire</span>
+          <span class="emotion-cal">-1,000</span>
+        </button>
+        <button class="emotion-btn" data-emotion="spend_money" data-tier="purple" data-calories="-2000">
+          <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Purple Spent Money NOT Spend.png" alt="Spent Money"></div>
+          <span class="emotion-name">Spent Money</span>
+          <span class="emotion-cal">-2,000</span>
+        </button>
+        <button class="emotion-btn" data-emotion="synchronicity" data-tier="purple" data-calories="-3000">
+          <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/Purple Synchronicity.png" alt="Synchronicity"></div>
+          <span class="emotion-name">Synchronicity</span>
+          <span class="emotion-cal">-3,000</span>
+        </button>
+      </div>
+      <p class="tier-description">Every time you notice a Positive or Contrast occurrence you score 3,000 calories burned.</p>
     </div>
-    <p class="tier-description">Every synchronicity occurrence = 3,000 calories burned.</p>
   </section>
 
-  <!-- WHITE TIER (hidden by default) -->
-  <section class="tier-section tier-white" id="white-section" style="display:none;">
+  <!-- WHITE TIER -->
+  <section class="tier-section tier-white">
     <div class="tier-wave">
       <img src="assets/vibrations/Vibrations White.png" alt="White vibrations">
       <div class="tier-wave-label">Ultimate<br>Consciousness<br>1000 Vibes</div>
     </div>
     <div class="tier-title">WHITE 901-1000 Vibrations Per Second</div>
-    <div class="emotion-grid">
-      <button class="emotion-btn" data-emotion="intention" data-tier="white" data-calories="-1000">
-        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/White Intention.png" alt="Intention"></div>
-        <span class="emotion-name">Intention</span>
-        <span class="emotion-cal">-1,000</span>
-      </button>
-      <button class="emotion-btn" data-emotion="stayed_calm" data-tier="white" data-calories="-2000">
-        <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/White Stayed Calm.png" alt="Stayed Calm"></div>
-        <span class="emotion-name">Stayed Calm</span>
-        <span class="emotion-cal">-2,000</span>
-      </button>
+    <div class="tier-content-row">
+      <div class="emotion-grid">
+        <button class="emotion-btn" data-emotion="intention" data-tier="white" data-calories="-1000">
+          <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/White Intention.png" alt="Intention"></div>
+          <span class="emotion-name">Intention</span>
+          <span class="emotion-cal">-1,000</span>
+        </button>
+        <button class="emotion-btn" data-emotion="stayed_calm" data-tier="white" data-calories="-2000">
+          <div class="icon-wrap"><img src="assets/icons/allthenewiconsinreversealreadypreparedmakethemsa/White Stayed Calm.png" alt="Stayed Calm"></div>
+          <span class="emotion-name">Stayed Calm</span>
+          <span class="emotion-cal">-2,000</span>
+        </button>
+      </div>
+      <div class="intention-input">
+        <input type="text" id="tracker-intention" placeholder="Your Short Intention" maxlength="100">
+      </div>
     </div>
-    <div class="intention-input">
-      <input type="text" id="tracker-intention" placeholder="Your Short Intention" maxlength="100">
-    </div>
-    <p class="tier-description">When you have listened to your NEW STORY, meditated, or recited your short Intention 3 times in one day, you have BURNED 1,000 negative thought calories.</p>
-    <p class="tier-description" style="margin-top: 8px;">For EVERY HOUR you have remained totally CALM and have flipped away negatives before they are fully formed you can calculate 2,000 CALM fat burning calories.</p>
+    <p class="tier-description">When you have listened to your NEW STORY, meditated, or recited your Short Intention and/or watched a Principles Video you have BURNED 1,000 negative thought calories for every one of these "Intentions Reviews" you do.</p>
+    <p class="tier-description" style="margin-top: 8px;">For EVERY TIME you have remained totally CALM and have flipped away negatives before they are fully formed you can calculate 2,000 CALM fat burning calories.</p>
   </section>
+
+  <!-- Mind Exercises link -->
+  <button class="section-link-btn" onclick="window.location.hash='exercises'">Mind Exercises</button>
 
   <!-- Today's Log -->
   <section class="log-section">

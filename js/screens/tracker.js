@@ -133,20 +133,6 @@ registerScreen('tracker', {
       });
     }
 
-    // Purple & White Vibes toggle
-    const pwBtn = document.getElementById('show-purple-white');
-    if (pwBtn) {
-      pwBtn.addEventListener('click', () => {
-        const purpleSec = document.getElementById('purple-white-section');
-        const whiteSec = document.getElementById('white-section');
-        const showing = purpleSec.style.display !== 'none';
-        purpleSec.style.display = showing ? 'none' : 'block';
-        whiteSec.style.display = showing ? 'none' : 'block';
-        pwBtn.textContent = showing ? 'Purple & White Vibes' : 'Hide Purple & White Vibes';
-        if (!showing) purpleSec.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      });
-    }
-
     // Intention save
     let intentionTimeout;
     const intentionInput = document.getElementById('tracker-intention');

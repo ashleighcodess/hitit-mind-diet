@@ -278,17 +278,23 @@
 .tier-purple .emotion-cal { color: var(--tier-purple); }
 .tier-white .emotion-cal { color: var(--tier-white); }
 
-/* ---- Green tier special layout: icons + description side by side ---- */
-.tier-green .tier-content-row {
+/* ---- Side-by-side layout: icons + description/input ---- */
+.tier-content-row {
   display: flex;
   align-items: flex-start;
   gap: 12px;
   margin-bottom: 10px;
 }
 
-.tier-green .emotion-grid {
+.tier-content-row .emotion-grid {
   flex-shrink: 0;
   margin-bottom: 0;
+}
+
+.tier-content-row .intention-input {
+  flex: 1;
+  margin: 0;
+  padding-top: 10px;
 }
 
 .tier-description {

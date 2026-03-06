@@ -10,7 +10,7 @@ import {
   calcDailyTotals, countByEmotion, updateUserSettings,
   createAssignment, getAssignments, getAllAssignments, reviewAssignment,
   subscribeToNotifications, markAllNotificationsRead,
-  getEntriesForDate
+  getEntriesForDate, uploadFile
 } from '../data/firestore.js';
 import { getUserDoc } from '../data/firestore.js';
 
@@ -1068,12 +1068,9 @@ registerScreen('coach', {
       if (file) {
         sendBtn.textContent = 'Uploading...';
         try {
-          const formData = new FormData();
-          formData.append('file', file);
-          const res = await fetch('/api/upload', { method: 'POST', body: formData });
-          const data = await res.json();
-          if (!res.ok) throw new Error(data.error || 'Upload failed');
-          mediaUrl = data.url;
+          const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+          const path = `assignments/${Date.now()}-${safeName}`;
+          mediaUrl = await uploadFile(file, path);
         } catch (err) {
           console.error('Upload failed:', err);
           showToast('File upload failed — try pasting a URL instead');

@@ -299,6 +299,68 @@
   color: var(--accent-blue);
 }
 
+/* ---- Vibe score modal ---- */
+.pvc-score-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.pvc-score-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.pvc-score-modal-card {
+  background: #1a1a1a;
+  border-radius: 20px;
+  padding: 36px 28px 28px;
+  text-align: center;
+  max-width: 320px;
+  width: 100%;
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+
+.pvc-score-modal.active .pvc-score-modal-card {
+  transform: scale(1);
+}
+
+.pvc-score-modal-label {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.pvc-score-modal-number {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 3.5rem;
+  color: var(--accent-blue);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.pvc-score-modal-sub {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 24px;
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 360px) {
   .pvc-emo-btn {

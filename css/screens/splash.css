@@ -154,3 +154,26 @@
   font-size: 1.4rem;
   color: var(--accent-blue);
 }
+
+.btn-splash-login {
+  display: block;
+  width: 100%;
+  margin-top: 14px;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.btn-splash-login strong {
+  color: var(--accent-blue);
+  font-weight: 600;
+}
+
+.btn-splash-login:hover {
+  color: var(--text-secondary);
+}

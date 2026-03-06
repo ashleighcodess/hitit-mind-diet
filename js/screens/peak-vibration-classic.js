@@ -73,6 +73,13 @@ async function updateScore() {
 
   document.getElementById('pvc-score-value').textContent = avg;
 
+  // Show modal when all 3 are selected
+  if (selected.size === 3) {
+    const modal = document.getElementById('pvc-score-modal');
+    document.getElementById('pvc-score-modal-value').textContent = avg;
+    modal.classList.add('active');
+  }
+
   const user = getCurrentUser();
   if (user) {
     await updateUserSettings(user.uid, 'settings.peakVibe', avg).catch(() => {});
@@ -97,6 +104,15 @@ registerScreen('peak-vibration', {
   init() {
     renderEmotionGrid();
     initMilestoneSlider();
+
+    // Modal close handlers
+    const modal = document.getElementById('pvc-score-modal');
+    document.getElementById('pvc-score-modal-close').addEventListener('click', () => {
+      modal.classList.remove('active');
+    });
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) modal.classList.remove('active');
+    });
   },
 
   enter() {

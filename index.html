@@ -167,6 +167,7 @@
       <span class="label">Get Started</span>
       <span class="arrow">&rsaquo;</span>
     </button>
+    <button class="btn-splash-login" onclick="location.hash='login'">Already have an account? <strong>Log In</strong></button>
   </div>
 </div>
 
@@ -737,6 +738,16 @@
     <div class="pvc-score-display">
       <span class="pvc-score-title">Vibe Score</span>
       <span class="pvc-score-number" id="pvc-score-value">0</span>
+    </div>
+  </div>
+
+  <!-- Vibe score modal — shown when 3 emotions selected -->
+  <div class="pvc-score-modal" id="pvc-score-modal">
+    <div class="pvc-score-modal-card">
+      <div class="pvc-score-modal-label">Your Vibe Score</div>
+      <div class="pvc-score-modal-number" id="pvc-score-modal-value">0</div>
+      <div class="pvc-score-modal-sub">Average of 3 selected emotions</div>
+      <button class="btn btn-primary btn-full" id="pvc-score-modal-close">Got it</button>
     </div>
   </div>
 

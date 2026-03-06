@@ -116,7 +116,7 @@ body {
 
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Montserrat', Helvetica, sans-serif;
-  font-weight: 200;
+  font-weight: 300;
   line-height: 1.2;
 }
 
@@ -260,6 +260,20 @@ input:focus, textarea:focus, select:focus {
 /* Safe area padding for notched phones */
 .safe-bottom {
   padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+
+/* Focus-visible outlines for accessibility */
+:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+button:focus:not(:focus-visible),
+a:focus:not(:focus-visible),
+input:focus:not(:focus-visible),
+select:focus:not(:focus-visible),
+textarea:focus:not(:focus-visible) {
+  outline: none;
 }
 
 @media (prefers-reduced-motion: reduce) {

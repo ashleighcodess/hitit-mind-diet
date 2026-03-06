@@ -598,8 +598,8 @@
 }
 
 .ex-counter-btn {
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 1px solid var(--border-color);
   background: var(--bg-input);
@@ -623,7 +623,7 @@
 
 .ex-counter-value {
   width: 40px;
-  height: 30px;
+  height: 44px;
   text-align: center;
   border: 1px solid var(--border-color);
   border-left: none;

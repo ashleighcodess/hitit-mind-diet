@@ -526,8 +526,8 @@ registerScreen('coach', {
     // Set coach welcome name
     const userData = getUserData();
     const nameEl = document.getElementById('coach-welcome-name');
-    if (nameEl && userData?.name) {
-      nameEl.textContent = `Coach ${userData.name.split(' ')[0]}!`;
+    if (nameEl) {
+      nameEl.textContent = 'Coach Jayne!';
     }
 
     // Time-based greeting

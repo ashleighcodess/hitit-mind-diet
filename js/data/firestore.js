@@ -160,13 +160,7 @@ export async function updateUserSettings(uid, path, value) {
 
 // ---- Coach operations ----
 export async function getCoachUid() {
-  const q = query(
-    collection(db, 'users'),
-    where('role', '==', 'coach')
-  );
-  const snapshot = await getDocs(q);
-  if (snapshot.empty) return null;
-  return snapshot.docs[0].id; // first (only) coach
+  return 'bYrV0rVnuMWYtkmtUK9u883kHOO2'; // Coach Jaynie
 }
 
 export async function getClientsByCoach(coachId) {

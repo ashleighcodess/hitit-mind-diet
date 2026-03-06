@@ -833,174 +833,406 @@
      SCREEN: COACH DASHBOARD
      ============================================================ -->
 <div class="screen" id="screen-coach">
-  <div class="coach-topbar">
-    <div class="coach-welcome">
-      <div class="coach-avatar">
-        <img src="assets/images/hitit-h-symbol.png" alt="H">
-      </div>
-      <div class="coach-welcome-text">
-        <span class="coach-greeting" id="coach-greeting">Welcome back,</span>
-        <h1 id="coach-welcome-name">Coach</h1>
-      </div>
+
+  <!-- ======== SIDEBAR (desktop) ======== -->
+  <aside class="coach-sidebar" id="coach-sidebar">
+    <div class="sidebar-brand">
+      <img src="assets/images/hitit-h-symbol.png" alt="H" class="sidebar-logo">
+      <span>HIT IT</span>
     </div>
-    <div class="coach-topbar-actions">
-      <span id="coach-notif-badge" class="coach-notif-badge" style="display:none;">0</span>
-      <button class="btn-icon" id="coach-logout-btn" title="Sign out">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <button class="sidebar-item active" data-page="dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button class="sidebar-item" data-page="clients">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Clients
+      </button>
+      <button class="sidebar-item" data-page="review">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Needs Review
+        <span class="sidebar-badge" id="sidebar-review-badge" style="display:none">0</span>
+      </button>
+      <button class="sidebar-item" data-page="assignments">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Assignments
+      </button>
+      <button class="sidebar-item" data-page="insights">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Insights
+      </button>
+      <button class="sidebar-item" data-page="log">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Activity Log
+      </button>
+    </nav>
+    <div class="sidebar-footer">
+      <button class="sidebar-item sidebar-logout" id="coach-logout-sidebar">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Sign Out
       </button>
     </div>
-  </div>
+  </aside>
 
-  <!-- List view -->
-  <div id="coach-list-view">
-    <div class="coach-client-list" id="coach-client-list">
-      <div class="empty-state">Loading clients...</div>
+  <!-- ======== MAIN AREA ======== -->
+  <div class="coach-main">
+
+    <!-- Header bar -->
+    <header class="coach-header-bar">
+      <div class="coach-header-left">
+        <button class="coach-mobile-menu" id="coach-mobile-menu">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="coach-welcome">
+          <div class="coach-avatar">
+            <img src="assets/images/hitit-h-symbol.png" alt="H">
+          </div>
+          <div class="coach-welcome-text">
+            <span class="coach-greeting" id="coach-greeting">Welcome back,</span>
+            <h1 id="coach-welcome-name">Coach Jayne!</h1>
+          </div>
+        </div>
+      </div>
+      <div class="coach-header-actions">
+        <span id="coach-notif-badge" class="coach-notif-badge" style="display:none;">0</span>
+        <button class="btn btn-primary coach-new-assign-btn" id="coach-new-assign-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <span class="btn-label">New Assignment</span>
+        </button>
+        <button class="btn-icon" id="coach-logout-btn" title="Sign out">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile nav pills -->
+    <div class="coach-mobile-pills" id="coach-mobile-pills">
+      <button class="coach-pill active" data-page="dashboard">Dashboard</button>
+      <button class="coach-pill" data-page="clients">Clients</button>
+      <button class="coach-pill" data-page="review">Review</button>
+      <button class="coach-pill" data-page="assignments">Assignments</button>
+      <button class="coach-pill" data-page="insights">Insights</button>
+      <button class="coach-pill" data-page="log">Log</button>
+    </div>
+
+    <!-- ======== PAGE: DASHBOARD ======== -->
+    <div class="coach-page active" id="coach-page-dashboard">
+      <div class="coach-page-inner">
+        <div class="page-header">
+          <h2>Dashboard</h2>
+        </div>
+        <div class="kpi-grid" id="coach-kpi-grid">
+          <div class="kpi-card">
+            <div class="kpi-value" id="kpi-active-clients">0</div>
+            <div class="kpi-label">Active Clients</div>
+          </div>
+          <div class="kpi-card kpi-accent">
+            <div class="kpi-value" id="kpi-needs-review">0</div>
+            <div class="kpi-label">Needs Review</div>
+          </div>
+          <div class="kpi-card">
+            <div class="kpi-value" id="kpi-sent-week">0</div>
+            <div class="kpi-label">Sent This Week</div>
+          </div>
+          <div class="kpi-card kpi-warn">
+            <div class="kpi-value" id="kpi-overdue">0</div>
+            <div class="kpi-label">Overdue</div>
+          </div>
+        </div>
+        <div class="dash-panels">
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3>Needs Attention</h3>
+            </div>
+            <div class="panel-body" id="dash-needs-attention">
+              <p class="text-muted">Loading...</p>
+            </div>
+          </div>
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3>Recent Submissions</h3>
+            </div>
+            <div class="panel-body" id="dash-recent-submissions">
+              <p class="text-muted">Loading...</p>
+            </div>
+          </div>
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3>Recent Activity</h3>
+            </div>
+            <div class="panel-body" id="dash-recent-activity">
+              <p class="text-muted">Loading...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== PAGE: CLIENTS ======== -->
+    <div class="coach-page" id="coach-page-clients">
+      <div class="coach-page-inner">
+
+        <!-- Client list view -->
+        <div id="clients-list-view">
+          <div class="page-header">
+            <h2>Clients</h2>
+            <div class="client-filters" id="client-filters">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="review">Needs Review</button>
+              <button class="filter-btn" data-filter="active">Active</button>
+              <button class="filter-btn" data-filter="overdue">Overdue</button>
+            </div>
+          </div>
+          <div class="client-table" id="coach-client-list">
+            <div class="empty-state">Loading clients...</div>
+          </div>
+        </div>
+
+        <!-- Client workspace (detail) view -->
+        <div id="clients-workspace-view" style="display:none">
+          <div class="workspace-header">
+            <button class="coach-back-btn" id="coach-back-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              All Clients
+            </button>
+            <h2 id="coach-detail-name"></h2>
+            <!-- Mobile tabs for workspace -->
+            <div class="workspace-tabs" id="workspace-tabs">
+              <button class="ws-tab active" data-wstab="overview">Overview</button>
+              <button class="ws-tab" data-wstab="assignments">Assignments</button>
+              <button class="ws-tab" data-wstab="insights">Insights</button>
+              <button class="ws-tab" data-wstab="log">Log</button>
+            </div>
+          </div>
+          <div class="workspace-layout">
+            <!-- Left column (main content) -->
+            <div class="workspace-main">
+              <div class="ws-panel" id="ws-panel-overview">
+                <!-- Assignments for this client -->
+                <div class="panel-section">
+                  <div class="panel-header"><h3>Assignments</h3></div>
+                  <div id="coach-assign-list"></div>
+                </div>
+              </div>
+              <div class="ws-panel" id="ws-panel-assignments" style="display:none">
+                <div class="panel-section">
+                  <div class="panel-header"><h3>All Assignments</h3></div>
+                  <div id="coach-assign-list-full"></div>
+                </div>
+              </div>
+              <div class="ws-panel" id="ws-panel-insights" style="display:none">
+                <div class="coach-red-section">
+                  <h3>RED Thought Summary</h3>
+                  <div id="coach-red-summary">
+                    <p class="text-muted">No red thoughts logged today.</p>
+                  </div>
+                </div>
+                <div class="coach-client-fears">
+                  <h3>Client's Fears &amp; Gratitudes</h3>
+                  <div id="coach-client-fears-list"></div>
+                  <div id="coach-client-gratitudes-list"></div>
+                </div>
+              </div>
+              <div class="ws-panel" id="ws-panel-log" style="display:none">
+                <div class="coach-log-section">
+                  <h3>Today's Log</h3>
+                  <div id="coach-log-list">
+                    <div class="log-empty">No entries yet today.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- Right column (sidebar info) -->
+            <div class="workspace-sidebar">
+              <div class="ws-sidebar-card">
+                <h4>Today's Stats</h4>
+                <div class="ws-stats-grid">
+                  <div class="ws-stat">
+                    <span class="ws-stat-value" id="coach-stat-cal">0</span>
+                    <span class="ws-stat-label">Calories</span>
+                  </div>
+                  <div class="ws-stat">
+                    <span class="ws-stat-value" id="coach-stat-entries">0</span>
+                    <span class="ws-stat-label">Entries</span>
+                  </div>
+                  <div class="ws-stat">
+                    <span class="ws-stat-value" id="coach-stat-goal">--</span>
+                    <span class="ws-stat-label">Goal</span>
+                  </div>
+                </div>
+              </div>
+              <div class="ws-sidebar-card">
+                <h4>Goals</h4>
+                <div class="goal-inputs">
+                  <div class="form-group">
+                    <label>Daily Target</label>
+                    <input type="number" id="coach-goal-daily" placeholder="0">
+                  </div>
+                  <div class="form-group">
+                    <label>Weekly Target</label>
+                    <input type="number" id="coach-goal-weekly" placeholder="0">
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-full btn-sm" id="coach-save-goals">Save Goals</button>
+              </div>
+              <div class="ws-sidebar-card">
+                <button class="btn btn-primary btn-full" id="coach-ws-new-assign">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Send Assignment
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== PAGE: REVIEW ======== -->
+    <div class="coach-page" id="coach-page-review">
+      <div class="coach-page-inner">
+        <div class="page-header">
+          <h2>Needs Review</h2>
+        </div>
+        <div id="coach-review-queue">
+          <p class="text-muted">Loading submissions...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== PAGE: ASSIGNMENTS ======== -->
+    <div class="coach-page" id="coach-page-assignments">
+      <div class="coach-page-inner">
+        <div class="page-header">
+          <h2>All Assignments</h2>
+        </div>
+        <div id="coach-all-assignments">
+          <p class="text-muted">Loading...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== PAGE: INSIGHTS ======== -->
+    <div class="coach-page" id="coach-page-insights">
+      <div class="coach-page-inner">
+        <div class="page-header">
+          <h2>Insights</h2>
+        </div>
+        <div id="coach-global-insights">
+          <p class="text-muted">Select a client to view insights.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======== PAGE: LOG ======== -->
+    <div class="coach-page" id="coach-page-log">
+      <div class="coach-page-inner">
+        <div class="page-header">
+          <h2>Activity Log</h2>
+        </div>
+        <div id="coach-global-log">
+          <p class="text-muted">Loading activity...</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /.coach-main -->
+
+  <!-- ======== SLIDE PANEL: Assignment Composer ======== -->
+  <div class="slide-overlay" id="coach-slide-overlay"></div>
+  <div class="slide-panel" id="coach-slide-panel">
+    <div class="slide-panel-header">
+      <h3>New Assignment</h3>
+      <button class="slide-close" id="coach-slide-close">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="slide-panel-body">
+      <!-- Client selector (when opened from header, not workspace) -->
+      <div class="form-group" id="slide-client-group">
+        <label>Client</label>
+        <select id="coach-assign-client">
+          <option value="">Select client...</option>
+        </select>
+      </div>
+
+      <div class="slide-section">
+        <div class="slide-section-title">Assignment Basics</div>
+        <div class="form-group">
+          <label>Type</label>
+          <select id="coach-assign-type">
+            <option value="task">Task Assignment</option>
+            <option value="video">Video</option>
+            <option value="visual">Visual</option>
+            <option value="mental">Mental Exercise</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" id="coach-assign-title" placeholder="Assignment title" maxlength="120">
+        </div>
+        <div class="form-group">
+          <label>Action</label>
+          <textarea id="coach-assign-field-1" placeholder="What do they need to do?" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="slide-section">
+        <div class="slide-section-title">Detailed Instructions</div>
+        <div class="form-group">
+          <label>Work to Do</label>
+          <textarea id="coach-assign-field-2" placeholder="Detailed instructions..." rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Notes</label>
+          <textarea id="coach-assign-field-3" placeholder="Additional context or tips..." rows="2"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Additional Details</label>
+          <textarea id="coach-assign-field-4" placeholder="Anything else..." rows="2"></textarea>
+        </div>
+      </div>
+
+      <!-- 5 video URL slots -->
+      <div class="slide-section" id="coach-video-slots" style="display:none;">
+        <div class="slide-section-title">Video Links</div>
+        <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 1 — YouTube, Vimeo, or direct URL"></div>
+        <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 2"></div>
+        <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 3"></div>
+        <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 4"></div>
+        <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 5"></div>
+      </div>
+
+      <div class="slide-section">
+        <div class="slide-section-title">Resources</div>
+        <div class="form-group">
+          <label>Upload File</label>
+          <input type="file" id="coach-assign-file" accept="image/*,video/*,.pdf,.doc,.docx,.pptx,.ppt,.xlsx,.xls">
+          <div class="upload-hint">Images, Videos, PDF, Word, PowerPoint, Excel</div>
+        </div>
+        <div class="media-or">or</div>
+        <div class="form-group">
+          <label>Paste Link</label>
+          <input type="url" id="coach-assign-url" placeholder="File or resource URL">
+        </div>
+      </div>
+
+      <div class="slide-section">
+        <div class="slide-section-title">Timing</div>
+        <div class="form-group">
+          <label>Due Date</label>
+          <input type="date" id="coach-assign-due">
+        </div>
+      </div>
+    </div>
+    <div class="slide-panel-footer">
+      <button class="btn btn-primary btn-full" id="coach-assign-send">Send to Client</button>
     </div>
   </div>
 
-  <!-- Detail view -->
-  <div id="coach-detail-view" style="display:none">
-    <div class="coach-detail">
-      <button class="coach-back-btn" id="coach-back-btn">&larr; All Clients</button>
-      <h2 id="coach-detail-name"></h2>
+  <!-- Sidebar mobile overlay -->
+  <div class="sidebar-overlay" id="coach-sidebar-overlay"></div>
 
-      <!-- Tab bar -->
-      <div class="coach-tab-bar" id="coach-tab-bar">
-        <button class="coach-tab active" data-tab="overview">Overview</button>
-        <button class="coach-tab" data-tab="assignments">Assignments</button>
-        <button class="coach-tab" data-tab="insights">Insights</button>
-        <button class="coach-tab" data-tab="log">Log</button>
-      </div>
-
-      <!-- Tab: Overview -->
-      <div class="coach-tab-panel active" id="coach-panel-overview">
-        <div class="coach-stats-grid">
-          <div class="coach-stat-card">
-            <div class="coach-stat-value" id="coach-stat-cal">0</div>
-            <div class="coach-stat-label">Today's Calories</div>
-          </div>
-          <div class="coach-stat-card">
-            <div class="coach-stat-value" id="coach-stat-entries">0</div>
-            <div class="coach-stat-label">Entries Today</div>
-          </div>
-          <div class="coach-stat-card">
-            <div class="coach-stat-value" id="coach-stat-goal">--</div>
-            <div class="coach-stat-label">Goal Status</div>
-          </div>
-        </div>
-
-        <div class="coach-goal-section">
-          <h3>Goals</h3>
-          <div class="goal-inputs">
-            <div class="form-group">
-              <label>Daily Target (cal burned)</label>
-              <input type="number" id="coach-goal-daily" placeholder="0">
-            </div>
-            <div class="form-group">
-              <label>Weekly Target</label>
-              <input type="number" id="coach-goal-weekly" placeholder="0">
-            </div>
-          </div>
-          <button class="btn btn-primary" id="coach-save-goals">Save Goals</button>
-        </div>
-      </div>
-
-      <!-- Tab: Assignments -->
-      <div class="coach-tab-panel" id="coach-panel-assignments">
-        <div class="coach-assign-section">
-          <h3>Send Assignment</h3>
-          <div class="form-group">
-            <label>Type</label>
-            <select id="coach-assign-type">
-              <option value="task">Task Assignment</option>
-              <option value="video">Video</option>
-              <option value="visual">Visual</option>
-              <option value="mental">Mental Exercise</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label>Title</label>
-            <input type="text" id="coach-assign-title" placeholder="Assignment title" maxlength="120">
-          </div>
-
-          <!-- 4 instruction fields -->
-          <div class="form-group">
-            <label>Action</label>
-            <textarea id="coach-assign-field-1" placeholder="What do they need to do?" rows="2"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Work to Do</label>
-            <textarea id="coach-assign-field-2" placeholder="Detailed instructions..." rows="3"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Notes</label>
-            <textarea id="coach-assign-field-3" placeholder="Additional context or tips..." rows="2"></textarea>
-          </div>
-          <div class="form-group">
-            <label>Additional Details</label>
-            <textarea id="coach-assign-field-4" placeholder="Anything else..." rows="2"></textarea>
-          </div>
-
-          <!-- 5 video URL slots (shown for video type) -->
-          <div id="coach-video-slots" style="display:none;">
-            <label style="font-size:0.85rem;color:var(--text-secondary);font-weight:500;margin-bottom:8px;display:block;">Video Links (up to 5)</label>
-            <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 1 — YouTube, Vimeo, or direct URL"></div>
-            <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 2"></div>
-            <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 3"></div>
-            <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 4"></div>
-            <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 5"></div>
-          </div>
-
-          <!-- File upload + link -->
-          <div id="coach-assign-media-group">
-            <div class="form-group">
-              <label>Upload File</label>
-              <input type="file" id="coach-assign-file" accept="image/*,video/*,.pdf,.doc,.docx,.pptx,.ppt,.xlsx,.xls">
-              <div class="upload-hint">Images, Videos, PDF, Word, PowerPoint, Excel (up to 50MB)</div>
-            </div>
-            <div class="media-or">or</div>
-            <div class="form-group">
-              <label>Paste Link</label>
-              <input type="url" id="coach-assign-url" placeholder="File or resource URL">
-            </div>
-          </div>
-          <div class="form-group">
-            <label>Due Date</label>
-            <input type="date" id="coach-assign-due">
-          </div>
-          <button class="btn btn-primary btn-full" id="coach-assign-send">Send to Client</button>
-          <div id="coach-assign-list" style="margin-top: 16px;"></div>
-        </div>
-      </div>
-
-      <!-- Tab: Insights -->
-      <div class="coach-tab-panel" id="coach-panel-insights">
-        <div class="coach-red-section">
-          <h3>RED Thought Summary</h3>
-          <div id="coach-red-summary">
-            <p class="text-muted" style="font-style:italic">No red thoughts logged today.</p>
-          </div>
-        </div>
-
-        <div class="coach-client-fears">
-          <h3>Client's Fears &amp; Gratitudes</h3>
-          <div id="coach-client-fears-list"></div>
-          <div id="coach-client-gratitudes-list"></div>
-        </div>
-      </div>
-
-      <!-- Tab: Log -->
-      <div class="coach-tab-panel" id="coach-panel-log">
-        <div class="coach-log-section">
-          <h3>Today's Log</h3>
-          <div id="coach-log-list">
-            <div class="log-empty">No entries yet today.</div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
 </div>
 
 <!-- ============================================================

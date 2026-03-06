@@ -219,6 +219,21 @@ export async function getAssignments(clientId) {
     });
 }
 
+export async function getAllAssignments(coachId) {
+  const q = query(
+    collection(db, 'assignments'),
+    where('coachId', '==', coachId)
+  );
+  const snapshot = await getDocs(q);
+  return snapshot.docs
+    .map(d => ({ id: d.id, ...d.data() }))
+    .sort((a, b) => {
+      const ta = a.createdAt?.seconds || 0;
+      const tb = b.createdAt?.seconds || 0;
+      return tb - ta;
+    });
+}
+
 export async function submitAssignment(assignmentId, response, responseFiles = [], videoResponses = []) {
   const docRef = doc(db, 'assignments', assignmentId);
   const update = {

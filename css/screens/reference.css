@@ -6,78 +6,85 @@
   padding: 16px;
   padding-top: max(16px, env(safe-area-inset-top));
   padding-bottom: 100px;
+  background: #000;
 }
 
+/* Header — logo + title inline */
 .ref-header {
-  text-align: center;
-  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
-.ref-header h1 {
+.ref-header-logo {
+  height: 28px;
+}
+
+.ref-header-title {
   font-family: 'Montserrat', Helvetica, sans-serif;
   font-weight: 200;
-  font-size: 1.4rem;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  color: var(--text-muted);
 }
 
-/* Continuous scroll container */
+/* Scroll container */
 .ref-scroll {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
-/* Reference cards */
-.ref-card {
-  background: var(--bg-card);
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  overflow: hidden;
-}
-
-.ref-card img {
+/* Full-width image */
+.ref-img-full img {
   width: 100%;
   display: block;
+  border-radius: 4px;
 }
 
-.ref-card-caption {
-  padding: 14px 16px;
-  line-height: 1.5;
+/* Two images side by side */
+.ref-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
 }
 
-.ref-card-caption h3 {
+.ref-row-img {
+  flex: 1;
+  width: 50%;
+  display: block;
+  border-radius: 4px;
+  object-fit: contain;
+}
+
+/* Section title */
+.ref-section-title {
   font-family: 'Montserrat', Helvetica, sans-serif;
   font-weight: 600;
-  font-size: 1rem;
-  color: var(--text-primary);
-  margin-bottom: 6px;
-}
-
-.ref-card-caption p {
-  font-size: 0.95rem;
-  color: var(--text-secondary);
-}
-
-/* Quote card */
-.ref-quote {
-  background: var(--bg-card);
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 24px 20px;
+  font-size: 1.05rem;
+  color: #fff;
   text-align: center;
+  margin: 4px 0 0;
+}
+
+/* Quotes — no background, just text */
+.ref-quote {
+  text-align: center;
+  padding: 12px 16px;
 }
 
 .ref-quote blockquote {
   font-family: 'Montserrat', Helvetica, sans-serif;
-  font-weight: 200;
-  font-size: 1.15rem;
-  font-style: italic;
-  color: var(--text-secondary);
-  line-height: 1.6;
-  margin-bottom: 10px;
+  font-weight: 400;
+  font-size: 1.05rem;
+  color: #fff;
+  line-height: 1.5;
+  margin-bottom: 4px;
 }
 
 .ref-quote cite {
   font-size: 0.9rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.8);
   font-style: italic;
 }

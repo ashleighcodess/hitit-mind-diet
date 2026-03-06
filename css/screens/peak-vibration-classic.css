@@ -233,18 +233,28 @@
   line-height: 1.1;
 }
 
-/* Selected state */
+/* Selected state — strong visible highlight */
 .pvc-emo-btn.selected {
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 8px;
+  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline-offset: -2px;
+  transform: scale(1.05);
+}
+
+.pvc-emo-btn.selected .pvc-emo-value {
+  filter: brightness(1.4);
 }
 
 .pvc-emo-btn.selected .pvc-emo-label {
   color: #fff;
+  font-weight: 600;
 }
 
+/* Tap feedback */
 .pvc-emo-btn:active {
-  opacity: 0.6;
+  transform: scale(0.92);
+  opacity: 0.7;
 }
 
 /* ---- Score card at bottom ---- */

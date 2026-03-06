@@ -178,7 +178,7 @@ function renderAssignmentCard(a) {
             <div class="ex-hw-upload-zone" data-id="${a.id}">
               <label class="ex-hw-upload-label">
                 <span class="ex-hw-upload-icon">+</span> Attach Files
-                <input type="file" class="ex-hw-file-input" multiple accept="image/*,.pdf,.pptx,.xlsx,.xls,.doc,.docx,.mp4,.mov" style="display:none">
+                <input type="file" class="ex-hw-file-input" multiple accept="image/*,.pdf,.ppt,.pptx,.xlsx,.xls,.doc,.docx,.mp4,.mov" style="display:none">
               </label>
               <span class="ex-hw-upload-hint">Images, PDF, Word, Excel, PowerPoint, Video</span>
               <div class="ex-hw-file-list"></div>
@@ -224,8 +224,11 @@ async function loadExercises() {
 
   const container = document.getElementById('exercises-list');
   const userData = getUserData();
-  const fears = userData?.settings?.topFears || ['', '', '', ''];
-  const fearCounts = userData?.settings?.fearCounts || [0, 0, 0, 0];
+  const fears = userData?.settings?.topFears || ['', '', '', '', '', ''];
+  const fearCounts = userData?.settings?.fearCounts || [0, 0, 0, 0, 0, 0];
+  // Pad to 6 if user had old 4-field data
+  while (fears.length < 6) fears.push('');
+  while (fearCounts.length < 6) fearCounts.push(0);
   const gratitudes = userData?.settings?.gratitudes || ['', '', '', '', '', ''];
 
   try {

@@ -380,13 +380,8 @@ registerScreen('coach', {
       }
     });
 
-    // Show/hide media fields based on type
     const typeSelect = document.getElementById('coach-assign-type');
     const mediaGroup = document.getElementById('coach-assign-media-group');
-    typeSelect.addEventListener('change', () => {
-      const showMedia = typeSelect.value === 'video' || typeSelect.value === 'visual';
-      mediaGroup.style.display = showMedia ? 'block' : 'none';
-    });
 
     // Assignment creation
     const sendBtn = document.getElementById('coach-assign-send');
@@ -450,7 +445,6 @@ registerScreen('coach', {
         document.getElementById('coach-assign-due').value = '';
         document.getElementById('coach-assign-url').value = '';
         if (fileInput) fileInput.value = '';
-        mediaGroup.style.display = 'none';
         typeSelect.value = 'task';
 
         loadClientAssignments(selectedClientId);

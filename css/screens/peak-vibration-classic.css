@@ -73,6 +73,11 @@
   margin-bottom: 8px;
 }
 
+/* Miracles source image has more padding — scale up to match others */
+.pvc-ref-card:last-child img {
+  transform: scale(1.45);
+}
+
 .pvc-ref-label {
   font-family: 'Montserrat', Helvetica, sans-serif;
   font-weight: 700;

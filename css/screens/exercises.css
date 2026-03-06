@@ -685,6 +685,85 @@
   color: var(--text-muted);
 }
 
+/* ---- Structured instruction fields ---- */
+.ex-instruction-field {
+  margin-bottom: 10px;
+}
+
+.ex-instruction-label {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--accent-blue);
+  margin-bottom: 3px;
+}
+
+.ex-instruction-text {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  white-space: pre-wrap;
+}
+
+/* ---- Video list with per-video response ---- */
+.ex-video-list {
+  margin-bottom: 10px;
+}
+
+.ex-video-item {
+  margin-bottom: 14px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ex-video-item:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.ex-video-label {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+
+.ex-video-response {
+  width: 100%;
+  margin-top: 8px;
+  padding: 10px 12px;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  resize: vertical;
+  transition: border-color 0.2s ease;
+}
+
+.ex-video-response:focus {
+  border-color: var(--accent-blue);
+  outline: none;
+}
+
+.ex-video-response::placeholder {
+  color: var(--text-muted);
+}
+
+.ex-video-response-display {
+  margin-top: 8px;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--tier-blue);
+}
+
 /* ---- Empty state ---- */
 .empty-state {
   text-align: center;

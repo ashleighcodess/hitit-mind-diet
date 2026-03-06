@@ -2,7 +2,7 @@
 // Weekly Results Screen
 // ========================================
 
-import { registerScreen, getCurrentUser } from '../app.js';
+import { registerScreen, getCurrentUser, getUserData } from '../app.js';
 import { getEntriesForDateRange, todayStr, getWeekDays, calcDailyTotals, groupEntriesByDate } from '../data/firestore.js';
 
 async function loadWeeklyData() {
@@ -124,6 +124,23 @@ registerScreen('weekly', {
     // Force video autoplay on mobile
     const vid = document.querySelector('#screen-weekly .weekly-video-header video');
     if (vid) vid.play().catch(() => {});
+
+    // Show fear totals from user settings
+    const userData = getUserData();
+    const fearCounts = userData?.settings?.fearCounts || [];
+    const fears = userData?.settings?.topFears || [];
+    const fearTotal = fearCounts.reduce((s, c) => s + c, 0);
+    const activeFears = fears.filter(f => f).length;
+    const fearCard = document.getElementById('weekly-fears');
+    if (fearCard) {
+      if (fearTotal > 0 || activeFears > 0) {
+        fearCard.style.display = '';
+        document.getElementById('weekly-fear-total').textContent = fearTotal;
+        document.getElementById('weekly-fear-count').textContent = activeFears;
+      } else {
+        fearCard.style.display = 'none';
+      }
+    }
 
     loadWeeklyData();
   },

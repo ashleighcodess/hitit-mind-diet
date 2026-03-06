@@ -160,17 +160,19 @@ async function openClientDetail(clientId) {
 
 function renderClientFearsGratitudes(client) {
   const fears = client.settings?.topFears || [];
+  const fearCounts = client.settings?.fearCounts || [];
   const gratitudes = client.settings?.gratitudes || [];
 
   const fearsEl = document.getElementById('coach-client-fears-list');
   const gratEl = document.getElementById('coach-client-gratitudes-list');
 
-  const filledFears = fears.filter(f => f);
+  const filledFears = fears.map((f, i) => ({ text: f, count: fearCounts[i] || 0 })).filter(f => f.text);
   const filledGrats = gratitudes.filter(g => g);
+  const fearTotal = filledFears.reduce((s, f) => s + f.count, 0);
 
   fearsEl.innerHTML = filledFears.length > 0
-    ? `<h4 class="coach-sub-title">Fears (${filledFears.length})</h4>` +
-      filledFears.map(f => `<div class="coach-list-item coach-fear-item">${escapeHtml(f)}</div>`).join('')
+    ? `<h4 class="coach-sub-title">Fears (${filledFears.length}) — ${fearTotal} total occurrences</h4>` +
+      filledFears.map(f => `<div class="coach-list-item coach-fear-item" style="display:flex;justify-content:space-between"><span>${escapeHtml(f.text)}</span><span style="font-weight:700">${f.count}x</span></div>`).join('')
     : '<p class="text-muted" style="font-size:0.8rem;font-style:italic">No fears entered yet.</p>';
 
   gratEl.innerHTML = filledGrats.length > 0
@@ -260,6 +262,27 @@ function renderCoachFileList(files) {
   `;
 }
 
+function renderVideoResponses(a) {
+  if (!a.videoResponses || !a.videoLinks) return '';
+  const responses = a.videoResponses.filter(r => r);
+  if (responses.length === 0) return '';
+  return `
+    <div style="margin-top:8px">
+      <div style="font-size:0.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">Video Responses</div>
+      ${a.videoLinks.map((url, i) => {
+        const resp = a.videoResponses[i];
+        if (!resp) return '';
+        return `
+          <div style="margin-bottom:6px">
+            <div style="font-size:0.65rem;color:var(--text-muted);margin-bottom:2px">Video ${i + 1}</div>
+            <div style="font-size:0.8rem;color:var(--text-secondary);padding:6px 10px;background:rgba(74,158,255,0.04);border-radius:6px;border-left:2px solid var(--tier-blue);white-space:pre-wrap">${escapeHtml(resp)}</div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
+}
+
 function renderCoachAssignCard(a, status) {
   const statusLabels = { pending: 'Pending', submitted: 'Submitted', reviewed: 'Reviewed' };
   const statusColors = { pending: '#f0a030', submitted: 'var(--tier-blue)', reviewed: 'var(--tier-green)' };
@@ -274,12 +297,16 @@ function renderCoachAssignCard(a, status) {
       <div class="coach-assign-item-title">${escapeHtml(a.title)}</div>
       ${a.description ? `<div class="coach-assign-item-desc">${escapeHtml(a.description)}</div>` : ''}
       ${a.mediaUrl ? `<div class="coach-assign-media">${renderMedia(a.mediaUrl, a.type)}</div>` : ''}
+      ${a.videoLinks && a.videoLinks.length > 0 ? `
+        <div style="font-size:0.7rem;color:var(--text-muted);margin-top:6px">${a.videoLinks.length} video${a.videoLinks.length > 1 ? 's' : ''} assigned</div>
+      ` : ''}
       ${due ? `<div class="coach-assign-item-due">Due: ${due}</div>` : ''}
 
       ${status === 'submitted' ? `
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color)">
           <div style="font-size:0.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:4px">Client's Response</div>
           <div style="font-size:0.8rem;color:var(--text-secondary);padding:8px 10px;background:rgba(74,158,255,0.06);border-radius:6px;border-left:3px solid var(--tier-blue);white-space:pre-wrap;margin-bottom:8px">${escapeHtml(a.response || 'No written response')}</div>
+          ${renderVideoResponses(a)}
           ${renderCoachFileList(a.responseFiles)}
           <textarea class="coach-review-note" placeholder="Add feedback (optional)..." rows="2" style="width:100%;background:var(--bg-input);border:1px solid var(--border-color);border-radius:6px;padding:8px 10px;font-size:0.8rem;color:var(--text-primary);resize:none;font-family:inherit;margin-bottom:8px"></textarea>
           <button class="coach-review-btn btn btn-primary" data-id="${a.id}" style="width:100%;padding:10px;font-size:0.8rem">Mark Reviewed</button>
@@ -290,6 +317,7 @@ function renderCoachAssignCard(a, status) {
         <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border-color)">
           <div style="font-size:0.7rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;margin-bottom:4px">Client's Response</div>
           <div style="font-size:0.8rem;color:var(--text-secondary);padding:8px 10px;background:rgba(74,158,255,0.06);border-radius:6px;border-left:3px solid var(--tier-blue);white-space:pre-wrap;margin-bottom:8px">${escapeHtml(a.response || 'No written response')}</div>
+          ${renderVideoResponses(a)}
           ${renderCoachFileList(a.responseFiles)}
           ${a.coachNote ? `
             <div style="font-size:0.7rem;font-weight:600;color:var(--tier-green);text-transform:uppercase;margin-bottom:4px">Your Feedback</div>
@@ -382,6 +410,12 @@ registerScreen('coach', {
 
     const typeSelect = document.getElementById('coach-assign-type');
     const mediaGroup = document.getElementById('coach-assign-media-group');
+    const videoSlots = document.getElementById('coach-video-slots');
+
+    // Show video URL slots only for video type
+    typeSelect.addEventListener('change', () => {
+      videoSlots.style.display = typeSelect.value === 'video' ? 'block' : 'none';
+    });
 
     // Assignment creation
     const sendBtn = document.getElementById('coach-assign-send');
@@ -392,11 +426,27 @@ registerScreen('coach', {
 
       const type = document.getElementById('coach-assign-type').value;
       const title = document.getElementById('coach-assign-title').value.trim();
-      const description = document.getElementById('coach-assign-desc').value.trim();
       const dueDate = document.getElementById('coach-assign-due').value;
       const fileInput = document.getElementById('coach-assign-file');
       const file = fileInput?.files[0] || null;
       const pastedUrl = document.getElementById('coach-assign-url').value.trim();
+
+      // Collect 4 instruction fields
+      const instructionFields = [
+        document.getElementById('coach-assign-field-1').value.trim(),
+        document.getElementById('coach-assign-field-2').value.trim(),
+        document.getElementById('coach-assign-field-3').value.trim(),
+        document.getElementById('coach-assign-field-4').value.trim()
+      ];
+      // Build description from fields for backward compat
+      const description = instructionFields.filter(f => f).join('\n\n');
+
+      // Collect video links (up to 5)
+      const videoLinks = [];
+      document.querySelectorAll('.coach-video-url').forEach(input => {
+        const v = input.value.trim();
+        if (v) videoLinks.push(v);
+      });
 
       if (!title) {
         showToast('Please enter a title');
@@ -433,6 +483,8 @@ registerScreen('coach', {
           type,
           title,
           description,
+          instructionFields,
+          videoLinks,
           dueDate,
           mediaUrl,
           questions: ''
@@ -441,9 +493,14 @@ registerScreen('coach', {
 
         // Clear form
         document.getElementById('coach-assign-title').value = '';
-        document.getElementById('coach-assign-desc').value = '';
+        document.getElementById('coach-assign-field-1').value = '';
+        document.getElementById('coach-assign-field-2').value = '';
+        document.getElementById('coach-assign-field-3').value = '';
+        document.getElementById('coach-assign-field-4').value = '';
         document.getElementById('coach-assign-due').value = '';
         document.getElementById('coach-assign-url').value = '';
+        document.querySelectorAll('.coach-video-url').forEach(i => i.value = '');
+        videoSlots.style.display = 'none';
         if (fileInput) fileInput.value = '';
         typeSelect.value = 'task';
 

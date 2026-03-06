@@ -2,7 +2,7 @@
 // Daily Mind Weight Screen
 // ========================================
 
-import { registerScreen, getCurrentUser, showToast } from '../app.js';
+import { registerScreen, getCurrentUser, getUserData, showToast } from '../app.js';
 import { TIERS, EMOTIONS, getEmotionsByTier, TIER_ORDER } from '../data/emotions.js';
 import { subscribeToEntries, todayStr, formatTime, calcDailyTotals, countByEmotion } from '../data/firestore.js';
 import { staggerDailyCards } from '../animations.js';
@@ -79,6 +79,17 @@ registerScreen('daily', {
     // Force video autoplay on mobile
     const vid = document.querySelector('#screen-daily .video-header video');
     if (vid) vid.play().catch(() => {});
+
+    // Show fear totals from user settings
+    const userData = getUserData();
+    const fearCounts = userData?.settings?.fearCounts || [];
+    const fearTotal = fearCounts.reduce((s, c) => s + c, 0);
+    const fearRow = document.getElementById('daily-fear-row');
+    const fearEl = document.getElementById('daily-fear-total');
+    if (fearRow && fearEl) {
+      fearEl.textContent = fearTotal;
+      fearRow.style.display = fearTotal > 0 ? 'flex' : 'none';
+    }
 
     document.getElementById('daily-date').textContent = new Date().toLocaleDateString('en-US', {
       weekday: 'short', month: 'short', day: 'numeric'

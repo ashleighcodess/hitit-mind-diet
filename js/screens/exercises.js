@@ -53,7 +53,53 @@ function renderMediaPreview(url) {
   if (url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
     return `<img src="${escapeAttr(url)}" alt="Attachment" class="ex-media-img">`;
   }
+  if (url.match(/\.(mp4|mov|webm)$/i)) {
+    return `<video src="${escapeAttr(url)}" controls preload="metadata" class="ex-media-frame"></video>`;
+  }
   return `<a href="${escapeAttr(url)}" target="_blank" class="ex-file-link">View Attachment</a>`;
+}
+
+function renderInstructionFields(fields) {
+  if (!fields || fields.length === 0) return '';
+  const labels = ['Action', 'Work to Do', 'Notes', 'Additional Details'];
+  return fields.map((f, i) => {
+    if (!f) return '';
+    return `
+      <div class="ex-instruction-field">
+        <div class="ex-instruction-label">${labels[i] || 'Details'}</div>
+        <div class="ex-instruction-text">${escapeAttr(f)}</div>
+      </div>
+    `;
+  }).filter(h => h).join('');
+}
+
+function renderVideoEmbeds(videoLinks, assignId, videoResponses, isPending) {
+  if (!videoLinks || videoLinks.length === 0) return '';
+  return `
+    <div class="ex-video-list">
+      ${videoLinks.map((url, i) => {
+        const embed = getEmbedUrl(url);
+        const existingResponse = (videoResponses && videoResponses[i]) || '';
+        return `
+          <div class="ex-video-item">
+            <div class="ex-video-label">Video ${i + 1}</div>
+            ${embed
+              ? `<iframe src="${embed}" frameborder="0" allowfullscreen class="ex-media-frame"></iframe>`
+              : `<a href="${escapeAttr(url)}" target="_blank" class="ex-file-link">${escapeAttr(url)}</a>`
+            }
+            ${isPending ? `
+              <textarea class="ex-video-response" data-assign="${assignId}" data-video-idx="${i}" placeholder="What I learned from Video ${i + 1}..." rows="3">${escapeAttr(existingResponse)}</textarea>
+            ` : existingResponse ? `
+              <div class="ex-video-response-display">
+                <div class="ex-instruction-label">Your Response</div>
+                <div class="ex-instruction-text">${escapeAttr(existingResponse)}</div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('')}
+    </div>
+  `;
 }
 
 function renderFileList(files) {
@@ -156,6 +202,9 @@ function renderAssignmentCard(a) {
   const dueDateStr = a.dueDate || '';
   const isOverdue = dueDateStr && new Date(dueDateStr + 'T23:59:59') < new Date() && isPending;
 
+  const hasStructuredFields = a.instructionFields && a.instructionFields.some(f => f);
+  const hasVideoLinks = a.videoLinks && a.videoLinks.length > 0;
+
   return `
     <div class="ex-hw-card ${isOverdue ? 'ex-hw-overdue' : ''}" data-id="${a.id}">
       <div class="ex-hw-summary" data-toggle-hw="${a.id}">
@@ -165,8 +214,10 @@ function renderAssignmentCard(a) {
         <span class="ex-hw-summary-arrow">&#9656;</span>
       </div>
       <div class="ex-hw-detail collapsed" id="hw-detail-${a.id}">
-        ${a.description ? `<p class="ex-hw-desc">${escapeAttr(a.description)}</p>` : ''}
+        ${hasStructuredFields ? renderInstructionFields(a.instructionFields)
+          : a.description ? `<p class="ex-hw-desc">${escapeAttr(a.description)}</p>` : ''}
         ${a.mediaUrl ? `<div class="ex-hw-media">${renderMediaPreview(a.mediaUrl)}</div>` : ''}
+        ${hasVideoLinks ? renderVideoEmbeds(a.videoLinks, a.id, a.videoResponses, isPending) : ''}
         <div class="ex-hw-meta">
           ${dueDateStr ? `<span class="ex-hw-due ${isOverdue ? 'ex-overdue-text' : ''}">Due: ${dueDateStr}</span>` : ''}
           <span class="ex-hw-time">${timeAgo(a.createdAt)}</span>
@@ -485,7 +536,15 @@ async function loadExercises() {
         const response = textarea ? textarea.value.trim() : '';
         const files = fileInput ? Array.from(fileInput.files) : [];
 
-        if (!response && files.length === 0) {
+        // Collect per-video responses
+        const videoResponseEls = card.querySelectorAll('.ex-video-response');
+        const videoResponses = [];
+        videoResponseEls.forEach(el => {
+          videoResponses.push(el.value.trim());
+        });
+
+        const hasVideoResponses = videoResponses.some(r => r);
+        if (!response && files.length === 0 && !hasVideoResponses) {
           showToast('Please write a response or attach files before submitting');
           return;
         }
@@ -510,7 +569,7 @@ async function loadExercises() {
         btn.textContent = 'Submitting...';
 
         try {
-          await submitAssignment(assignId, response, uploadedFiles);
+          await submitAssignment(assignId, response, uploadedFiles, videoResponses);
 
           // Send notification to coach
           if (coachId) {

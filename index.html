@@ -607,6 +607,10 @@
       <span class="daily-total-label">Mind Weight</span>
       <span class="daily-net-value neutral" id="daily-net-total">0</span>
     </div>
+    <div class="daily-total-row" id="daily-fear-row" style="display:none;">
+      <span class="daily-total-label">Fear Occurrences</span>
+      <span class="daily-total-value" id="daily-fear-total" style="color: var(--tier-red)">0</span>
+    </div>
   </div>
 </div>
 
@@ -665,6 +669,19 @@
         </div>
       </div>
       <div class="weekly-improvement">No prior data</div>
+    </div>
+    <div class="weekly-card" id="weekly-fears" style="display:none;">
+      <div class="weekly-card-title" style="color:var(--tier-red)">Fear Occurrences</div>
+      <div class="weekly-stats">
+        <div class="weekly-stat">
+          <div class="weekly-stat-label">Total Count</div>
+          <div class="weekly-daily" id="weekly-fear-total" style="color:var(--tier-red)">0</div>
+        </div>
+        <div class="weekly-stat">
+          <div class="weekly-stat-label">Active Fears</div>
+          <div class="weekly-daily" id="weekly-fear-count" style="color:var(--tier-red)">0</div>
+        </div>
+      </div>
     </div>
   </div>
   <div class="weekly-actions">
@@ -904,10 +921,36 @@
             <label>Title</label>
             <input type="text" id="coach-assign-title" placeholder="Assignment title" maxlength="120">
           </div>
+
+          <!-- 4 instruction fields -->
           <div class="form-group">
-            <label>Description</label>
-            <textarea id="coach-assign-desc" placeholder="Instructions or details..." rows="3"></textarea>
+            <label>Action</label>
+            <textarea id="coach-assign-field-1" placeholder="What do they need to do?" rows="2"></textarea>
           </div>
+          <div class="form-group">
+            <label>Work to Do</label>
+            <textarea id="coach-assign-field-2" placeholder="Detailed instructions..." rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Notes</label>
+            <textarea id="coach-assign-field-3" placeholder="Additional context or tips..." rows="2"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Additional Details</label>
+            <textarea id="coach-assign-field-4" placeholder="Anything else..." rows="2"></textarea>
+          </div>
+
+          <!-- 5 video URL slots (shown for video type) -->
+          <div id="coach-video-slots" style="display:none;">
+            <label style="font-size:0.85rem;color:var(--text-secondary);font-weight:500;margin-bottom:8px;display:block;">Video Links (up to 5)</label>
+            <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 1 — YouTube, Vimeo, or direct URL"></div>
+            <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 2"></div>
+            <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 3"></div>
+            <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 4"></div>
+            <div class="form-group"><input type="url" class="coach-video-url" placeholder="Video 5"></div>
+          </div>
+
+          <!-- File upload + link -->
           <div id="coach-assign-media-group">
             <div class="form-group">
               <label>Upload File</label>
@@ -917,7 +960,7 @@
             <div class="media-or">or</div>
             <div class="form-group">
               <label>Paste Link</label>
-              <input type="url" id="coach-assign-url" placeholder="YouTube, Vimeo, or file URL">
+              <input type="url" id="coach-assign-url" placeholder="File or resource URL">
             </div>
           </div>
           <div class="form-group">

@@ -219,14 +219,18 @@ export async function getAssignments(clientId) {
     });
 }
 
-export async function submitAssignment(assignmentId, response, responseFiles = []) {
+export async function submitAssignment(assignmentId, response, responseFiles = [], videoResponses = []) {
   const docRef = doc(db, 'assignments', assignmentId);
-  return updateDoc(docRef, {
+  const update = {
     status: 'submitted',
     response,
     responseFiles,
     submittedAt: serverTimestamp()
-  });
+  };
+  if (videoResponses.length > 0) {
+    update.videoResponses = videoResponses;
+  }
+  return updateDoc(docRef, update);
 }
 
 // ---- File upload to Firebase Storage ----

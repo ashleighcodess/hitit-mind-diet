@@ -1246,6 +1246,190 @@
 }
 
 /* ========================================
+   VIBRATION STATUS
+   ======================================== */
+
+/* Inline indicator pill */
+.vibe-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+
+.vibe-positive {
+  background: rgba(68, 204, 68, 0.12);
+  color: var(--tier-green);
+}
+
+.vibe-negative {
+  background: rgba(255, 68, 68, 0.12);
+  color: var(--tier-red);
+}
+
+.vibe-neutral {
+  background: rgba(74, 158, 255, 0.12);
+  color: var(--accent-blue);
+}
+
+.vibe-inactive {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-muted);
+}
+
+/* Dashboard vibration overview panel */
+.dash-panel-vibe .panel-header {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.panel-header-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  font-weight: 400;
+}
+
+.vibe-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.vibe-summary-item {
+  text-align: center;
+  padding: 12px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.vibe-summary-count {
+  display: block;
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+}
+
+.vibe-summary-label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.vibe-summary-positive .vibe-summary-count { color: var(--tier-green); }
+.vibe-summary-positive { border-color: rgba(68, 204, 68, 0.15); }
+.vibe-summary-negative .vibe-summary-count { color: var(--tier-red); }
+.vibe-summary-negative { border-color: rgba(255, 68, 68, 0.15); }
+.vibe-summary-neutral .vibe-summary-count { color: var(--accent-blue); }
+.vibe-summary-neutral { border-color: rgba(74, 158, 255, 0.15); }
+.vibe-summary-inactive .vibe-summary-count { color: var(--text-muted); }
+.vibe-summary-positive .vibe-summary-label { color: var(--tier-green); }
+.vibe-summary-negative .vibe-summary-label { color: var(--tier-red); }
+.vibe-summary-neutral .vibe-summary-label { color: var(--accent-blue); }
+.vibe-summary-inactive .vibe-summary-label { color: var(--text-muted); }
+
+.vibe-client-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.vibe-client-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.vibe-client-row:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.vibe-client-name {
+  flex: 1;
+  font-size: 0.88rem;
+  font-weight: 500;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Client workspace vibration card */
+.ws-vibe-card {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.ws-vibe-big {
+  text-align: center;
+  padding: 12px 0 8px;
+}
+
+.ws-vibe-label {
+  display: block;
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.ws-vibe-score {
+  display: block;
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  margin-top: 2px;
+  opacity: 0.8;
+}
+
+.ws-vibe-big.vibe-positive .ws-vibe-label { color: var(--tier-green); }
+.ws-vibe-big.vibe-positive .ws-vibe-score { color: var(--tier-green); }
+.ws-vibe-big.vibe-negative .ws-vibe-label { color: var(--tier-red); }
+.ws-vibe-big.vibe-negative .ws-vibe-score { color: var(--tier-red); }
+.ws-vibe-big.vibe-neutral .ws-vibe-label { color: var(--accent-blue); }
+.ws-vibe-big.vibe-neutral .ws-vibe-score { color: var(--accent-blue); }
+.ws-vibe-big.vibe-inactive .ws-vibe-label { color: var(--text-muted); }
+
+.ws-vibe-breakdown {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.ws-vibe-detail {
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.ws-vibe-detail.positive { color: var(--tier-green); }
+.ws-vibe-detail.negative { color: var(--tier-red); }
+
+/* Filter button variants */
+.filter-positive.active {
+  background: rgba(68, 204, 68, 0.12);
+  border-color: var(--tier-green);
+  color: var(--tier-green);
+}
+
+.filter-negative.active {
+  background: rgba(255, 68, 68, 0.12);
+  border-color: var(--tier-red);
+  color: var(--tier-red);
+}
+
+/* ========================================
    DESKTOP LAYOUT (1024px+)
    ======================================== */
 

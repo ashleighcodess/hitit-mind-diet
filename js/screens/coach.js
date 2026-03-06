@@ -9,7 +9,8 @@ import {
   getClientsByCoach, subscribeToEntries, todayStr, formatTime,
   calcDailyTotals, countByEmotion, updateUserSettings,
   createAssignment, getAssignments, getAllAssignments, reviewAssignment,
-  subscribeToNotifications, markAllNotificationsRead
+  subscribeToNotifications, markAllNotificationsRead,
+  getEntriesForDate
 } from '../data/firestore.js';
 import { getUserDoc } from '../data/firestore.js';
 
@@ -19,6 +20,7 @@ let unsubClientEntries = null;
 let unsubNotifications = null;
 let cachedClients = [];
 let cachedAllAssignments = [];
+let cachedClientVibes = {}; // { clientId: { net, entries, status, label, color } }
 let currentPage = 'dashboard';
 let currentFilter = 'all';
 
@@ -73,6 +75,55 @@ function isSentThisWeek(a) {
 function clientNameById(id) {
   const c = cachedClients.find(cl => cl.id === id);
   return c ? c.name : 'Unknown';
+}
+
+// ---- Vibration Status ----
+
+function getVibeStatus(net, entryCount) {
+  if (entryCount === 0) return { status: 'inactive', label: 'No Activity', color: 'var(--text-muted)' };
+  // Net < 0 means they burned more than they gained = positive vibration
+  // Net > 0 means they gained more = negative vibration
+  if (net < -200) return { status: 'high-positive', label: 'High Positive', color: 'var(--tier-green)' };
+  if (net < 0) return { status: 'positive', label: 'Positive', color: 'var(--tier-green)' };
+  if (net === 0) return { status: 'neutral', label: 'Neutral', color: 'var(--accent-blue)' };
+  if (net <= 200) return { status: 'negative', label: 'Negative', color: 'var(--tier-red)' };
+  return { status: 'high-negative', label: 'High Negative', color: 'var(--tier-red)' };
+}
+
+async function loadClientVibes(clients) {
+  const today = todayStr();
+  const vibes = {};
+
+  await Promise.all(clients.map(async (c) => {
+    try {
+      const entries = await getEntriesForDate(c.id, today);
+      const totals = calcDailyTotals(entries);
+      const vibe = getVibeStatus(totals.net, entries.length);
+      vibes[c.id] = {
+        net: totals.net,
+        redTotal: totals.redTotal,
+        positiveTotal: totals.positiveTotal,
+        entries: entries.length,
+        ...vibe
+      };
+    } catch (e) {
+      vibes[c.id] = { net: 0, redTotal: 0, positiveTotal: 0, entries: 0, status: 'inactive', label: 'No Activity', color: 'var(--text-muted)' };
+    }
+  }));
+
+  cachedClientVibes = vibes;
+  return vibes;
+}
+
+function renderVibeIndicator(clientId) {
+  const v = cachedClientVibes[clientId];
+  if (!v || v.status === 'inactive') {
+    return '<span class="vibe-indicator vibe-inactive">No Activity</span>';
+  }
+  const isPos = v.status === 'positive' || v.status === 'high-positive';
+  const cls = isPos ? 'vibe-positive' : v.status === 'neutral' ? 'vibe-neutral' : 'vibe-negative';
+  const sign = v.net > 0 ? '+' : '';
+  return `<span class="vibe-indicator ${cls}">${v.label} (${sign}${v.net.toLocaleString()})</span>`;
 }
 
 // ---- Page Navigation ----
@@ -167,13 +218,16 @@ async function loadDashboard() {
   if (!user) return;
 
   try {
-    // Load clients + all assignments in parallel
+    // Load clients + all assignments + vibes in parallel
     const [clients, allAssign] = await Promise.all([
       getClientsByCoach(user.uid),
       getAllAssignments(user.uid)
     ]);
     cachedClients = clients;
     cachedAllAssignments = allAssign;
+
+    // Load vibration data for all clients
+    await loadClientVibes(clients);
 
     // KPIs
     const needsReview = allAssign.filter(a => a.status === 'submitted');
@@ -268,6 +322,57 @@ async function loadDashboard() {
     } else {
       actEl.innerHTML = '<p class="text-muted" style="padding:12px 0">No activity yet.</p>';
     }
+
+    // Vibration Overview panel
+    const vibeEl = document.getElementById('dash-vibration-overview');
+    if (vibeEl && clients.length > 0) {
+      const vibeValues = Object.values(cachedClientVibes);
+      const posCount = vibeValues.filter(v => v.status === 'positive' || v.status === 'high-positive').length;
+      const negCount = vibeValues.filter(v => v.status === 'negative' || v.status === 'high-negative').length;
+      const neutralCount = vibeValues.filter(v => v.status === 'neutral').length;
+      const inactiveCount = vibeValues.filter(v => v.status === 'inactive').length;
+
+      vibeEl.innerHTML = `
+        <div class="vibe-summary-grid">
+          <div class="vibe-summary-item vibe-summary-positive">
+            <span class="vibe-summary-count">${posCount}</span>
+            <span class="vibe-summary-label">Positive</span>
+          </div>
+          <div class="vibe-summary-item vibe-summary-negative">
+            <span class="vibe-summary-count">${negCount}</span>
+            <span class="vibe-summary-label">Negative</span>
+          </div>
+          <div class="vibe-summary-item vibe-summary-neutral">
+            <span class="vibe-summary-count">${neutralCount}</span>
+            <span class="vibe-summary-label">Neutral</span>
+          </div>
+          <div class="vibe-summary-item vibe-summary-inactive">
+            <span class="vibe-summary-count">${inactiveCount}</span>
+            <span class="vibe-summary-label">No Activity</span>
+          </div>
+        </div>
+        <div class="vibe-client-list">
+          ${clients.map(c => {
+            const v = cachedClientVibes[c.id];
+            if (!v) return '';
+            return `
+              <div class="vibe-client-row" data-client-id="${c.id}">
+                <div class="client-row-avatar" style="width:30px;height:30px;font-size:0.7rem">${clientInitials(c.name)}</div>
+                <span class="vibe-client-name">${escapeHtml(c.name)}</span>
+                ${renderVibeIndicator(c.id)}
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+
+      vibeEl.querySelectorAll('.vibe-client-row').forEach(row => {
+        row.addEventListener('click', () => {
+          navigateTo('clients');
+          setTimeout(() => openClientWorkspace(row.dataset.clientId), 100);
+        });
+      });
+    }
   } catch (err) {
     console.error('Failed to load dashboard:', err);
   }
@@ -299,6 +404,11 @@ async function loadClients() {
       return;
     }
 
+    // Load vibration data if not cached yet
+    if (Object.keys(cachedClientVibes).length === 0) {
+      await loadClientVibes(clients);
+    }
+
     renderClientList(clients, allAssign);
   } catch (err) {
     console.error('Failed to load clients:', err);
@@ -317,6 +427,16 @@ function renderClientList(clients, allAssign) {
     filtered = clients.filter(c => allAssign.some(a => a.clientId === c.id && isOverdue(a)));
   } else if (currentFilter === 'active') {
     filtered = clients.filter(c => allAssign.some(a => a.clientId === c.id && (!a.status || a.status === 'pending')));
+  } else if (currentFilter === 'positive') {
+    filtered = clients.filter(c => {
+      const v = cachedClientVibes[c.id];
+      return v && (v.status === 'positive' || v.status === 'high-positive');
+    });
+  } else if (currentFilter === 'negative') {
+    filtered = clients.filter(c => {
+      const v = cachedClientVibes[c.id];
+      return v && (v.status === 'negative' || v.status === 'high-negative');
+    });
   }
 
   if (filtered.length === 0) {
@@ -338,6 +458,7 @@ function renderClientList(clients, allAssign) {
           <div class="client-row-email">${escapeHtml(c.email)}</div>
         </div>
         <div class="client-row-stats">
+          ${renderVibeIndicator(c.id)}
           ${revCount > 0 ? `<span class="client-stat-pill review">${revCount} to review</span>` : ''}
           ${pendCount > 0 ? `<span class="client-stat-pill pending">${pendCount} active</span>` : ''}
           ${overdueCount > 0 ? `<span class="client-stat-pill overdue">${overdueCount} overdue</span>` : ''}
@@ -469,6 +590,26 @@ function renderClientStats(entries) {
   } else {
     statusEl.textContent = '--';
     statusEl.style.color = '';
+  }
+
+  // Update workspace vibration status
+  const vibe = getVibeStatus(totalCal, entries.length);
+  const vibeEl = document.getElementById('ws-vibe-status');
+  if (vibeEl) {
+    const isPos = vibe.status === 'positive' || vibe.status === 'high-positive';
+    const isNeg = vibe.status === 'negative' || vibe.status === 'high-negative';
+    const cls = isPos ? 'vibe-positive' : vibe.status === 'neutral' ? 'vibe-neutral' : isNeg ? 'vibe-negative' : 'vibe-inactive';
+    const sign = totalCal > 0 ? '+' : '';
+    vibeEl.innerHTML = `
+      <div class="ws-vibe-big ${cls}">
+        <span class="ws-vibe-label">${vibe.label}</span>
+        ${entries.length > 0 ? `<span class="ws-vibe-score">${sign}${totalCal.toLocaleString()} cal</span>` : ''}
+      </div>
+      <div class="ws-vibe-breakdown">
+        <span class="ws-vibe-detail negative">+${totals.redTotal.toLocaleString()} red</span>
+        <span class="ws-vibe-detail positive">${totals.positiveTotal.toLocaleString()} positive</span>
+      </div>
+    `;
   }
 }
 

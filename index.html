@@ -947,6 +947,15 @@
           </div>
         </div>
         <div class="dash-panels">
+          <div class="dash-panel dash-panel-vibe">
+            <div class="panel-header">
+              <h3>Vibration Overview</h3>
+              <span class="panel-header-sub">Today's client status</span>
+            </div>
+            <div class="panel-body" id="dash-vibration-overview">
+              <p class="text-muted">Loading vibrations...</p>
+            </div>
+          </div>
           <div class="dash-panel">
             <div class="panel-header">
               <h3>Needs Attention</h3>
@@ -985,6 +994,8 @@
             <h2>Clients</h2>
             <div class="client-filters" id="client-filters">
               <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn filter-positive" data-filter="positive">Positive Vibe</button>
+              <button class="filter-btn filter-negative" data-filter="negative">Negative Vibe</button>
               <button class="filter-btn" data-filter="review">Needs Review</button>
               <button class="filter-btn" data-filter="active">Active</button>
               <button class="filter-btn" data-filter="overdue">Overdue</button>
@@ -1051,6 +1062,12 @@
             </div>
             <!-- Right column (sidebar info) -->
             <div class="workspace-sidebar">
+              <div class="ws-sidebar-card ws-vibe-card" id="ws-client-vibe">
+                <h4>Vibration Status</h4>
+                <div class="ws-vibe-status" id="ws-vibe-status">
+                  <span class="vibe-indicator vibe-inactive">No Activity</span>
+                </div>
+              </div>
               <div class="ws-sidebar-card">
                 <h4>Today's Stats</h4>
                 <div class="ws-stats-grid">

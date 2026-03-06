@@ -61,7 +61,7 @@ export const EMOTIONS = [
   { key: 'fear',               label: 'Fear',               tier: 'red',    calories: 2000,  icon: 'RedComplainticons/Fear.png' },
   { key: 'anger',              label: 'Anger',              tier: 'red',    calories: 3000,  icon: 'RedComplainticons/Anger.png' },
   { key: 'doubt',              label: 'Doubt',              tier: 'red',    calories: 4000,  icon: 'RedComplainticons/Doubt.png' },
-  { key: 'critical',           label: 'Critical\nSelf-Centered', tier: 'red', calories: 5000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Red Critical Self Centered.png' },
+  { key: 'critical',           label: 'Critical',    tier: 'red', calories: 5000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Red Critical Self Centered.png' },
   { key: 'complaints',         label: 'Complaints',         tier: 'red',    calories: 6000,  icon: 'RedComplainticons/Complaints White.png' },
   // GREEN — burns calories (flips RED to BLUE)
   { key: 'willingness',        label: 'Willingness',     tier: 'green',  calories: -2000, icon: 'allthenewiconsinreversealreadypreparedmakethemsa/Green Willingness.png' },

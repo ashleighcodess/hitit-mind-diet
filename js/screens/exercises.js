@@ -256,9 +256,6 @@ async function loadExercises() {
           <img src="assets/icons/exerciseicons/task assignments.png" alt="" class="ex-section-icon">
           <div class="ex-section-info">
             <h3 class="ex-section-title">TASK ASSIGNMENTS</h3>
-            <p class="ex-section-sub">View Assignment(s)</p>
-            <p class="ex-section-sub">Assignment Questions??</p>
-            <p class="ex-section-sub">Upload Completed Assignment</p>
           </div>
           <div class="ex-header-right">
             <span class="ex-pending-count">${getNextDueDate(taskAssigns)}</span>
@@ -281,9 +278,6 @@ async function loadExercises() {
           <img src="assets/icons/exerciseicons/Videos to Listen To.png" alt="" class="ex-section-icon">
           <div class="ex-section-info">
             <h3 class="ex-section-title">VIDEOS TO LISTEN TO</h3>
-            <p class="ex-section-sub">View Assigned Videos</p>
-            <p class="ex-section-sub">Assignment Questions??</p>
-            <p class="ex-section-sub">Upload What You&rsquo;ve Learned</p>
           </div>
           <div class="ex-header-right">
             <span class="ex-pending-count">${getNextDueDate(videoAssigns)}</span>
@@ -306,9 +300,6 @@ async function loadExercises() {
           <img src="assets/icons/exerciseicons/Visuals to Create.png" alt="" class="ex-section-icon">
           <div class="ex-section-info">
             <h3 class="ex-section-title">VISUALS TO CREATE</h3>
-            <p class="ex-section-sub">View Assignment(s)</p>
-            <p class="ex-section-sub">Assignment Questions??</p>
-            <p class="ex-section-sub">Upload Completed Visuals</p>
           </div>
           <div class="ex-header-right">
             <span class="ex-pending-count">${getNextDueDate(visualAssigns)}</span>
@@ -331,9 +322,6 @@ async function loadExercises() {
           <img src="assets/icons/exerciseicons/Mentalexercises.png" alt="" class="ex-section-icon">
           <div class="ex-section-info">
             <h3 class="ex-section-title">MENTAL EXERCISES</h3>
-            <p class="ex-section-sub">View Assignment(s)</p>
-            <p class="ex-section-sub">Assignment Questions??</p>
-            <p class="ex-section-sub">Upload Completed Assignments</p>
           </div>
           <div class="ex-header-right">
             <span class="ex-pending-count">${getNextDueDate(mentalAssigns)}</span>
@@ -357,10 +345,6 @@ async function loadExercises() {
           <img src="assets/icons/exerciseicons/Red Brain Exercising.jpg" alt="" class="ex-section-icon ex-section-icon-round">
           <div class="ex-section-info">
             <h3 class="ex-section-title">YOUR MOST CONSISTENT FEARS</h3>
-            <p class="ex-section-sub">Fear 1 Drop Down</p>
-            <p class="ex-section-sub">Fear 2 Drop Down</p>
-            <p class="ex-section-sub">Fear 3 Drop Down</p>
-            <p class="ex-section-sub">Fear 4 Drop Down</p>
           </div>
           <div class="ex-header-right">
             <span class="ex-fear-badge">${fearTotal} Fears</span>

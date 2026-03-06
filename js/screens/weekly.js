@@ -121,6 +121,10 @@ function renderWeeklyCard(id, data) {
 registerScreen('weekly', {
   init() {},
   enter() {
+    // Force video autoplay on mobile
+    const vid = document.querySelector('#screen-weekly .weekly-video-header video');
+    if (vid) vid.play().catch(() => {});
+
     loadWeeklyData();
   },
   leave() {}

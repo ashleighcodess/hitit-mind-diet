@@ -472,6 +472,20 @@ registerScreen('coach', {
     showListView();
     loadClients();
 
+    // Set coach welcome name
+    const userData = getUserData();
+    const nameEl = document.getElementById('coach-welcome-name');
+    if (nameEl && userData?.name) {
+      nameEl.textContent = `Coach ${userData.name.split(' ')[0]}!`;
+    }
+
+    // Time-based greeting
+    const greetEl = document.getElementById('coach-greeting');
+    if (greetEl) {
+      const h = new Date().getHours();
+      greetEl.textContent = h < 12 ? 'Good morning,' : h < 17 ? 'Good afternoon,' : 'Good evening,';
+    }
+
     // Subscribe to notifications for badge updates
     const user = getCurrentUser();
     if (user && !unsubNotifications) {

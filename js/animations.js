@@ -30,90 +30,37 @@ function fadeEdges(ctx, w, h) {
 }
 
 // ============================================================
-// RED — SLOWEST. Chaotic, jittery, lots of vibrating lines.
-// Irregular spikes, random jitter, harsh but slow-moving.
+// RED — SLOWEST vibration. Tiny, gentle, barely moving.
+// 2 lines, very low frequency, small amplitude, very slow speed.
+// Think: a lazy, sluggish pulse barely oscillating.
 // ============================================================
 function drawRedWave(ctx, w, h, time) {
   ctx.fillStyle = '#0a0a0a';
   ctx.fillRect(0, 0, w, h);
   const midY = h / 2;
 
-  for (let i = 0; i < 4; i++) {
-    const opacity = 0.25 + i * 0.22;
-    const speed = 0.25 + i * 0.05;
-    const amp = midY * (0.38 - i * 0.05);
+  for (let i = 0; i < 2; i++) {
+    const opacity = 0.4 + i * 0.3;
+    const speed = 0.08 + i * 0.02;   // VERY slow
+    const amp = midY * 0.15;          // SMALL amplitude
+    const freq = 0.8 + i * 0.2;      // LOW frequency — barely one full wave
 
     ctx.beginPath();
     ctx.moveTo(0, midY);
-
     for (let x = 0; x <= w; x++) {
       const xN = x / w;
       const envelope = Math.sin(xN * Math.PI);
-      const sharp = Math.sin(xN * 4.5 * Math.PI * 2 + time * speed + i * 1.5);
-      const spike = Math.sin(xN * 11 * Math.PI * 2 + time * speed * 1.8 + i) * 0.4;
-      const noise = (Math.random() - 0.5) * 0.35;
-      const y = midY + (sharp + spike + noise) * amp * envelope;
+      const wave = Math.sin(xN * freq * Math.PI * 2 + time * speed + i * 1.5);
+      const y = midY + wave * amp * envelope;
       ctx.lineTo(x, y);
     }
 
-    ctx.strokeStyle = 'rgba(255, 68, 68, 0.35)';
+    ctx.strokeStyle = 'rgba(255, 68, 68, 0.3)';
     ctx.lineWidth = 4;
     ctx.globalAlpha = opacity * 0.3;
     ctx.stroke();
 
     ctx.strokeStyle = '#ff4444';
-    ctx.lineWidth = 1.3;
-    ctx.globalAlpha = opacity;
-    ctx.stroke();
-  }
-
-  fadeEdges(ctx, w, h);
-}
-
-// ============================================================
-// GREEN — Moderate speed. Lots of vibrating lines like red style.
-// Slightly faster than red.
-// ============================================================
-function drawGreenWave(ctx, w, h, time) {
-  ctx.fillStyle = '#0a0a0a';
-  ctx.fillRect(0, 0, w, h);
-  const midY = h / 2;
-
-  // Background soft glow
-  const glowGrad = ctx.createRadialGradient(w / 2, midY, 0, w / 2, midY, w * 0.4);
-  glowGrad.addColorStop(0, 'rgba(68, 204, 68, 0.04)');
-  glowGrad.addColorStop(1, 'transparent');
-  ctx.fillStyle = glowGrad;
-  ctx.globalAlpha = 0.6 + Math.sin(time * 0.5) * 0.3;
-  ctx.fillRect(0, 0, w, h);
-
-  for (let i = 0; i < 4; i++) {
-    const opacity = 0.2 + i * 0.25;
-    const speed = 0.45 + i * 0.08;
-    const amp = midY * (0.32 - i * 0.04);
-    const freq = 2.0 + i * 0.5;
-
-    ctx.beginPath();
-    ctx.moveTo(0, midY);
-
-    for (let x = 0; x <= w; x++) {
-      const xN = x / w;
-      const envelope = Math.sin(xN * Math.PI);
-      // Smooth sine with gentle secondary harmonic
-      const wave1 = Math.sin(xN * freq * Math.PI * 2 + time * speed + i * 0.8);
-      const wave2 = Math.sin(xN * freq * 2.0 * Math.PI * 2 + time * speed * 0.6 + i * 2.0) * 0.2;
-      // Slow breathing modulation
-      const breathe = 1.0 + Math.sin(time * 0.4 + i) * 0.15;
-      const y = midY + (wave1 + wave2) * amp * envelope * breathe;
-      ctx.lineTo(x, y);
-    }
-
-    ctx.strokeStyle = 'rgba(68, 204, 68, 0.3)';
-    ctx.lineWidth = 5;
-    ctx.globalAlpha = opacity * 0.25;
-    ctx.stroke();
-
-    ctx.strokeStyle = '#44cc44';
     ctx.lineWidth = 1.5;
     ctx.globalAlpha = opacity;
     ctx.stroke();
@@ -123,52 +70,37 @@ function drawGreenWave(ctx, w, h, time) {
 }
 
 // ============================================================
-// BLUE — Faster than green. Flowing, layered harmonics with
-// lots of vibrating lines.
+// GREEN — A step up from red. Slightly faster, slightly taller,
+// 3 lines with a gentle secondary harmonic.
 // ============================================================
-function drawBlueWave(ctx, w, h, time) {
+function drawGreenWave(ctx, w, h, time) {
   ctx.fillStyle = '#0a0a0a';
   ctx.fillRect(0, 0, w, h);
   const midY = h / 2;
 
-  // Soft ambient glow that pulses
-  const glowGrad = ctx.createRadialGradient(w * 0.5, midY, 0, w * 0.5, midY, w * 0.45);
-  glowGrad.addColorStop(0, 'rgba(74, 158, 255, 0.06)');
-  glowGrad.addColorStop(1, 'transparent');
-  ctx.fillStyle = glowGrad;
-  ctx.globalAlpha = 0.5 + Math.sin(time * 0.3) * 0.4;
-  ctx.fillRect(0, 0, w, h);
-
-  for (let i = 0; i < 4; i++) {
-    const opacity = 0.15 + i * 0.22;
-    const speed = 0.7 + i * 0.12;
-    const amp = midY * (0.3 - i * 0.03);
-    const freq = 1.8 + i * 0.6;
+  for (let i = 0; i < 3; i++) {
+    const opacity = 0.3 + i * 0.2;
+    const speed = 0.18 + i * 0.04;   // Noticeably faster than red
+    const amp = midY * 0.2;           // A bit taller
+    const freq = 1.2 + i * 0.3;      // Slightly higher freq
 
     ctx.beginPath();
     ctx.moveTo(0, midY);
-
     for (let x = 0; x <= w; x++) {
       const xN = x / w;
       const envelope = Math.sin(xN * Math.PI);
-      // Layered harmonics like music
-      const wave1 = Math.sin(xN * freq * Math.PI * 2 + time * speed + i * 1.0);
-      const wave2 = Math.sin(xN * freq * 1.5 * Math.PI * 2 + time * speed * 0.8 + i * 2.2) * 0.35;
-      const wave3 = Math.sin(xN * freq * 2.5 * Math.PI * 2 + time * speed * 0.5 + i * 3.5) * 0.15;
-      // Gentle swaying phase offset
-      const sway = Math.sin(time * 0.25 + xN * 2) * 0.08;
-      const y = midY + (wave1 + wave2 + wave3 + sway) * amp * envelope;
+      const wave1 = Math.sin(xN * freq * Math.PI * 2 + time * speed + i * 0.8);
+      const wave2 = Math.sin(xN * freq * 2.0 * Math.PI * 2 + time * speed * 0.6 + i * 2.0) * 0.15;
+      const y = midY + (wave1 + wave2) * amp * envelope;
       ctx.lineTo(x, y);
     }
 
-    // Wide glow behind
-    ctx.strokeStyle = 'rgba(74, 158, 255, 0.25)';
-    ctx.lineWidth = 6 - i * 0.5;
+    ctx.strokeStyle = 'rgba(68, 204, 68, 0.3)';
+    ctx.lineWidth = 4;
     ctx.globalAlpha = opacity * 0.25;
     ctx.stroke();
 
-    // Crisp line
-    ctx.strokeStyle = i === 3 ? '#6ab4ff' : '#4a9eff';
+    ctx.strokeStyle = '#44cc44';
     ctx.lineWidth = 1.4;
     ctx.globalAlpha = opacity;
     ctx.stroke();
@@ -178,53 +110,39 @@ function drawBlueWave(ctx, w, h, time) {
 }
 
 // ============================================================
-// PURPLE — Fast. Resonant, lots of vibrating lines.
-// Faster than blue.
+// BLUE — Medium. Clearly moving, 3 lines with layered harmonics.
+// Faster and more complex than green.
 // ============================================================
-function drawPurpleWave(ctx, w, h, time) {
+function drawBlueWave(ctx, w, h, time) {
   ctx.fillStyle = '#0a0a0a';
   ctx.fillRect(0, 0, w, h);
   const midY = h / 2;
 
-  // Soft bloom glow
-  const glowGrad = ctx.createRadialGradient(w * 0.5, midY, 0, w * 0.5, midY, w * 0.5);
-  glowGrad.addColorStop(0, 'rgba(170, 102, 255, 0.07)');
-  glowGrad.addColorStop(0.6, 'rgba(120, 80, 220, 0.03)');
-  glowGrad.addColorStop(1, 'transparent');
-  ctx.fillStyle = glowGrad;
-  ctx.globalAlpha = 0.5 + Math.sin(time * 0.2) * 0.4;
-  ctx.fillRect(0, 0, w, h);
-
-  for (let i = 0; i < 4; i++) {
-    const opacity = 0.15 + i * 0.2;
-    const speed = 1.0 + i * 0.15;
-    const amp = midY * (0.28 - i * 0.02);
-    const freq = 2.2 + i * 0.7;
+  for (let i = 0; i < 3; i++) {
+    const opacity = 0.25 + i * 0.22;
+    const speed = 0.35 + i * 0.08;   // Moderate speed
+    const amp = midY * 0.25;          // Medium amplitude
+    const freq = 1.8 + i * 0.5;      // Higher freq than green
 
     ctx.beginPath();
     ctx.moveTo(0, midY);
-
     for (let x = 0; x <= w; x++) {
       const xN = x / w;
       const envelope = Math.sin(xN * Math.PI);
-      // Interweaving resonant harmonics
-      const wave1 = Math.sin(xN * freq * Math.PI * 2 + time * speed + i * 0.9);
-      const wave2 = Math.cos(xN * freq * 1.618 * Math.PI * 2 + time * speed * 0.7 + i * 1.8) * 0.3;
-      const wave3 = Math.sin(xN * freq * 2.618 * Math.PI * 2 + time * speed * 0.4 + i * 3.0) * 0.12;
-      // Bloom: slow amplitude modulation
-      const bloom = 1.0 + Math.sin(time * 0.2 + i * 0.5) * 0.2;
-      const y = midY + (wave1 + wave2 + wave3) * amp * envelope * bloom;
+      const wave1 = Math.sin(xN * freq * Math.PI * 2 + time * speed + i * 1.0);
+      const wave2 = Math.sin(xN * freq * 1.5 * Math.PI * 2 + time * speed * 0.7 + i * 2.2) * 0.25;
+      const wave3 = Math.sin(xN * freq * 2.5 * Math.PI * 2 + time * speed * 0.4 + i * 3.5) * 0.1;
+      const y = midY + (wave1 + wave2 + wave3) * amp * envelope;
       ctx.lineTo(x, y);
     }
 
-    // Wider, softer glow
-    ctx.strokeStyle = 'rgba(170, 102, 255, 0.2)';
-    ctx.lineWidth = 7 - i;
-    ctx.globalAlpha = opacity * 0.2;
+    ctx.strokeStyle = 'rgba(74, 158, 255, 0.25)';
+    ctx.lineWidth = 4;
+    ctx.globalAlpha = opacity * 0.25;
     ctx.stroke();
 
-    ctx.strokeStyle = i >= 2 ? '#c088ff' : '#aa66ff';
-    ctx.lineWidth = 1.5;
+    ctx.strokeStyle = i === 2 ? '#6ab4ff' : '#4a9eff';
+    ctx.lineWidth = 1.3;
     ctx.globalAlpha = opacity;
     ctx.stroke();
   }
@@ -233,7 +151,49 @@ function drawPurpleWave(ctx, w, h, time) {
 }
 
 // ============================================================
-// WHITE — FASTEST. Lots of vibrating lines, high energy.
+// PURPLE — Fast. 4 lines, complex harmonics, rapid motion.
+// Clearly energetic, building toward the peak.
+// ============================================================
+function drawPurpleWave(ctx, w, h, time) {
+  ctx.fillStyle = '#0a0a0a';
+  ctx.fillRect(0, 0, w, h);
+  const midY = h / 2;
+
+  for (let i = 0; i < 4; i++) {
+    const opacity = 0.2 + i * 0.18;
+    const speed = 0.6 + i * 0.12;    // Fast
+    const amp = midY * 0.28;          // Taller
+    const freq = 2.5 + i * 0.7;      // High frequency
+
+    ctx.beginPath();
+    ctx.moveTo(0, midY);
+    for (let x = 0; x <= w; x++) {
+      const xN = x / w;
+      const envelope = Math.sin(xN * Math.PI);
+      const wave1 = Math.sin(xN * freq * Math.PI * 2 + time * speed + i * 0.9);
+      const wave2 = Math.cos(xN * freq * 1.618 * Math.PI * 2 + time * speed * 0.7 + i * 1.8) * 0.25;
+      const wave3 = Math.sin(xN * freq * 2.5 * Math.PI * 2 + time * speed * 0.5 + i * 3.0) * 0.12;
+      const y = midY + (wave1 + wave2 + wave3) * amp * envelope;
+      ctx.lineTo(x, y);
+    }
+
+    ctx.strokeStyle = 'rgba(170, 102, 255, 0.2)';
+    ctx.lineWidth = 4;
+    ctx.globalAlpha = opacity * 0.2;
+    ctx.stroke();
+
+    ctx.strokeStyle = i >= 2 ? '#c088ff' : '#aa66ff';
+    ctx.lineWidth = 1.3;
+    ctx.globalAlpha = opacity;
+    ctx.stroke();
+  }
+
+  fadeEdges(ctx, w, h);
+}
+
+// ============================================================
+// WHITE — FASTEST. 5 lines, highest frequency, biggest amplitude,
+// chaotic harmonics, noise, rapid buzzing movement.
 // Pure consciousness — the highest vibration.
 // ============================================================
 function drawWhiteWave(ctx, w, h, time) {
@@ -241,45 +201,32 @@ function drawWhiteWave(ctx, w, h, time) {
   ctx.fillRect(0, 0, w, h);
   const midY = h / 2;
 
-  // Soft radial glow that breathes
-  const glowGrad = ctx.createRadialGradient(w * 0.5, midY, 0, w * 0.5, midY, w * 0.5);
-  glowGrad.addColorStop(0, 'rgba(224, 224, 224, 0.06)');
-  glowGrad.addColorStop(0.5, 'rgba(200, 220, 255, 0.03)');
-  glowGrad.addColorStop(1, 'transparent');
-  ctx.fillStyle = glowGrad;
-  ctx.globalAlpha = 0.4 + Math.sin(time * 0.15) * 0.35;
-  ctx.fillRect(0, 0, w, h);
-
   for (let i = 0; i < 5; i++) {
-    const opacity = 0.1 + i * 0.16;
-    const speed = 1.4 + i * 0.2;
-    const amp = midY * (0.22 - i * 0.015);
-    const freq = 1.5 + i * 0.5;
+    const opacity = 0.15 + i * 0.16;
+    const speed = 1.0 + i * 0.2;     // VERY fast
+    const amp = midY * 0.32;          // Tallest amplitude
+    const freq = 3.5 + i * 1.2;      // HIGHEST frequency
 
     ctx.beginPath();
     ctx.moveTo(0, midY);
-
     for (let x = 0; x <= w; x++) {
       const xN = x / w;
       const envelope = Math.sin(xN * Math.PI);
-      // Ultra-smooth pure sine — almost perfect
-      const wave1 = Math.sin(xN * freq * Math.PI * 2 + time * speed + i * 0.7);
-      const wave2 = Math.sin(xN * freq * 2.0 * Math.PI * 2 + time * speed * 0.5 + i * 1.4) * 0.15;
-      // Very slow breathe
-      const breathe = 1.0 + Math.sin(time * 0.12 + i * 0.3) * 0.15;
-      const y = midY + (wave1 + wave2) * amp * envelope * breathe;
+      const wave1 = Math.sin(xN * freq * Math.PI * 2 + time * speed + i * 1.5);
+      const spike = Math.sin(xN * freq * 2.5 * Math.PI * 2 + time * speed * 1.6 + i) * 0.3;
+      const buzz = Math.sin(xN * freq * 4.0 * Math.PI * 2 + time * speed * 2.0 + i * 2.5) * 0.12;
+      const noise = (Math.random() - 0.5) * 0.18;
+      const y = midY + (wave1 + spike + buzz + noise) * amp * envelope;
       ctx.lineTo(x, y);
     }
 
-    // Very wide, ghostly glow
-    ctx.strokeStyle = 'rgba(224, 224, 224, 0.12)';
-    ctx.lineWidth = 8 - i;
-    ctx.globalAlpha = opacity * 0.2;
+    ctx.strokeStyle = 'rgba(224, 224, 224, 0.15)';
+    ctx.lineWidth = 3;
+    ctx.globalAlpha = opacity * 0.25;
     ctx.stroke();
 
-    // Bright but ethereal
     ctx.strokeStyle = i >= 3 ? '#f0f0f0' : '#e0e0e0';
-    ctx.lineWidth = 1.2;
+    ctx.lineWidth = 1.1;
     ctx.globalAlpha = opacity;
     ctx.stroke();
   }

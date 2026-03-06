@@ -76,6 +76,10 @@ registerScreen('daily', {
     const user = getCurrentUser();
     if (!user) return;
 
+    // Force video autoplay on mobile
+    const vid = document.querySelector('#screen-daily .video-header video');
+    if (vid) vid.play().catch(() => {});
+
     document.getElementById('daily-date').textContent = new Date().toLocaleDateString('en-US', {
       weekday: 'short', month: 'short', day: 'numeric'
     });

@@ -140,16 +140,20 @@ export function initApp() {
 
   // Auth state listener
   onAuthStateChanged(auth, async (user) => {
+    console.log('[Auth] State changed:', user ? user.uid : 'no user');
     if (user) {
       currentUser = user;
       try {
+        console.log('[Auth] Fetching user doc...');
         userDoc = await getUserDoc(user.uid);
+        console.log('[Auth] User doc:', userDoc);
       } catch (err) {
-        console.error('Failed to load user data:', err);
+        console.error('[Auth] Failed to load user data:', err);
       }
 
       // If on a public screen, redirect to tracker
       const hash = window.location.hash.slice(1) || 'splash';
+      console.log('[Auth] Current hash:', hash, 'Navigating...');
       if (PUBLIC_SCREENS.includes(hash)) {
         // Check if user has seen onboarding
         const hasOnboarded = localStorage.getItem('hitit_onboarded');

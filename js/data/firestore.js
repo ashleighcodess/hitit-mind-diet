@@ -66,6 +66,10 @@ export async function logEntry(userId, emotion, tier, calories, details = '') {
   });
 }
 
+export async function updateEntry(entryId, updates) {
+  return updateDoc(doc(db, 'entries', entryId), updates);
+}
+
 // All queries use single userId filter + client-side filtering/sorting
 // to avoid needing composite indexes
 

@@ -171,7 +171,7 @@
     <div class="tagline-blue">Stop Eating High Calorie</div>
     <div class="tagline-bold">Negative Thoughts</div>
     <p class="description">
-      Stop eating high calorie negative thoughts and you'll quickly attract what your burning desires are, as you feel so light and happy on your path to NO resistance.
+      Stop eating high calorie negative thoughts and you'll quickly attract what your burning desires are, as you feel so light and happy on your path of NO resistance.
     </p>
   </div>
   <div class="dots">
@@ -593,6 +593,21 @@
       </div>
     </div>
   </div>
+
+  <!-- Edit entry modal -->
+  <div class="modal-overlay" id="edit-modal">
+    <div class="modal-sheet">
+      <h3>Edit Entry</h3>
+      <label style="font-size:0.85rem;color:rgba(255,255,255,0.7);display:block;margin-bottom:6px;">Emotion</label>
+      <select id="edit-emotion-select" class="input" style="margin-bottom:14px;width:100%;padding:10px;background:#222;color:#fff;border:1px solid rgba(255,255,255,0.15);border-radius:8px;font-size:0.95rem;"></select>
+      <label style="font-size:0.85rem;color:rgba(255,255,255,0.7);display:block;margin-bottom:6px;">Details</label>
+      <textarea id="edit-details" placeholder="Edit your note..."></textarea>
+      <div class="modal-actions">
+        <button class="btn btn-outline" id="edit-modal-cancel">Cancel</button>
+        <button class="btn btn-primary" id="edit-modal-save">Save</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ============================================================
@@ -815,11 +830,19 @@
     <div class="ref-img-full">
       <img src="assets/reference/bowling-pins.jpg" alt="60,000 Thoughts">
     </div>
+    <div class="ref-grey-strip">
+      In the outside world it&rsquo;s fact that 7 out of 10 People are Predominantly <span style="color:var(--tier-red);font-weight:700;">RED</span>, 2 are <span style="color:var(--tier-green);font-weight:700;">GREEN</span> and Only 1 Vibrates Consistently <span style="color:var(--tier-blue);font-weight:700;">BLUE</span>.
+    </div>
 
-    <!-- Two men + Prism side by side -->
-    <div class="ref-row">
-      <img src="assets/reference/red-head-42k.png" alt="42,000 Negative Thoughts" class="ref-row-img">
-      <img src="assets/images/prism.png" alt="Prism" class="ref-row-img">
+    <!-- Red head — full width -->
+    <div class="ref-img-full">
+      <img src="assets/reference/red-head-42k.png" alt="42,000 Negative Thoughts">
+    </div>
+
+    <!-- Prism — flush left with label -->
+    <div class="ref-prism-block">
+      <div class="ref-prism-label">Prism &mdash; The Colors are Scientific</div>
+      <img src="assets/images/prism.png" alt="Prism">
     </div>
 
     <!-- Electromagnetic Spectrum -->

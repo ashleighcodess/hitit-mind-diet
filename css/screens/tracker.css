@@ -150,7 +150,10 @@
 
 /* ---- Tier sections ---- */
 .tier-section {
-  padding: 0 12px 8px;
+  padding: 12px 12px 8px;
+  margin: 0 8px 10px;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
 }
 
 /* Vibration wave area — large, prominent */
@@ -163,8 +166,8 @@
 }
 
 .tier-wave img {
-  width: 65%;
-  max-width: 280px;
+  width: 100%;
+  max-width: 400px;
 }
 
 .tier-wave-label {
@@ -174,6 +177,12 @@
   color: #fff;
   line-height: 1.3;
 }
+
+.tier-red .tier-wave-label { color: var(--tier-red); }
+.tier-green .tier-wave-label { color: var(--tier-green); }
+.tier-blue .tier-wave-label { color: var(--tier-blue); }
+.tier-purple .tier-wave-label { color: var(--tier-purple); }
+.tier-white .tier-wave-label { color: var(--tier-white); }
 
 /* Tier title */
 .tier-title {
@@ -254,6 +263,13 @@
   transition: filter 0.2s ease;
 }
 
+/* Green tier icons — larger to match each other */
+.tier-green .icon-wrap {
+  width: 68px;
+  height: 68px;
+  overflow: visible;
+}
+
 /* Emotion name below icon */
 .emotion-name {
   font-size: 0.75rem;
@@ -261,6 +277,9 @@
   line-height: 1.15;
   text-align: center;
   transition: color 0.2s ease;
+  word-break: break-word;
+  max-width: 100%;
+  padding: 0 2px;
 }
 
 /* Calorie value below name */
@@ -382,6 +401,23 @@
 .log-cal.blue { color: var(--tier-blue); }
 .log-cal.purple { color: var(--tier-purple); }
 .log-cal.white { color: var(--tier-white); }
+
+.log-edit-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color 0.15s ease, background 0.15s ease;
+  flex-shrink: 0;
+}
+
+.log-edit-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
 
 .log-empty {
   text-align: center;

@@ -3,8 +3,8 @@
 // ========================================
 
 import { registerScreen, getCurrentUser, showToast, escapeHtml } from '../app.js';
-import { TIERS, EMOTIONS, getEmotionsByTier, getEmotionLabel, TIER_ORDER } from '../data/emotions.js';
-import { logEntry, subscribeToEntries, todayStr, formatTime, updateUserSettings } from '../data/firestore.js';
+import { TIERS, EMOTIONS, getEmotionsByTier, getEmotionByKey, getEmotionLabel, TIER_ORDER } from '../data/emotions.js';
+import { logEntry, updateEntry, subscribeToEntries, todayStr, formatTime, updateUserSettings } from '../data/firestore.js';
 import { getUserData } from '../app.js';
 import { animateScore, showCalorieFlash } from '../animations.js';
 
@@ -12,6 +12,7 @@ let unsubEntries = null;
 let todayEntries = [];
 let prevEntryCount = 0;
 let pendingEmotion = null;
+let editingEntryId = null;
 
 function updateScore() {
   const scoreEl = document.getElementById('tracker-score');
@@ -48,13 +49,50 @@ function renderLog() {
     const cal = entry.calories;
     const sign = cal > 0 ? '+' : '';
     return `
-      <div class="log-entry">
+      <div class="log-entry" data-entry-id="${entry.id}">
         <span class="log-time">${time}</span>
         <span class="log-emotion">${label}${entry.details ? ' &mdash; ' + escapeHtml(entry.details) : ''}</span>
         <span class="log-cal ${entry.tier}">${sign}${cal.toLocaleString()}</span>
+        <button class="log-edit-btn" data-entry-id="${entry.id}" title="Edit">&#9998;</button>
       </div>
     `;
   }).join('');
+
+  // Attach edit handlers
+  logList.querySelectorAll('.log-edit-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const entryId = btn.dataset.entryId;
+      const entry = todayEntries.find(en => en.id === entryId);
+      if (!entry) return;
+      openEditModal(entry);
+    });
+  });
+}
+
+function openEditModal(entry) {
+  editingEntryId = entry.id;
+  const modal = document.getElementById('edit-modal');
+  const select = document.getElementById('edit-emotion-select');
+  const textarea = document.getElementById('edit-details');
+
+  // Build emotion options from all tiers
+  select.innerHTML = '';
+  TIER_ORDER.forEach(tier => {
+    const emotions = getEmotionsByTier(tier);
+    emotions.forEach(emo => {
+      const opt = document.createElement('option');
+      opt.value = emo.key;
+      opt.textContent = emo.label;
+      opt.dataset.tier = tier;
+      opt.dataset.calories = emo.calories;
+      if (emo.key === entry.emotion) opt.selected = true;
+      select.appendChild(opt);
+    });
+  });
+
+  textarea.value = entry.details || '';
+  modal.classList.add('active');
 }
 
 registerScreen('tracker', {
@@ -114,6 +152,45 @@ registerScreen('tracker', {
       if (e.target === modal) {
         modal.classList.remove('active');
         pendingEmotion = null;
+      }
+    });
+
+    // Edit modal handlers
+    const editModal = document.getElementById('edit-modal');
+    document.getElementById('edit-modal-cancel').addEventListener('click', () => {
+      editModal.classList.remove('active');
+      editingEntryId = null;
+    });
+
+    document.getElementById('edit-modal-save').addEventListener('click', async () => {
+      if (!editingEntryId) return;
+      const select = document.getElementById('edit-emotion-select');
+      const selectedOpt = select.options[select.selectedIndex];
+      const newEmotion = select.value;
+      const newTier = selectedOpt.dataset.tier;
+      const newCalories = parseInt(selectedOpt.dataset.calories, 10);
+      const newDetails = document.getElementById('edit-details').value.trim();
+
+      editModal.classList.remove('active');
+      try {
+        await updateEntry(editingEntryId, {
+          emotion: newEmotion,
+          tier: newTier,
+          calories: newCalories,
+          details: newDetails
+        });
+        showToast('Entry updated!', 'success');
+      } catch (err) {
+        console.error('Edit error:', err);
+        showToast('Failed to update entry');
+      }
+      editingEntryId = null;
+    });
+
+    editModal.addEventListener('click', (e) => {
+      if (e.target === editModal) {
+        editModal.classList.remove('active');
+        editingEntryId = null;
       }
     });
 

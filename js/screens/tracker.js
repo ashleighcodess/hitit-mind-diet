@@ -80,7 +80,13 @@ registerScreen('tracker', {
           `What triggered "${getEmotionLabel(emotionKey)}"?`;
         document.getElementById('tracker-modal-details').value = '';
         modal.classList.add('active');
-        document.getElementById('tracker-modal-details').focus();
+        // Delay focus so modal animates in first, then keyboard opens
+        setTimeout(() => {
+          const textarea = document.getElementById('tracker-modal-details');
+          textarea.focus();
+          // Scroll textarea into view if keyboard obscures it
+          setTimeout(() => textarea.scrollIntoView({ behavior: 'smooth', block: 'center' }), 300);
+        }, 350);
       });
     });
 

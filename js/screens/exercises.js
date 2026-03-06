@@ -148,7 +148,7 @@ function saveGratitudes() {
   }, 800);
 }
 
-// ---- Render a single assignment card ----
+// ---- Render a single assignment card (accordion style) ----
 function renderAssignmentCard(a) {
   const isPending = a.status === 'pending' || !a.status;
   const isSubmitted = a.status === 'submitted';
@@ -158,58 +158,61 @@ function renderAssignmentCard(a) {
 
   return `
     <div class="ex-hw-card ${isOverdue ? 'ex-hw-overdue' : ''}" data-id="${a.id}">
-      <div class="ex-hw-top">
-        <div class="ex-hw-type-badge ex-type-${a.type}">${a.type}</div>
+      <div class="ex-hw-summary" data-toggle-hw="${a.id}">
         ${statusBadge(a.status || 'pending')}
+        <span class="ex-hw-summary-title">${escapeAttr(a.title)}</span>
+        <span class="ex-hw-summary-due">${dueDateStr || ''}</span>
+        <span class="ex-hw-summary-arrow">&#9656;</span>
       </div>
-      <h4 class="ex-hw-title">${escapeAttr(a.title)}</h4>
-      ${a.description ? `<p class="ex-hw-desc">${escapeAttr(a.description)}</p>` : ''}
-      ${a.mediaUrl ? `<div class="ex-hw-media">${renderMediaPreview(a.mediaUrl)}</div>` : ''}
-      <div class="ex-hw-meta">
-        ${dueDateStr ? `<span class="ex-hw-due ${isOverdue ? 'ex-overdue-text' : ''}">Due: ${dueDateStr}</span>` : ''}
-        <span class="ex-hw-time">${timeAgo(a.createdAt)}</span>
+      <div class="ex-hw-detail collapsed" id="hw-detail-${a.id}">
+        ${a.description ? `<p class="ex-hw-desc">${escapeAttr(a.description)}</p>` : ''}
+        ${a.mediaUrl ? `<div class="ex-hw-media">${renderMediaPreview(a.mediaUrl)}</div>` : ''}
+        <div class="ex-hw-meta">
+          ${dueDateStr ? `<span class="ex-hw-due ${isOverdue ? 'ex-overdue-text' : ''}">Due: ${dueDateStr}</span>` : ''}
+          <span class="ex-hw-time">${timeAgo(a.createdAt)}</span>
+        </div>
+
+        ${isPending ? `
+          <div class="ex-hw-response-area">
+            <textarea class="ex-hw-response" placeholder="Write your response here..." rows="3">${escapeAttr(a.response || '')}</textarea>
+            <div class="ex-hw-upload-zone" data-id="${a.id}">
+              <label class="ex-hw-upload-label">
+                <span class="ex-hw-upload-icon">+</span> Attach Files
+                <input type="file" class="ex-hw-file-input" multiple accept="image/*,.pdf,.pptx,.xlsx,.xls,.doc,.docx,.mp4,.mov" style="display:none">
+              </label>
+              <span class="ex-hw-upload-hint">Images, PDF, Word, Excel, PowerPoint, Video</span>
+              <div class="ex-hw-file-list"></div>
+            </div>
+            <div class="ex-hw-actions">
+              <button class="ex-hw-submit-btn" data-id="${a.id}" data-coach="${a.coachId || ''}">
+                Submit to Coach
+              </button>
+            </div>
+          </div>
+        ` : ''}
+
+        ${isSubmitted ? `
+          <div class="ex-hw-submitted-info">
+            <div class="ex-hw-submitted-label">Your Response</div>
+            <div class="ex-hw-submitted-text">${escapeAttr(a.response || 'No written response')}</div>
+            ${renderFileList(a.responseFiles)}
+            <div class="ex-hw-submitted-time">Submitted ${timeAgo(a.submittedAt)}</div>
+          </div>
+        ` : ''}
+
+        ${isReviewed ? `
+          <div class="ex-hw-reviewed-info">
+            <div class="ex-hw-submitted-label">Your Response</div>
+            <div class="ex-hw-submitted-text">${escapeAttr(a.response || 'No written response')}</div>
+            ${renderFileList(a.responseFiles)}
+            ${a.coachNote ? `
+              <div class="ex-hw-coach-note-label">Coach Feedback</div>
+              <div class="ex-hw-coach-note">${escapeAttr(a.coachNote)}</div>
+            ` : ''}
+            <div class="ex-hw-submitted-time">Reviewed ${timeAgo(a.reviewedAt)}</div>
+          </div>
+        ` : ''}
       </div>
-
-      ${isPending ? `
-        <div class="ex-hw-response-area">
-          <textarea class="ex-hw-response" placeholder="Write your response here..." rows="3">${escapeAttr(a.response || '')}</textarea>
-          <div class="ex-hw-upload-zone" data-id="${a.id}">
-            <label class="ex-hw-upload-label">
-              <span class="ex-hw-upload-icon">+</span> Attach Files
-              <input type="file" class="ex-hw-file-input" multiple accept="image/*,.pdf,.pptx,.xlsx,.xls,.doc,.docx,.mp4,.mov" style="display:none">
-            </label>
-            <span class="ex-hw-upload-hint">Images, PDF, Word, Excel, PowerPoint, Video</span>
-            <div class="ex-hw-file-list"></div>
-          </div>
-          <div class="ex-hw-actions">
-            <button class="ex-hw-submit-btn" data-id="${a.id}" data-coach="${a.coachId || ''}">
-              Submit to Coach
-            </button>
-          </div>
-        </div>
-      ` : ''}
-
-      ${isSubmitted ? `
-        <div class="ex-hw-submitted-info">
-          <div class="ex-hw-submitted-label">Your Response</div>
-          <div class="ex-hw-submitted-text">${escapeAttr(a.response || 'No written response')}</div>
-          ${renderFileList(a.responseFiles)}
-          <div class="ex-hw-submitted-time">Submitted ${timeAgo(a.submittedAt)}</div>
-        </div>
-      ` : ''}
-
-      ${isReviewed ? `
-        <div class="ex-hw-reviewed-info">
-          <div class="ex-hw-submitted-label">Your Response</div>
-          <div class="ex-hw-submitted-text">${escapeAttr(a.response || 'No written response')}</div>
-          ${renderFileList(a.responseFiles)}
-          ${a.coachNote ? `
-            <div class="ex-hw-coach-note-label">Coach Feedback</div>
-            <div class="ex-hw-coach-note">${escapeAttr(a.coachNote)}</div>
-          ` : ''}
-          <div class="ex-hw-submitted-time">Reviewed ${timeAgo(a.reviewedAt)}</div>
-        </div>
-      ` : ''}
     </div>
   `;
 }
@@ -430,6 +433,22 @@ async function loadExercises() {
           arrow.textContent = '\u25BE';
         } else {
           body.classList.add('collapsed');
+          arrow.textContent = '\u25B8';
+        }
+      });
+    });
+
+    // Assignment card accordion toggles
+    container.querySelectorAll('.ex-hw-summary[data-toggle-hw]').forEach(summary => {
+      summary.addEventListener('click', () => {
+        const id = summary.dataset.toggleHw;
+        const detail = document.getElementById('hw-detail-' + id);
+        const arrow = summary.querySelector('.ex-hw-summary-arrow');
+        if (detail.classList.contains('collapsed')) {
+          detail.classList.remove('collapsed');
+          arrow.textContent = '\u25BE';
+        } else {
+          detail.classList.add('collapsed');
           arrow.textContent = '\u25B8';
         }
       });

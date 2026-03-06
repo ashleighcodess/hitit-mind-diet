@@ -1301,6 +1301,10 @@
   margin-bottom: 16px;
 }
 
+.vibe-summary-grid.vibe-summary-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .vibe-summary-item {
   text-align: center;
   padding: 12px 8px;

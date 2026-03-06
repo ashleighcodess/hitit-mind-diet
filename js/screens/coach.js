@@ -81,13 +81,10 @@ function clientNameById(id) {
 
 function getVibeStatus(net, entryCount) {
   if (entryCount === 0) return { status: 'inactive', label: 'No Activity', color: 'var(--text-muted)' };
-  // Net < 0 means they burned more than they gained = positive vibration
-  // Net > 0 means they gained more = negative vibration
-  if (net < -200) return { status: 'high-positive', label: 'High Positive', color: 'var(--tier-green)' };
-  if (net < 0) return { status: 'positive', label: 'Positive', color: 'var(--tier-green)' };
-  if (net === 0) return { status: 'neutral', label: 'Neutral', color: 'var(--accent-blue)' };
-  if (net <= 200) return { status: 'negative', label: 'Negative', color: 'var(--tier-red)' };
-  return { status: 'high-negative', label: 'High Negative', color: 'var(--tier-red)' };
+  // Net < 0 means they burned more than they gained = positive vibration (good)
+  // Net >= 0 means they haven't made progress = negative vibration (needs work)
+  if (net < 0) return { status: 'positive', label: 'Positive Vibration', color: 'var(--tier-green)' };
+  return { status: 'negative', label: 'Negative Vibration', color: 'var(--tier-red)' };
 }
 
 async function loadClientVibes(clients) {
@@ -120,10 +117,8 @@ function renderVibeIndicator(clientId) {
   if (!v || v.status === 'inactive') {
     return '<span class="vibe-indicator vibe-inactive">No Activity</span>';
   }
-  const isPos = v.status === 'positive' || v.status === 'high-positive';
-  const cls = isPos ? 'vibe-positive' : v.status === 'neutral' ? 'vibe-neutral' : 'vibe-negative';
-  const sign = v.net > 0 ? '+' : '';
-  return `<span class="vibe-indicator ${cls}">${v.label} (${sign}${v.net.toLocaleString()})</span>`;
+  const cls = v.status === 'positive' ? 'vibe-positive' : 'vibe-negative';
+  return `<span class="vibe-indicator ${cls}">${v.label}</span>`;
 }
 
 // ---- Page Navigation ----
@@ -327,13 +322,12 @@ async function loadDashboard() {
     const vibeEl = document.getElementById('dash-vibration-overview');
     if (vibeEl && clients.length > 0) {
       const vibeValues = Object.values(cachedClientVibes);
-      const posCount = vibeValues.filter(v => v.status === 'positive' || v.status === 'high-positive').length;
-      const negCount = vibeValues.filter(v => v.status === 'negative' || v.status === 'high-negative').length;
-      const neutralCount = vibeValues.filter(v => v.status === 'neutral').length;
+      const posCount = vibeValues.filter(v => v.status === 'positive').length;
+      const negCount = vibeValues.filter(v => v.status === 'negative').length;
       const inactiveCount = vibeValues.filter(v => v.status === 'inactive').length;
 
       vibeEl.innerHTML = `
-        <div class="vibe-summary-grid">
+        <div class="vibe-summary-grid vibe-summary-3">
           <div class="vibe-summary-item vibe-summary-positive">
             <span class="vibe-summary-count">${posCount}</span>
             <span class="vibe-summary-label">Positive</span>
@@ -341,10 +335,6 @@ async function loadDashboard() {
           <div class="vibe-summary-item vibe-summary-negative">
             <span class="vibe-summary-count">${negCount}</span>
             <span class="vibe-summary-label">Negative</span>
-          </div>
-          <div class="vibe-summary-item vibe-summary-neutral">
-            <span class="vibe-summary-count">${neutralCount}</span>
-            <span class="vibe-summary-label">Neutral</span>
           </div>
           <div class="vibe-summary-item vibe-summary-inactive">
             <span class="vibe-summary-count">${inactiveCount}</span>
@@ -430,12 +420,12 @@ function renderClientList(clients, allAssign) {
   } else if (currentFilter === 'positive') {
     filtered = clients.filter(c => {
       const v = cachedClientVibes[c.id];
-      return v && (v.status === 'positive' || v.status === 'high-positive');
+      return v && v.status === 'positive';
     });
   } else if (currentFilter === 'negative') {
     filtered = clients.filter(c => {
       const v = cachedClientVibes[c.id];
-      return v && (v.status === 'negative' || v.status === 'high-negative');
+      return v && v.status === 'negative';
     });
   }
 
@@ -596,9 +586,7 @@ function renderClientStats(entries) {
   const vibe = getVibeStatus(totalCal, entries.length);
   const vibeEl = document.getElementById('ws-vibe-status');
   if (vibeEl) {
-    const isPos = vibe.status === 'positive' || vibe.status === 'high-positive';
-    const isNeg = vibe.status === 'negative' || vibe.status === 'high-negative';
-    const cls = isPos ? 'vibe-positive' : vibe.status === 'neutral' ? 'vibe-neutral' : isNeg ? 'vibe-negative' : 'vibe-inactive';
+    const cls = vibe.status === 'positive' ? 'vibe-positive' : vibe.status === 'negative' ? 'vibe-negative' : 'vibe-inactive';
     const sign = totalCal > 0 ? '+' : '';
     vibeEl.innerHTML = `
       <div class="ws-vibe-big ${cls}">

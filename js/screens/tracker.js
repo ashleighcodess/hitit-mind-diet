@@ -13,6 +13,8 @@ let todayEntries = [];
 let prevEntryCount = 0;
 let pendingEmotion = null;
 let editingEntryId = null;
+let midnightCheckInterval = null;
+let currentDateStr = null;
 
 function updateScore() {
   const scoreEl = document.getElementById('tracker-score');
@@ -244,13 +246,14 @@ registerScreen('tracker', {
     }
 
     // Update date
+    currentDateStr = todayStr();
     document.getElementById('tracker-date').textContent = new Date().toLocaleDateString('en-US', {
       weekday: 'long', month: 'long', day: 'numeric'
     });
 
     // Subscribe to entries
     if (unsubEntries) unsubEntries();
-    unsubEntries = subscribeToEntries(user.uid, todayStr(), (entries) => {
+    unsubEntries = subscribeToEntries(user.uid, currentDateStr, (entries) => {
       todayEntries = entries;
       updateScore();
       renderLog();
@@ -260,12 +263,36 @@ registerScreen('tracker', {
         showToast('Setting up database index... Please refresh in a moment.');
       }
     });
+
+    // Check every 30s if the date has rolled past midnight — re-subscribe if so
+    if (midnightCheckInterval) clearInterval(midnightCheckInterval);
+    midnightCheckInterval = setInterval(() => {
+      const now = todayStr();
+      if (now !== currentDateStr) {
+        currentDateStr = now;
+        document.getElementById('tracker-date').textContent = new Date().toLocaleDateString('en-US', {
+          weekday: 'long', month: 'long', day: 'numeric'
+        });
+        // Re-subscribe to the new day's entries
+        if (unsubEntries) unsubEntries();
+        unsubEntries = subscribeToEntries(user.uid, currentDateStr, (entries) => {
+          todayEntries = entries;
+          prevEntryCount = 0;
+          updateScore();
+          renderLog();
+        }, (err) => console.error('Entries listener error:', err));
+      }
+    }, 30000);
   },
 
   leave() {
     if (unsubEntries) {
       unsubEntries();
       unsubEntries = null;
+    }
+    if (midnightCheckInterval) {
+      clearInterval(midnightCheckInterval);
+      midnightCheckInterval = null;
     }
   }
 });

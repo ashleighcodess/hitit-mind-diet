@@ -1087,7 +1087,11 @@
               </div>
               <div class="ws-panel" id="ws-panel-log" style="display:none">
                 <div class="coach-log-section">
-                  <h3>Today's Log</h3>
+                  <div class="coach-log-date-nav">
+                    <button id="coach-log-prev" class="coach-log-nav-btn" title="Previous day">&#9664;</button>
+                    <h3 id="coach-log-date-label">Today's Log</h3>
+                    <button id="coach-log-next" class="coach-log-nav-btn" title="Next day">&#9654;</button>
+                  </div>
                   <div id="coach-log-list">
                     <div class="log-empty">No entries yet today.</div>
                   </div>

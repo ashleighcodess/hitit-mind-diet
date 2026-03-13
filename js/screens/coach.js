@@ -20,12 +20,14 @@ const COACH_UID = 'bYrV0rVnuMWYtkmtUK9u883kHOO2';
 // ---- State ----
 let selectedClientId = null;
 let unsubClientEntries = null;
+let unsubLogEntries = null;
 let unsubNotifications = null;
 let cachedClients = [];
 let cachedAllAssignments = [];
 let cachedClientVibes = {}; // { clientId: { net, entries, status, label, color } }
 let currentPage = 'dashboard';
 let currentFilter = 'all';
+let logViewDate = null; // date string for the coach log tab (null = today)
 
 // ---- Helpers ----
 
@@ -480,7 +482,12 @@ function hideWorkspace() {
     unsubClientEntries();
     unsubClientEntries = null;
   }
+  if (unsubLogEntries) {
+    unsubLogEntries();
+    unsubLogEntries = null;
+  }
   selectedClientId = null;
+  logViewDate = null;
 }
 
 function switchWorkspaceTab(tabName) {
@@ -516,18 +523,59 @@ async function openClientWorkspace(clientId) {
     console.error('Failed to load client:', err);
   }
 
-  // Subscribe to entries
+  // Subscribe to today's entries for stats/overview
   if (unsubClientEntries) unsubClientEntries();
   unsubClientEntries = subscribeToEntries(clientId, todayStr(), (entries) => {
     renderClientStats(entries);
-    renderClientLog(entries);
     renderRedSummary(entries);
   }, (err) => {
     console.error('Client entries error:', err);
   });
 
+  // Initialize log view to today
+  logViewDate = todayStr();
+  loadLogForDate(clientId, logViewDate);
+
   loadClientAssignments(clientId);
   switchWorkspaceTab('overview');
+}
+
+// ---- Coach Log Date Navigation ----
+
+function formatLogDateLabel(dateStr) {
+  const today = todayStr();
+  if (dateStr === today) return "Today's Log";
+  const d = new Date(dateStr + 'T12:00:00');
+  return d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+}
+
+function shiftDate(dateStr, days) {
+  const d = new Date(dateStr + 'T12:00:00');
+  d.setDate(d.getDate() + days);
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
+function loadLogForDate(clientId, dateStr) {
+  // Update label
+  const label = document.getElementById('coach-log-date-label');
+  if (label) label.textContent = formatLogDateLabel(dateStr);
+
+  // Disable next button if viewing today
+  const nextBtn = document.getElementById('coach-log-next');
+  if (nextBtn) nextBtn.disabled = (dateStr >= todayStr());
+
+  // Unsubscribe previous log listener
+  if (unsubLogEntries) unsubLogEntries();
+
+  // Subscribe to entries for the selected date
+  unsubLogEntries = subscribeToEntries(clientId, dateStr, (entries) => {
+    renderClientLog(entries);
+  }, (err) => {
+    console.error('Log entries error:', err);
+  });
 }
 
 // Navigate to page without re-triggering loads (for internal use)
@@ -607,7 +655,8 @@ function renderClientStats(entries) {
 function renderClientLog(entries) {
   const logList = document.getElementById('coach-log-list');
   if (entries.length === 0) {
-    logList.innerHTML = '<div class="log-empty">No entries yet today.</div>';
+    const isToday = logViewDate === todayStr();
+    logList.innerHTML = `<div class="log-empty">No entries ${isToday ? 'yet today' : 'on this date'}.</div>`;
     return;
   }
   logList.innerHTML = entries.map(entry => {
@@ -979,6 +1028,19 @@ registerScreen('coach', {
     // Workspace tabs (mobile)
     document.querySelectorAll('#workspace-tabs .ws-tab').forEach(btn => {
       btn.addEventListener('click', () => switchWorkspaceTab(btn.dataset.wstab));
+    });
+
+    // Log date navigation
+    document.getElementById('coach-log-prev').addEventListener('click', () => {
+      if (!selectedClientId || !logViewDate) return;
+      logViewDate = shiftDate(logViewDate, -1);
+      loadLogForDate(selectedClientId, logViewDate);
+    });
+    document.getElementById('coach-log-next').addEventListener('click', () => {
+      if (!selectedClientId || !logViewDate) return;
+      if (logViewDate >= todayStr()) return;
+      logViewDate = shiftDate(logViewDate, 1);
+      loadLogForDate(selectedClientId, logViewDate);
     });
 
     // Save goals

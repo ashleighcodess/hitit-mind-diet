@@ -24,8 +24,16 @@ import {
 } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-storage.js';
 
 // ---- Date helpers ----
+// Use local timezone (not UTC) so the day boundary matches the user's clock
+function localDateStr(d) {
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+}
+
 export function todayStr() {
-  return new Date().toISOString().slice(0, 10);
+  return localDateStr(new Date());
 }
 
 export function formatTime(date) {
@@ -38,7 +46,7 @@ export function weekStartStr(dateStr) {
   const day = d.getDay();
   const diff = d.getDate() - day + (day === 0 ? -6 : 1);
   d.setDate(diff);
-  return d.toISOString().slice(0, 10);
+  return localDateStr(d);
 }
 
 // Get all 7 days of the week containing dateStr
@@ -48,7 +56,7 @@ export function getWeekDays(dateStr) {
   for (let i = 0; i < 7; i++) {
     const d = new Date(start + 'T00:00:00');
     d.setDate(d.getDate() + i);
-    days.push(d.toISOString().slice(0, 10));
+    days.push(localDateStr(d));
   }
   return days;
 }

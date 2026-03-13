@@ -548,13 +548,20 @@
 
 .workspace-header {
   margin-bottom: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg-main);
+  padding-top: 8px;
+  padding-bottom: 4px;
 }
 
 .workspace-header h2 {
   font-family: 'Montserrat', Helvetica, sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.4rem;
   margin: 8px 0 12px;
+  color: var(--accent-blue);
 }
 
 .coach-back-btn {
@@ -927,6 +934,48 @@
 /* ========================================
    LOG
    ======================================== */
+
+.coach-log-date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.coach-log-date-nav h3 {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin: 0;
+  min-width: 160px;
+  text-align: center;
+}
+
+.coach-log-nav-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.coach-log-nav-btn:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+.coach-log-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
 
 .coach-log-section h3 {
   font-family: 'Montserrat', Helvetica, sans-serif;

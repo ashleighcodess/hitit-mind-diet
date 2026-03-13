@@ -39,15 +39,24 @@ function getEmbedUrl(url) {
   return null;
 }
 
-function renderMedia(url, type) {
+function renderMedia(url, type, mediaType) {
   const embed = getEmbedUrl(url);
   if (embed) {
     return `<iframe src="${embed}" frameborder="0" allowfullscreen style="width:100%;aspect-ratio:16/9;border-radius:8px;"></iframe>`;
   }
-  if (type === 'video') {
+  if (type === 'video' || (mediaType && mediaType.startsWith('video/'))) {
     return `<video src="${url}" controls preload="metadata" style="width:100%;border-radius:8px;"></video>`;
   }
-  return `<img src="${url}" alt="Attachment" style="width:100%;border-radius:8px;">`;
+  // Check if URL looks like an image (extension in path or MIME type)
+  const lc = url.toLowerCase();
+  const isImage = (mediaType && mediaType.startsWith('image/'))
+    || /\.(jpg|jpeg|png|gif|webp)/i.test(lc);
+  if (isImage) {
+    return `<img src="${url}" alt="Attachment" style="width:100%;border-radius:8px;">`;
+  }
+  // PDF, Word docs, and other files — show as download link
+  const fileName = decodeURIComponent(lc).match(/\/([^/?]+)\?/)?.[1] || 'Attachment';
+  return `<a href="${url}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:var(--accent-gold);font-size:0.85rem;text-decoration:underline;">📎 View Attachment</a>`;
 }
 
 function timeAgo(seconds) {
@@ -747,7 +756,7 @@ function renderAssignCard(a, opts = {}) {
       </div>
       <div class="coach-assign-item-title">${escapeHtml(a.title)}</div>
       ${a.description ? `<div class="coach-assign-item-desc">${escapeHtml(a.description)}</div>` : ''}
-      ${a.mediaUrl ? `<div class="coach-assign-media">${renderMedia(a.mediaUrl, a.type)}</div>` : ''}
+      ${a.mediaUrl ? `<div class="coach-assign-media">${renderMedia(a.mediaUrl, a.type, a.mediaType)}</div>` : ''}
       ${a.videoLinks && a.videoLinks.length > 0 ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px">${a.videoLinks.length} video${a.videoLinks.length > 1 ? 's' : ''} assigned</div>` : ''}
       ${due ? `<div class="coach-assign-item-due">${overdue ? '<span style="color:var(--tier-red)">Overdue — </span>' : ''}Due: ${due}</div>` : ''}
 
@@ -1126,6 +1135,7 @@ registerScreen('coach', {
       const sendBtn = document.getElementById('coach-assign-send');
       sendBtn.disabled = true;
       let mediaUrl = pastedUrl;
+      let mediaType = '';
 
       if (file) {
         sendBtn.textContent = 'Uploading...';
@@ -1133,6 +1143,7 @@ registerScreen('coach', {
           const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
           const path = `assignments/${Date.now()}-${safeName}`;
           mediaUrl = await uploadFile(file, path);
+          mediaType = file.type || '';
         } catch (err) {
           console.error('Upload failed:', err);
           showToast('File upload failed — try pasting a URL instead');
@@ -1154,6 +1165,7 @@ registerScreen('coach', {
           videoLinks,
           dueDate,
           mediaUrl,
+          mediaType,
           questions: ''
         });
         showToast('Assignment sent!', 'success');

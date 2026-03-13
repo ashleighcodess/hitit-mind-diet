@@ -44,19 +44,24 @@ function statusBadge(status) {
   return `<span class="ex-status-badge ${s.cls}">${s.label}</span>`;
 }
 
-function renderMediaPreview(url) {
+function renderMediaPreview(url, mediaType) {
   if (!url) return '';
   const embed = getEmbedUrl(url);
   if (embed) {
     return `<iframe src="${embed}" frameborder="0" allowfullscreen class="ex-media-frame"></iframe>`;
   }
-  if (url.match(/\.(jpg|jpeg|png|gif|webp)$/i)) {
+  const lc = url.toLowerCase();
+  const isImage = (mediaType && mediaType.startsWith('image/'))
+    || /\.(jpg|jpeg|png|gif|webp)/i.test(lc);
+  const isVideo = (mediaType && mediaType.startsWith('video/'))
+    || /\.(mp4|mov|webm)/i.test(lc);
+  if (isImage) {
     return `<img src="${escapeAttr(url)}" alt="Attachment" class="ex-media-img">`;
   }
-  if (url.match(/\.(mp4|mov|webm)$/i)) {
+  if (isVideo) {
     return `<video src="${escapeAttr(url)}" controls preload="metadata" class="ex-media-frame"></video>`;
   }
-  return `<a href="${escapeAttr(url)}" target="_blank" class="ex-file-link">View Attachment</a>`;
+  return `<a href="${escapeAttr(url)}" target="_blank" class="ex-file-link">📎 View Attachment</a>`;
 }
 
 function renderInstructionFields(fields) {
@@ -216,7 +221,7 @@ function renderAssignmentCard(a) {
       <div class="ex-hw-detail collapsed" id="hw-detail-${a.id}">
         ${hasStructuredFields ? renderInstructionFields(a.instructionFields)
           : a.description ? `<p class="ex-hw-desc">${escapeAttr(a.description)}</p>` : ''}
-        ${a.mediaUrl ? `<div class="ex-hw-media">${renderMediaPreview(a.mediaUrl)}</div>` : ''}
+        ${a.mediaUrl ? `<div class="ex-hw-media">${renderMediaPreview(a.mediaUrl, a.mediaType)}</div>` : ''}
         ${hasVideoLinks ? renderVideoEmbeds(a.videoLinks, a.id, a.videoResponses, isPending) : ''}
         <div class="ex-hw-meta">
           ${dueDateStr ? `<span class="ex-hw-due ${isOverdue ? 'ex-overdue-text' : ''}">Due: ${dueDateStr}</span>` : ''}

@@ -238,8 +238,14 @@ registerScreen('tracker', {
     const user = getCurrentUser();
     if (!user) return;
 
-    // Load intention
+    // Show user name in menu
     const userData = getUserData();
+    const nameEl = document.getElementById('topbar-user-name');
+    if (nameEl) {
+      nameEl.textContent = userData?.name || user.displayName || '';
+    }
+
+    // Load intention
     const intentionInput = document.getElementById('tracker-intention');
     if (intentionInput && userData?.settings?.intention) {
       intentionInput.value = userData.settings.intention;

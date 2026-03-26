@@ -793,43 +793,237 @@
 }
 
 /* ========================================
-   ASSIGNMENT CARDS (shared)
+   ASSIGNMENT FILTER TABS
    ======================================== */
 
-.coach-assign-item {
+.assign-filter-tabs {
+  display: flex;
+  gap: 6px;
+  padding: 12px 16px 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.assign-filter-tabs::-webkit-scrollbar { display: none; }
+
+.assign-filter-btn {
+  flex-shrink: 0;
+  padding: 5px 14px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: var(--text-secondary);
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.assign-filter-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-primary);
+}
+
+.assign-filter-btn.active {
+  background: rgba(74, 158, 255, 0.12);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+/* ========================================
+   WEEK GROUP HEADERS
+   ======================================== */
+
+.assign-week-group {
+  margin-bottom: 4px;
+}
+
+.assign-week-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease;
+  border-radius: var(--radius-sm);
+}
+
+.assign-week-header:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.assign-week-label {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
+
+.assign-week-count {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.assign-week-chevron {
+  margin-left: auto;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.assign-week-group.collapsed .assign-week-chevron {
+  transform: rotate(-90deg);
+}
+
+.assign-week-body {
+  padding: 0 4px;
+}
+
+.assign-week-group.collapsed .assign-week-body {
+  display: none;
+}
+
+/* ========================================
+   COMPACT ASSIGNMENT ROWS
+   ======================================== */
+
+.assign-compact-row {
   background: var(--bg-card);
   border-radius: var(--radius-md);
   border: 1px solid rgba(255, 255, 255, 0.06);
-  padding: 14px 16px;
-  margin-bottom: 8px;
-}
-
-.coach-assign-item-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 4px;
+  overflow: hidden;
+  transition: border-color 0.15s ease;
 }
 
-.coach-assign-item-type {
-  font-size: 0.7rem;
+.assign-compact-row:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.assign-compact-row.expanded {
+  border-color: rgba(74, 158, 255, 0.2);
+}
+
+.assign-row-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  cursor: pointer;
+  gap: 10px;
+}
+
+.assign-row-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+}
+
+.assign-row-title {
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.assign-row-type {
+  font-size: 0.68rem;
   text-transform: uppercase;
   color: var(--text-muted);
-  letter-spacing: 0.04em;
-  font-weight: 600;
+  letter-spacing: 0.03em;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.coach-assign-item-title {
-  font-weight: 600;
-  font-size: 0.95rem;
-  margin-bottom: 4px;
+.assign-row-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
+
+.assign-row-date {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.assign-row-overdue {
+  font-size: 0.68rem;
+  font-weight: 600;
+  color: var(--tier-red);
+  white-space: nowrap;
+}
+
+.assign-chevron {
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+
+.assign-compact-row.expanded .assign-chevron {
+  transform: rotate(180deg);
+}
+
+/* ========================================
+   EXPANDABLE DETAIL PANEL
+   ======================================== */
+
+.assign-detail {
+  padding: 0 14px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* ========================================
+   OLDER SECTION
+   ======================================== */
+
+.assign-older-header {
+  opacity: 0.7;
+}
+
+.assign-show-older-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  background: transparent;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  cursor: pointer;
+  margin-top: 4px;
+  transition: all 0.15s ease;
+}
+
+.assign-show-older-btn:hover {
+  border-color: var(--accent-blue);
+  color: var(--accent-blue);
+}
+
+/* ========================================
+   ASSIGNMENT CARDS (shared — legacy classes kept for desc/media/due)
+   ======================================== */
 
 .coach-assign-item-desc {
   font-size: 0.82rem;
   color: var(--text-secondary);
   line-height: 1.5;
   white-space: pre-wrap;
+  margin-top: 8px;
 }
 
 .coach-assign-item-due {
@@ -860,6 +1054,27 @@
   margin-bottom: 10px;
   padding: 0 16px;
   padding-top: 12px;
+}
+
+/* ========================================
+   MOBILE: stack type below title
+   ======================================== */
+
+@media (max-width: 480px) {
+  .assign-row-left {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+
+  .assign-row-type {
+    font-size: 0.65rem;
+  }
+
+  .assign-row-date,
+  .assign-row-overdue {
+    display: none;
+  }
 }
 
 /* ========================================

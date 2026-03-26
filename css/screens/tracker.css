@@ -88,6 +88,20 @@
   display: block;
 }
 
+.topbar-dropdown-name {
+  padding: 10px 14px 6px;
+  color: #fff;
+  font-family: 'Montserrat', Helvetica, sans-serif;
+  font-weight: 600;
+  font-size: 0.82rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 2px;
+}
+
+.topbar-dropdown-name:empty {
+  display: none;
+}
+
 .topbar-dropdown-item {
   display: flex;
   align-items: center;

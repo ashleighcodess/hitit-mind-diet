@@ -28,6 +28,11 @@ let cachedClientVibes = {}; // { clientId: { net, entries, status, label, color 
 let currentPage = 'dashboard';
 let currentFilter = 'all';
 let logViewDate = null; // date string for the coach log tab (null = today)
+let assignFilterClient = 'all';       // filter for client workspace assignments
+let assignFilterClientFull = 'all';   // filter for client workspace "All Assignments" tab
+let assignFilterGlobal = 'all';       // filter for global All Assignments page
+let expandedAssignId = null;          // accordion: currently expanded assignment id
+let cachedClientAssignments = [];     // cached assignments for current client
 
 // ---- Helpers ----
 
@@ -89,6 +94,57 @@ function isSentThisWeek(a) {
 function clientNameById(id) {
   const c = cachedClients.find(cl => cl.id === id);
   return c ? c.name : 'Unknown';
+}
+
+// ---- Week Grouping Helpers ----
+
+function getWeekStart(date) {
+  const d = new Date(date);
+  const day = d.getDay();
+  d.setDate(d.getDate() - day);
+  d.setHours(0, 0, 0, 0);
+  return d;
+}
+
+function weekLabel(date) {
+  const now = new Date();
+  const thisWeekStart = getWeekStart(now);
+  const weekStart = getWeekStart(date);
+  const diff = Math.round((thisWeekStart - weekStart) / (7 * 86400000));
+  if (diff === 0) return 'This Week';
+  if (diff === 1) return 'Last Week';
+  const mo = weekStart.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  return `Week of ${mo}`;
+}
+
+function groupByWeek(assignments) {
+  const groups = [];
+  const map = new Map();
+  for (const a of assignments) {
+    const ts = a.createdAt?.seconds ? new Date(a.createdAt.seconds * 1000) : new Date();
+    const ws = getWeekStart(ts).getTime();
+    if (!map.has(ws)) {
+      const group = { key: ws, label: weekLabel(ts), startDate: new Date(ws), assignments: [] };
+      map.set(ws, group);
+      groups.push(group);
+    }
+    map.get(ws).assignments.push(a);
+  }
+  // Sort groups newest first
+  groups.sort((a, b) => b.key - a.key);
+  return groups;
+}
+
+function formatAssignDate(createdAt) {
+  if (!createdAt?.seconds) return '';
+  const d = new Date(createdAt.seconds * 1000);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+}
+
+function isOlderThan4Weeks(createdAt) {
+  if (!createdAt?.seconds) return false;
+  const fourWeeksAgo = (Date.now() / 1000) - (28 * 86400);
+  return createdAt.seconds < fourWeeksAgo;
 }
 
 // ---- Vibration Status ----
@@ -743,48 +799,190 @@ function renderVideoResponses(a) {
 }
 
 function renderAssignCard(a, opts = {}) {
-  const statusLabels = { pending: 'Pending', submitted: 'Submitted', reviewed: 'Reviewed' };
+  const statusLabels = { pending: 'Pending', submitted: 'Needs Review', reviewed: 'Reviewed' };
   const status = a.status || 'pending';
   const due = a.dueDate || '';
   const overdue = isOverdue(a);
+  const isExpanded = expandedAssignId === a.id;
+  const dateStr = formatAssignDate(a.createdAt);
+  const statusColor = status === 'submitted' ? 'var(--accent-blue)' : status === 'reviewed' ? 'var(--tier-green)' : '#f0a030';
 
   return `
-    <div class="coach-assign-item" style="border-left:3px solid ${status === 'submitted' ? 'var(--accent-blue)' : status === 'reviewed' ? 'var(--tier-green)' : '#f0a030'}">
-      <div class="coach-assign-item-header">
-        <span class="coach-assign-item-type">${a.type}${opts.showClient ? ` — ${escapeHtml(clientNameById(a.clientId))}` : ''}</span>
-        <span class="status-badge ${status}">${statusLabels[status]}${overdue ? ' (Overdue)' : ''}</span>
+    <div class="assign-compact-row${isExpanded ? ' expanded' : ''}" data-assign-id="${a.id}" style="border-left:3px solid ${statusColor}">
+      <div class="assign-row-main">
+        <div class="assign-row-left">
+          <span class="assign-row-title">${escapeHtml(a.title)}</span>
+          <span class="assign-row-type">${a.type}${opts.showClient ? ` — ${escapeHtml(clientNameById(a.clientId))}` : ''}</span>
+        </div>
+        <div class="assign-row-right">
+          <span class="status-badge ${status}">${statusLabels[status]}</span>
+          ${overdue ? '<span class="assign-row-overdue">Overdue</span>' : (dateStr ? `<span class="assign-row-date">${dateStr}</span>` : '')}
+          <svg class="assign-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
       </div>
-      <div class="coach-assign-item-title">${escapeHtml(a.title)}</div>
-      ${a.description ? `<div class="coach-assign-item-desc">${escapeHtml(a.description)}</div>` : ''}
-      ${a.mediaUrl ? `<div class="coach-assign-media">${renderMedia(a.mediaUrl, a.type, a.mediaType)}</div>` : ''}
-      ${a.videoLinks && a.videoLinks.length > 0 ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px">${a.videoLinks.length} video${a.videoLinks.length > 1 ? 's' : ''} assigned</div>` : ''}
-      ${due ? `<div class="coach-assign-item-due">${overdue ? '<span style="color:var(--tier-red)">Overdue — </span>' : ''}Due: ${due}</div>` : ''}
+      <div class="assign-detail"${isExpanded ? '' : ' style="display:none"'}>
+        ${a.description ? `<div class="coach-assign-item-desc">${escapeHtml(a.description)}</div>` : ''}
+        ${a.mediaUrl ? `<div class="coach-assign-media">${renderMedia(a.mediaUrl, a.type, a.mediaType)}</div>` : ''}
+        ${a.videoLinks && a.videoLinks.length > 0 ? `<div style="font-size:0.72rem;color:var(--text-muted);margin-top:6px">${a.videoLinks.length} video${a.videoLinks.length > 1 ? 's' : ''} assigned</div>` : ''}
+        ${due ? `<div class="coach-assign-item-due">${overdue ? '<span style="color:var(--tier-red)">Overdue — </span>' : ''}Due: ${due}</div>` : ''}
 
-      ${status === 'submitted' ? `
-        <div class="review-expand">
-          <div class="review-expand-label">Client's Response</div>
-          <div class="review-expand-response">${escapeHtml(a.response || 'No written response')}</div>
-          ${renderVideoResponses(a)}
-          ${renderCoachFileList(a.responseFiles)}
-          <textarea class="coach-review-note" placeholder="Add feedback (optional)..." rows="2"></textarea>
-          <button class="coach-review-btn btn btn-primary" data-id="${a.id}" style="width:100%">Mark Reviewed</button>
-        </div>
-      ` : ''}
+        ${status === 'submitted' ? `
+          <div class="review-expand">
+            <div class="review-expand-label">Client's Response</div>
+            <div class="review-expand-response">${escapeHtml(a.response || 'No written response')}</div>
+            ${renderVideoResponses(a)}
+            ${renderCoachFileList(a.responseFiles)}
+            <textarea class="coach-review-note" placeholder="Add feedback (optional)..." rows="2"></textarea>
+            <button class="coach-review-btn btn btn-primary" data-id="${a.id}" style="width:100%">Mark Reviewed</button>
+          </div>
+        ` : ''}
 
-      ${status === 'reviewed' ? `
-        <div class="review-expand">
-          <div class="review-expand-label">Client's Response</div>
-          <div class="review-expand-response">${escapeHtml(a.response || 'No written response')}</div>
-          ${renderVideoResponses(a)}
-          ${renderCoachFileList(a.responseFiles)}
-          ${a.coachNote ? `
-            <div class="review-expand-label" style="color:var(--tier-green)">Your Feedback</div>
-            <div class="review-expand-response" style="border-left-color:var(--tier-green);background:rgba(68,204,68,0.04)">${escapeHtml(a.coachNote)}</div>
-          ` : ''}
-        </div>
-      ` : ''}
+        ${status === 'reviewed' ? `
+          <div class="review-expand">
+            <div class="review-expand-label">Client's Response</div>
+            <div class="review-expand-response">${escapeHtml(a.response || 'No written response')}</div>
+            ${renderVideoResponses(a)}
+            ${renderCoachFileList(a.responseFiles)}
+            ${a.coachNote ? `
+              <div class="review-expand-label" style="color:var(--tier-green)">Your Feedback</div>
+              <div class="review-expand-response" style="border-left-color:var(--tier-green);background:rgba(68,204,68,0.04)">${escapeHtml(a.coachNote)}</div>
+            ` : ''}
+          </div>
+        ` : ''}
+      </div>
     </div>
   `;
+}
+
+function renderWeekGroup(group, opts = {}) {
+  const now = new Date();
+  const thisWeekStart = getWeekStart(now);
+  const isCurrentWeek = group.key === thisWeekStart.getTime();
+  const collapsed = !isCurrentWeek;
+
+  return `
+    <div class="assign-week-group${collapsed ? ' collapsed' : ''}" data-week="${group.key}">
+      <div class="assign-week-header">
+        <span class="assign-week-label">${group.label}</span>
+        <span class="assign-week-count">${group.assignments.length}</span>
+        <svg class="assign-week-chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+      <div class="assign-week-body">
+        ${group.assignments.map(a => renderAssignCard(a, opts)).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function attachAccordionHandlers(container, refreshFn) {
+  // Row click → expand/collapse (accordion)
+  container.querySelectorAll('.assign-compact-row').forEach(row => {
+    row.querySelector('.assign-row-main').addEventListener('click', () => {
+      const id = row.dataset.assignId;
+      if (expandedAssignId === id) {
+        expandedAssignId = null;
+      } else {
+        expandedAssignId = id;
+      }
+      // Toggle details within this container only
+      container.querySelectorAll('.assign-compact-row').forEach(r => {
+        const detail = r.querySelector('.assign-detail');
+        if (r.dataset.assignId === expandedAssignId) {
+          r.classList.add('expanded');
+          detail.style.display = '';
+        } else {
+          r.classList.remove('expanded');
+          detail.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Week header click → collapse/expand week
+  container.querySelectorAll('.assign-week-header').forEach(header => {
+    header.addEventListener('click', () => {
+      const group = header.closest('.assign-week-group');
+      group.classList.toggle('collapsed');
+    });
+  });
+}
+
+function renderFilteredWeekGroups(assignments, container, opts = {}, refreshFn = null) {
+  if (assignments.length === 0) {
+    container.innerHTML = '<p class="text-muted" style="padding:16px">No assignments match this filter.</p>';
+    return;
+  }
+
+  // Separate: recent vs older (reviewed 4+ weeks ago)
+  const recent = [];
+  const older = [];
+  for (const a of assignments) {
+    if (a.status === 'reviewed' && isOlderThan4Weeks(a.createdAt)) {
+      older.push(a);
+    } else {
+      recent.push(a);
+    }
+  }
+
+  const weekGroups = groupByWeek(recent);
+  let html = weekGroups.map(g => renderWeekGroup(g, opts)).join('');
+
+  if (older.length > 0) {
+    const olderGroups = groupByWeek(older);
+    // Show first batch collapsed under "Older" heading
+    html += `
+      <div class="assign-older-section" data-showing="0">
+        <div class="assign-week-header assign-older-header" style="margin-top:8px">
+          <span class="assign-week-label">Older</span>
+          <span class="assign-week-count">${older.length}</span>
+        </div>
+        <div class="assign-older-content" style="display:none">
+          ${olderGroups.map(g => renderWeekGroup(g, opts)).join('')}
+        </div>
+        <button class="assign-show-older-btn">Show older assignments</button>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
+
+  // "Show older" button
+  const olderSection = container.querySelector('.assign-older-section');
+  if (olderSection) {
+    const btn = olderSection.querySelector('.assign-show-older-btn');
+    const content = olderSection.querySelector('.assign-older-content');
+    btn.addEventListener('click', () => {
+      content.style.display = '';
+      btn.style.display = 'none';
+      attachAccordionHandlers(content, refreshFn);
+      attachReviewHandlers(content, refreshFn);
+    });
+  }
+
+  attachAccordionHandlers(container, refreshFn);
+  if (refreshFn) attachReviewHandlers(container, refreshFn);
+}
+
+function setupFilterTabs(tabContainerId, filterVar, assignments, listEl, opts = {}, refreshFn = null) {
+  const tabContainer = document.getElementById(tabContainerId);
+  if (!tabContainer) return;
+
+  tabContainer.querySelectorAll('.assign-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tabContainer.querySelectorAll('.assign-filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const filter = btn.dataset.filter;
+
+      // Update the correct filter variable
+      if (tabContainerId === 'assign-filter-tabs') assignFilterClient = filter;
+      else if (tabContainerId === 'assign-filter-tabs-full') assignFilterClientFull = filter;
+      else if (tabContainerId === 'assign-filter-tabs-global') assignFilterGlobal = filter;
+
+      expandedAssignId = null;
+      const filtered = filter === 'all' ? assignments : assignments.filter(a => (a.status || 'pending') === filter);
+      renderFilteredWeekGroups(filtered, listEl, opts, refreshFn);
+    });
+  });
 }
 
 function attachReviewHandlers(container, refreshFn) {
@@ -792,7 +990,7 @@ function attachReviewHandlers(container, refreshFn) {
     btn.addEventListener('click', async (e) => {
       e.stopPropagation();
       const assignId = btn.dataset.id;
-      const card = btn.closest('.coach-assign-item');
+      const card = btn.closest('.assign-compact-row') || btn.closest('.coach-assign-item');
       const noteInput = card.querySelector('.coach-review-note');
       const note = noteInput ? noteInput.value.trim() : '';
 
@@ -821,46 +1019,29 @@ async function loadClientAssignments(clientId) {
 
   try {
     const assignments = await getAssignments(clientId);
-    const submitted = assignments.filter(a => a.status === 'submitted');
-    const pending = assignments.filter(a => !a.status || a.status === 'pending');
-    const reviewed = assignments.filter(a => a.status === 'reviewed');
+    cachedClientAssignments = assignments;
+    expandedAssignId = null;
 
-    // Overview shows submitted + pending
-    let overviewHtml = '';
-    if (submitted.length > 0) {
-      overviewHtml += `<div class="coach-sub-title" style="color:var(--accent-blue)">Needs Review (${submitted.length})</div>`;
-      overviewHtml += submitted.map(a => renderAssignCard(a)).join('');
-    }
-    if (pending.length > 0) {
-      overviewHtml += `<div class="coach-sub-title" style="margin-top:8px">Pending (${pending.length})</div>`;
-      overviewHtml += pending.map(a => renderAssignCard(a)).join('');
-    }
-    if (!overviewHtml) {
-      overviewHtml = '<p class="text-muted" style="padding:16px">No active assignments.</p>';
-    }
-    listEl.innerHTML = overviewHtml;
-    attachReviewHandlers(listEl, () => loadClientAssignments(clientId));
+    const refreshFn = () => loadClientAssignments(clientId);
 
-    // Full list shows everything
-    let fullHtml = '';
+    // Overview tab — all assignments, week-grouped
     if (assignments.length === 0) {
-      fullHtml = '<p class="text-muted" style="padding:16px">No assignments sent yet.</p>';
+      listEl.innerHTML = '<p class="text-muted" style="padding:16px">No assignments sent yet.</p>';
     } else {
-      if (submitted.length > 0) {
-        fullHtml += `<div class="coach-sub-title" style="color:var(--accent-blue)">Needs Review (${submitted.length})</div>`;
-        fullHtml += submitted.map(a => renderAssignCard(a)).join('');
-      }
-      if (pending.length > 0) {
-        fullHtml += `<div class="coach-sub-title" style="margin-top:8px">Pending (${pending.length})</div>`;
-        fullHtml += pending.map(a => renderAssignCard(a)).join('');
-      }
-      if (reviewed.length > 0) {
-        fullHtml += `<div class="coach-sub-title" style="margin-top:8px;color:var(--tier-green)">Reviewed (${reviewed.length})</div>`;
-        fullHtml += reviewed.map(a => renderAssignCard(a)).join('');
-      }
+      const filtered = assignFilterClient === 'all' ? assignments : assignments.filter(a => (a.status || 'pending') === assignFilterClient);
+      renderFilteredWeekGroups(filtered, listEl, {}, refreshFn);
     }
-    fullEl.innerHTML = fullHtml;
-    attachReviewHandlers(fullEl, () => loadClientAssignments(clientId));
+    setupFilterTabs('assign-filter-tabs', 'assignFilterClient', assignments, listEl, {}, refreshFn);
+
+    // Full assignments tab — same data, separate filter state
+    if (assignments.length === 0) {
+      fullEl.innerHTML = '<p class="text-muted" style="padding:16px">No assignments sent yet.</p>';
+    } else {
+      const filteredFull = assignFilterClientFull === 'all' ? assignments : assignments.filter(a => (a.status || 'pending') === assignFilterClientFull);
+      renderFilteredWeekGroups(filteredFull, fullEl, {}, refreshFn);
+    }
+    setupFilterTabs('assign-filter-tabs-full', 'assignFilterClientFull', assignments, fullEl, {}, refreshFn);
+
   } catch (err) {
     console.error('Failed to load assignments:', err);
     listEl.innerHTML = '';
@@ -891,7 +1072,18 @@ async function loadReviewQueue() {
       return;
     }
 
-    el.innerHTML = submitted.map(a => renderAssignCard(a, { showClient: true })).join('');
+    // Review queue: all cards expanded by default so review controls are visible
+    expandedAssignId = null;
+    el.innerHTML = submitted.map(a => {
+      const saved = expandedAssignId;
+      expandedAssignId = a.id; // force expanded
+      const html = renderAssignCard(a, { showClient: true });
+      expandedAssignId = saved;
+      return html;
+    }).join('');
+    // Make all details visible
+    el.querySelectorAll('.assign-detail').forEach(d => d.style.display = '');
+    el.querySelectorAll('.assign-compact-row').forEach(r => r.classList.add('expanded'));
     attachReviewHandlers(el, loadReviewQueue);
   } catch (err) {
     console.error('Failed to load review queue:', err);
@@ -909,32 +1101,17 @@ async function loadAllAssignments() {
   try {
     const allAssign = await getAllAssignments(COACH_UID);
     cachedAllAssignments = allAssign;
+    expandedAssignId = null;
 
     if (allAssign.length === 0) {
       el.innerHTML = '<div class="empty-state"><p>No assignments created yet.</p></div>';
       return;
     }
 
-    const submitted = allAssign.filter(a => a.status === 'submitted');
-    const pending = allAssign.filter(a => !a.status || a.status === 'pending');
-    const reviewed = allAssign.filter(a => a.status === 'reviewed');
-
-    let html = '';
-    if (submitted.length > 0) {
-      html += `<div class="coach-sub-title" style="color:var(--accent-blue);padding-left:0">Submitted (${submitted.length})</div>`;
-      html += submitted.map(a => renderAssignCard(a, { showClient: true })).join('');
-    }
-    if (pending.length > 0) {
-      html += `<div class="coach-sub-title" style="margin-top:12px;padding-left:0">Pending (${pending.length})</div>`;
-      html += pending.map(a => renderAssignCard(a, { showClient: true })).join('');
-    }
-    if (reviewed.length > 0) {
-      html += `<div class="coach-sub-title" style="margin-top:12px;color:var(--tier-green);padding-left:0">Reviewed (${reviewed.length})</div>`;
-      html += reviewed.map(a => renderAssignCard(a, { showClient: true })).join('');
-    }
-
-    el.innerHTML = html;
-    attachReviewHandlers(el, loadAllAssignments);
+    const opts = { showClient: true };
+    const filtered = assignFilterGlobal === 'all' ? allAssign : allAssign.filter(a => (a.status || 'pending') === assignFilterGlobal);
+    renderFilteredWeekGroups(filtered, el, opts, loadAllAssignments);
+    setupFilterTabs('assign-filter-tabs-global', 'assignFilterGlobal', allAssign, el, opts, loadAllAssignments);
   } catch (err) {
     console.error('Failed to load all assignments:', err);
   }

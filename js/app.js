@@ -154,7 +154,7 @@ export function initApp() {
       // Notify Coach Jaynie when a client logs in (not on page refresh)
       const hash = window.location.hash.slice(1) || 'splash';
       if (PUBLIC_SCREENS.includes(hash) && userDoc?.role !== 'coach') {
-        fetch('/api/notify-login', {
+        fetch('https://hitit-mind-diet.pages.dev/api/notify-login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

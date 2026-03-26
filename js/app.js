@@ -151,8 +151,20 @@ export function initApp() {
         console.error('[Auth] Failed to load user data:', err);
       }
 
-      // If on a public screen, redirect to tracker
+      // Notify Coach Jaynie when a client logs in (not on page refresh)
       const hash = window.location.hash.slice(1) || 'splash';
+      if (PUBLIC_SCREENS.includes(hash) && userDoc?.role !== 'coach') {
+        fetch('/api/notify-login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            clientName: userDoc?.name || user.displayName || 'Unknown',
+            clientEmail: user.email || '',
+          }),
+        }).catch(err => console.warn('[Notify] Login notification failed:', err));
+      }
+
+      // If on a public screen, redirect to tracker
       console.log('[Auth] Current hash:', hash, 'Navigating...');
       if (PUBLIC_SCREENS.includes(hash)) {
         // Check if user has seen onboarding
